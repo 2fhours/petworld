@@ -1,0 +1,352 @@
+{
+  "voice": "en-US-AnaNeural",
+  "foods": [
+    {
+      "id": "apple",
+      "name": "apple",
+      "emoji": "🍎",
+      "triggers": [
+        "apple"
+      ],
+      "accept": {
+        "text": "Yummy! I love apple.",
+        "audio": "audio/eat_ok_apple.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like apple.",
+        "audio": "audio/eat_no_apple.mp3"
+      }
+    },
+    {
+      "id": "banana",
+      "name": "banana",
+      "emoji": "🍌",
+      "triggers": [
+        "banana"
+      ],
+      "accept": {
+        "text": "Yummy! I love banana.",
+        "audio": "audio/eat_ok_banana.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like banana.",
+        "audio": "audio/eat_no_banana.mp3"
+      }
+    },
+    {
+      "id": "orange",
+      "name": "orange",
+      "emoji": "🍊",
+      "triggers": [
+        "orange"
+      ],
+      "accept": {
+        "text": "Yummy! I love orange.",
+        "audio": "audio/eat_ok_orange.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like orange.",
+        "audio": "audio/eat_no_orange.mp3"
+      }
+    },
+    {
+      "id": "grape",
+      "name": "grape",
+      "emoji": "🍇",
+      "triggers": [
+        "grape",
+        "grapes"
+      ],
+      "accept": {
+        "text": "Yummy! I love grape.",
+        "audio": "audio/eat_ok_grape.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like grape.",
+        "audio": "audio/eat_no_grape.mp3"
+      }
+    },
+    {
+      "id": "carrot",
+      "name": "carrot",
+      "emoji": "🥕",
+      "triggers": [
+        "carrot",
+        "carrots"
+      ],
+      "accept": {
+        "text": "Yummy! I love carrot.",
+        "audio": "audio/eat_ok_carrot.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like carrot.",
+        "audio": "audio/eat_no_carrot.mp3"
+      }
+    },
+    {
+      "id": "fish",
+      "name": "fish",
+      "emoji": "🐟",
+      "triggers": [
+        "fish"
+      ],
+      "accept": {
+        "text": "Yummy! I love fish.",
+        "audio": "audio/eat_ok_fish.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like fish.",
+        "audio": "audio/eat_no_fish.mp3"
+      }
+    },
+    {
+      "id": "meat",
+      "name": "meat",
+      "emoji": "🥩",
+      "triggers": [
+        "meat"
+      ],
+      "accept": {
+        "text": "Yummy! I love meat.",
+        "audio": "audio/eat_ok_meat.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like meat.",
+        "audio": "audio/eat_no_meat.mp3"
+      }
+    },
+    {
+      "id": "chicken",
+      "name": "chicken",
+      "emoji": "🍗",
+      "triggers": [
+        "chicken"
+      ],
+      "accept": {
+        "text": "Yummy! I love chicken.",
+        "audio": "audio/eat_ok_chicken.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like chicken.",
+        "audio": "audio/eat_no_chicken.mp3"
+      }
+    },
+    {
+      "id": "bone",
+      "name": "bone",
+      "emoji": "🦴",
+      "triggers": [
+        "bone"
+      ],
+      "accept": {
+        "text": "Yummy! I love bone.",
+        "audio": "audio/eat_ok_bone.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like bone.",
+        "audio": "audio/eat_no_bone.mp3"
+      }
+    },
+    {
+      "id": "egg",
+      "name": "egg",
+      "emoji": "🥚",
+      "triggers": [
+        "egg"
+      ],
+      "accept": {
+        "text": "Yummy! I love egg.",
+        "audio": "audio/eat_ok_egg.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like egg.",
+        "audio": "audio/eat_no_egg.mp3"
+      }
+    },
+    {
+      "id": "bread",
+      "name": "bread",
+      "emoji": "🍞",
+      "triggers": [
+        "bread"
+      ],
+      "accept": {
+        "text": "Yummy! I love bread.",
+        "audio": "audio/eat_ok_bread.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like bread.",
+        "audio": "audio/eat_no_bread.mp3"
+      }
+    },
+    {
+      "id": "milk",
+      "name": "milk",
+      "emoji": "🥛",
+      "triggers": [
+        "milk"
+      ],
+      "accept": {
+        "text": "Yummy! I love milk.",
+        "audio": "audio/eat_ok_milk.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like milk.",
+        "audio": "audio/eat_no_milk.mp3"
+      }
+    },
+    {
+      "id": "rice",
+      "name": "rice",
+      "emoji": "🍚",
+      "triggers": [
+        "rice"
+      ],
+      "accept": {
+        "text": "Yummy! I love rice.",
+        "audio": "audio/eat_ok_rice.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like rice.",
+        "audio": "audio/eat_no_rice.mp3"
+      }
+    },
+    {
+      "id": "cake",
+      "name": "cake",
+      "emoji": "🍰",
+      "triggers": [
+        "cake"
+      ],
+      "accept": {
+        "text": "Yummy! I love cake.",
+        "audio": "audio/eat_ok_cake.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like cake.",
+        "audio": "audio/eat_no_cake.mp3"
+      }
+    },
+    {
+      "id": "cookie",
+      "name": "cookie",
+      "emoji": "🍪",
+      "triggers": [
+        "cookie",
+        "cookies"
+      ],
+      "accept": {
+        "text": "Yummy! I love cookie.",
+        "audio": "audio/eat_ok_cookie.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like cookie.",
+        "audio": "audio/eat_no_cookie.mp3"
+      }
+    },
+    {
+      "id": "bamboo",
+      "name": "bamboo",
+      "emoji": "🎋",
+      "triggers": [
+        "bamboo"
+      ],
+      "accept": {
+        "text": "Yummy! I love bamboo.",
+        "audio": "audio/eat_ok_bamboo.mp3"
+      },
+      "reject": {
+        "text": "No thanks. I don't like bamboo.",
+        "audio": "audio/eat_no_bamboo.mp3"
+      }
+    }
+  ],
+  "petTaste": {
+    "cat": {
+      "like": [
+        "fish",
+        "milk",
+        "meat",
+        "chicken",
+        "egg",
+        "fish"
+      ],
+      "dislike": [
+        "bone",
+        "carrot",
+        "bamboo"
+      ]
+    },
+    "dog": {
+      "like": [
+        "bone",
+        "meat",
+        "chicken",
+        "cookie",
+        "bread",
+        "egg"
+      ],
+      "dislike": [
+        "fish",
+        "bamboo"
+      ]
+    },
+    "bunny": {
+      "like": [
+        "carrot",
+        "apple",
+        "banana",
+        "grape",
+        "orange",
+        "lettuce"
+      ],
+      "dislike": [
+        "meat",
+        "fish",
+        "bone",
+        "chicken"
+      ]
+    },
+    "fox": {
+      "like": [
+        "meat",
+        "chicken",
+        "fish",
+        "egg",
+        "apple"
+      ],
+      "dislike": [
+        "bamboo",
+        "bone"
+      ]
+    },
+    "panda": {
+      "like": [
+        "bamboo",
+        "apple",
+        "banana",
+        "carrot",
+        "rice",
+        "cake"
+      ],
+      "dislike": [
+        "meat",
+        "bone",
+        "fish",
+        "chicken"
+      ]
+    }
+  },
+  "genericAccept": {
+    "text": "Yummy! Thank you.",
+    "audio": "audio/eat_ok_generic.mp3"
+  },
+  "genericReject": {
+    "text": "No thanks. I don't want that.",
+    "audio": "audio/eat_no_generic.mp3"
+  },
+  "askFood": {
+    "text": "What should I eat?",
+    "audio": "audio/eat_ask.mp3"
+  }
+}

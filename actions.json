@@ -1,0 +1,109 @@
+{
+  "voice": "en-US-AnaNeural",
+  "actions": {
+    "pet": [
+      {
+        "id": "act_pet_1",
+        "text": "That feels good",
+        "ipa": "/ðæt fiːlz ɡʊd/",
+        "zh": "好舒服",
+        "action": "pet",
+        "audio": "audio/act_pet_1.mp3"
+      },
+      {
+        "id": "act_pet_2",
+        "text": "I like that",
+        "ipa": "/aɪ laɪk ðæt/",
+        "zh": "我喜欢",
+        "action": "pet",
+        "audio": "audio/act_pet_2.mp3"
+      },
+      {
+        "id": "act_pet_3",
+        "text": "Thank you",
+        "ipa": "/ˈθæŋk juː/",
+        "zh": "谢谢你",
+        "action": "pet",
+        "audio": "audio/act_pet_3.mp3"
+      }
+    ],
+    "feed": [
+      {
+        "id": "act_feed_1",
+        "text": "Yummy",
+        "ipa": "/ˈjʌmi/",
+        "zh": "好吃",
+        "action": "feed",
+        "audio": "audio/act_feed_1.mp3"
+      },
+      {
+        "id": "act_feed_2",
+        "text": "So delicious",
+        "ipa": "/soʊ dɪˈlɪʃəs/",
+        "zh": "太美味了",
+        "action": "feed",
+        "audio": "audio/act_feed_2.mp3"
+      },
+      {
+        "id": "act_feed_3",
+        "text": "More please",
+        "ipa": "/mɔːr pliːz/",
+        "zh": "再来一点",
+        "action": "feed",
+        "audio": "audio/act_feed_3.mp3"
+      }
+    ],
+    "play": [
+      {
+        "id": "act_play_1",
+        "text": "Let's play",
+        "ipa": "/lets pleɪ/",
+        "zh": "我们一起玩吧",
+        "action": "play",
+        "audio": "audio/act_play_1.mp3"
+      },
+      {
+        "id": "act_play_2",
+        "text": "This is fun",
+        "ipa": "/ðɪs ɪz fʌn/",
+        "zh": "真好玩",
+        "action": "play",
+        "audio": "audio/act_play_2.mp3"
+      },
+      {
+        "id": "act_play_3",
+        "text": "Come on",
+        "ipa": "/kʌm ɑːn/",
+        "zh": "来呀",
+        "action": "play",
+        "audio": "audio/act_play_3.mp3"
+      }
+    ],
+    "sleep": [
+      {
+        "id": "act_sleep_1",
+        "text": "Good night",
+        "ipa": "/ɡʊd ˈnaɪt/",
+        "zh": "晚安",
+        "action": "sleep",
+        "audio": "audio/act_sleep_1.mp3"
+      },
+      {
+        "id": "act_sleep_2",
+        "text": "I'm sleepy",
+        "ipa": "/aɪm ˈsliːpi/",
+        "zh": "我困了",
+        "action": "sleep",
+        "audio": "audio/act_sleep_2.mp3"
+      },
+      {
+        "id": "act_sleep_3",
+        "text": "See you tomorrow",
+        "ipa": "/siː juː təˈmɑːroʊ/",
+        "zh": "明天见",
+        "action": "sleep",
+        "audio": "audio/act_sleep_3.mp3"
+      }
+    ]
+  }
+}

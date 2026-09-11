@@ -1,0 +1,493 @@
+{
+  "voice": "en-US-AnaNeural",
+  "items": [
+    {
+      "id": "hello",
+      "text": "Hello",
+      "ipa": "/həˈloʊ/",
+      "zh": "你好",
+      "phonics": "he-LLO",
+      "audio": "audio/hello.mp3",
+      "phonicsAudio": "audio/hello_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "ə",
+        "l",
+        "oʊ"
+      ]
+    },
+    {
+      "id": "hi",
+      "text": "Hi",
+      "ipa": "/haɪ/",
+      "zh": "嗨",
+      "phonics": "HI",
+      "audio": "audio/hi.mp3",
+      "phonicsAudio": "audio/hi_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "aɪ"
+      ]
+    },
+    {
+      "id": "bye",
+      "text": "Bye",
+      "ipa": "/baɪ/",
+      "zh": "再见",
+      "phonics": "BYE",
+      "audio": "audio/bye.mp3",
+      "phonicsAudio": "audio/bye_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "aɪ"
+      ]
+    },
+    {
+      "id": "please",
+      "text": "Please",
+      "ipa": "/pliːz/",
+      "zh": "请",
+      "phonics": "PLEASE",
+      "audio": "audio/please.mp3",
+      "phonicsAudio": "audio/please_phonics.mp3",
+      "ipaSegments": [
+        "p",
+        "l",
+        "iː",
+        "z"
+      ]
+    },
+    {
+      "id": "thanks",
+      "text": "Thanks",
+      "ipa": "/θæŋks/",
+      "zh": "谢谢",
+      "phonics": "THANKS",
+      "audio": "audio/thanks.mp3",
+      "phonicsAudio": "audio/thanks_phonics.mp3",
+      "ipaSegments": [
+        "θ",
+        "æ",
+        "ŋ",
+        "k",
+        "s"
+      ]
+    },
+    {
+      "id": "thank_you",
+      "text": "Thank you",
+      "ipa": "/ˈθæŋk juː/",
+      "zh": "谢谢你",
+      "phonics": "THANK you",
+      "audio": "audio/thank_you.mp3",
+      "phonicsAudio": "audio/thank_you_phonics.mp3",
+      "ipaSegments": [
+        "θ",
+        "æ",
+        "ŋ",
+        "k",
+        "j",
+        "uː"
+      ]
+    },
+    {
+      "id": "sorry",
+      "text": "Sorry",
+      "ipa": "/ˈsɑːri/",
+      "zh": "对不起",
+      "phonics": "SOR-ry",
+      "audio": "audio/sorry.mp3",
+      "phonicsAudio": "audio/sorry_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "ɑː",
+        "r",
+        "i"
+      ]
+    },
+    {
+      "id": "yes",
+      "text": "Yes",
+      "ipa": "/jes/",
+      "zh": "是的",
+      "phonics": "YES",
+      "audio": "audio/yes.mp3",
+      "phonicsAudio": "audio/yes_phonics.mp3",
+      "ipaSegments": [
+        "j",
+        "e",
+        "s"
+      ]
+    },
+    {
+      "id": "no",
+      "text": "No",
+      "ipa": "/noʊ/",
+      "zh": "不",
+      "phonics": "NO",
+      "audio": "audio/no.mp3",
+      "phonicsAudio": "audio/no_phonics.mp3",
+      "ipaSegments": [
+        "n",
+        "oʊ"
+      ]
+    },
+    {
+      "id": "ok",
+      "text": "OK",
+      "ipa": "/ˌoʊˈkeɪ/",
+      "zh": "好的",
+      "phonics": "O-K",
+      "audio": "audio/ok.mp3",
+      "phonicsAudio": "audio/ok_phonics.mp3",
+      "ipaSegments": [
+        "oʊ",
+        "k",
+        "eɪ"
+      ]
+    },
+    {
+      "id": "good_morning",
+      "text": "Good morning",
+      "ipa": "/ɡʊd ˈmɔːrnɪŋ/",
+      "zh": "早上好",
+      "phonics": "good MOR-ning",
+      "audio": "audio/good_morning.mp3",
+      "phonicsAudio": "audio/good_morning_phonics.mp3",
+      "ipaSegments": [
+        "ɡ",
+        "ʊ",
+        "d",
+        "m",
+        "ɔː",
+        "r",
+        "n",
+        "ɪ",
+        "ŋ"
+      ]
+    },
+    {
+      "id": "good_night",
+      "text": "Good night",
+      "ipa": "/ɡʊd ˈnaɪt/",
+      "zh": "晚安",
+      "phonics": "good NIGHT",
+      "audio": "audio/good_night.mp3",
+      "phonicsAudio": "audio/good_night_phonics.mp3",
+      "ipaSegments": [
+        "ɡ",
+        "ʊ",
+        "d",
+        "n",
+        "aɪ",
+        "t"
+      ]
+    },
+    {
+      "id": "how_are_you",
+      "text": "How are you?",
+      "ipa": "/haʊ ɑːr juː/",
+      "zh": "你好吗？",
+      "phonics": "HOW are you",
+      "audio": "audio/how_are_you.mp3",
+      "phonicsAudio": "audio/how_are_you_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "aʊ",
+        "ɑː",
+        "r",
+        "j",
+        "uː"
+      ]
+    },
+    {
+      "id": "im_fine",
+      "text": "I'm fine",
+      "ipa": "/aɪm faɪn/",
+      "zh": "我很好",
+      "phonics": "I'm FINE",
+      "audio": "audio/im_fine.mp3",
+      "phonicsAudio": "audio/im_fine_phonics.mp3",
+      "ipaSegments": [
+        "aɪ",
+        "m",
+        "f",
+        "aɪ",
+        "n"
+      ]
+    },
+    {
+      "id": "nice_to_meet_you",
+      "text": "Nice to meet you",
+      "ipa": "/naɪs tə miːt juː/",
+      "zh": "很高兴认识你",
+      "phonics": "NICE to MEET you",
+      "audio": "audio/nice_to_meet_you.mp3",
+      "phonicsAudio": "audio/nice_to_meet_you_phonics.mp3",
+      "ipaSegments": [
+        "n",
+        "aɪ",
+        "s",
+        "t",
+        "ə",
+        "m",
+        "iː",
+        "t",
+        "j",
+        "uː"
+      ]
+    },
+    {
+      "id": "whats_your_name",
+      "text": "What's your name?",
+      "ipa": "/wʌts jʊr neɪm/",
+      "zh": "你叫什么名字？",
+      "phonics": "WHAT'S your NAME",
+      "audio": "audio/whats_your_name.mp3",
+      "phonicsAudio": "audio/whats_your_name_phonics.mp3",
+      "ipaSegments": [
+        "w",
+        "ʌ",
+        "t",
+        "s",
+        "j",
+        "ʊ",
+        "r",
+        "n",
+        "eɪ",
+        "m"
+      ]
+    },
+    {
+      "id": "my_name_is",
+      "text": "My name is Tom",
+      "ipa": "/maɪ neɪm ɪz tɑːm/",
+      "zh": "我叫汤姆",
+      "phonics": "my NAME is Tom",
+      "audio": "audio/my_name_is.mp3",
+      "phonicsAudio": "audio/my_name_is_phonics.mp3",
+      "ipaSegments": [
+        "m",
+        "aɪ",
+        "n",
+        "eɪ",
+        "m",
+        "ɪ",
+        "z",
+        "t",
+        "ɑː",
+        "m"
+      ]
+    },
+    {
+      "id": "apple",
+      "text": "Apple",
+      "ipa": "/ˈæpl/",
+      "zh": "苹果",
+      "phonics": "AP-ple",
+      "audio": "audio/apple.mp3",
+      "phonicsAudio": "audio/apple_phonics.mp3",
+      "ipaSegments": [
+        "æ",
+        "p",
+        "l"
+      ]
+    },
+    {
+      "id": "book",
+      "text": "Book",
+      "ipa": "/bʊk/",
+      "zh": "书",
+      "phonics": "BOOK",
+      "audio": "audio/book.mp3",
+      "phonicsAudio": "audio/book_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "ʊ",
+        "k"
+      ]
+    },
+    {
+      "id": "cat",
+      "text": "Cat",
+      "ipa": "/kæt/",
+      "zh": "猫",
+      "phonics": "CAT",
+      "audio": "audio/cat.mp3",
+      "phonicsAudio": "audio/cat_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "æ",
+        "t"
+      ]
+    },
+    {
+      "id": "dog",
+      "text": "Dog",
+      "ipa": "/dɔːɡ/",
+      "zh": "狗",
+      "phonics": "DOG",
+      "audio": "audio/dog.mp3",
+      "phonicsAudio": "audio/dog_phonics.mp3",
+      "ipaSegments": [
+        "d",
+        "ɔː",
+        "ɡ"
+      ]
+    },
+    {
+      "id": "water",
+      "text": "Water",
+      "ipa": "/ˈwɔːtər/",
+      "zh": "水",
+      "phonics": "WA-ter",
+      "audio": "audio/water.mp3",
+      "phonicsAudio": "audio/water_phonics.mp3",
+      "ipaSegments": [
+        "w",
+        "ɔː",
+        "t",
+        "ə",
+        "r"
+      ]
+    },
+    {
+      "id": "school",
+      "text": "School",
+      "ipa": "/skuːl/",
+      "zh": "学校",
+      "phonics": "SCHOOL",
+      "audio": "audio/school.mp3",
+      "phonicsAudio": "audio/school_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "k",
+        "uː",
+        "l"
+      ]
+    },
+    {
+      "id": "friend",
+      "text": "Friend",
+      "ipa": "/frend/",
+      "zh": "朋友",
+      "phonics": "FRIEND",
+      "audio": "audio/friend.mp3",
+      "phonicsAudio": "audio/friend_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "r",
+        "e",
+        "n",
+        "d"
+      ]
+    },
+    {
+      "id": "i_love_you",
+      "text": "I love you",
+      "ipa": "/aɪ lʌv juː/",
+      "zh": "我爱你",
+      "phonics": "I LOVE you",
+      "audio": "audio/i_love_you.mp3",
+      "phonicsAudio": "audio/i_love_you_phonics.mp3",
+      "ipaSegments": [
+        "aɪ",
+        "l",
+        "ʌ",
+        "v",
+        "j",
+        "uː"
+      ]
+    },
+    {
+      "id": "lets_play",
+      "text": "Let's play",
+      "ipa": "/lets pleɪ/",
+      "zh": "我们一起玩吧",
+      "phonics": "LET'S PLAY",
+      "audio": "audio/lets_play.mp3",
+      "phonicsAudio": "audio/lets_play_phonics.mp3",
+      "ipaSegments": [
+        "l",
+        "e",
+        "t",
+        "s",
+        "p",
+        "l",
+        "eɪ"
+      ]
+    },
+    {
+      "id": "come_here",
+      "text": "Come here",
+      "ipa": "/kʌm hɪr/",
+      "zh": "过来",
+      "phonics": "COME here",
+      "audio": "audio/come_here.mp3",
+      "phonicsAudio": "audio/come_here_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "ʌ",
+        "m",
+        "h",
+        "ɪ",
+        "r"
+      ]
+    },
+    {
+      "id": "sit_down",
+      "text": "Sit down",
+      "ipa": "/sɪt daʊn/",
+      "zh": "坐下",
+      "phonics": "SIT DOWN",
+      "audio": "audio/sit_down.mp3",
+      "phonicsAudio": "audio/sit_down_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "ɪ",
+        "t",
+        "d",
+        "aʊ",
+        "n"
+      ]
+    },
+    {
+      "id": "stand_up",
+      "text": "Stand up",
+      "ipa": "/stænd ʌp/",
+      "zh": "站起来",
+      "phonics": "STAND UP",
+      "audio": "audio/stand_up.mp3",
+      "phonicsAudio": "audio/stand_up_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "t",
+        "æ",
+        "n",
+        "d",
+        "ʌ",
+        "p"
+      ]
+    },
+    {
+      "id": "open_the_book",
+      "text": "Open the book",
+      "ipa": "/ˈoʊpən ðə bʊk/",
+      "zh": "打开书",
+      "phonics": "O-pen the BOOK",
+      "audio": "audio/open_the_book.mp3",
+      "phonicsAudio": "audio/open_the_book_phonics.mp3",
+      "ipaSegments": [
+        "oʊ",
+        "p",
+        "ə",
+        "n",
+        "ð",
+        "ə",
+        "b",
+        "ʊ",
+        "k"
+      ]
+    }
+  ]
+}

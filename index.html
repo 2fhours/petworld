@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pet World</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; }
+    body {
+      display: grid;
+      place-items: center;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #87c8f5;
+      color: #fff;
+      cursor: none;
+    }
+    .scene {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+    }
+    .sky {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, #7ec8f8 0%, #b8e4ff 42%, #fff6d8 78%, #c8eb9c 100%);
+      transition: background 0.6s ease;
+    }
+    .sun {
+      position: absolute; top: 8%; right: 12%; width: 86px; height: 86px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff7b0, #ffd35a 55%, #ffb02e 100%);
+      box-shadow: 0 0 40px rgba(255, 205, 80, 0.65);
+    }
+    .cloud {
+      position: absolute; background: rgba(255,255,255,0.92); border-radius: 40px;
+      filter: drop-shadow(0 6px 10px rgba(80,120,160,0.12));
+      animation: cloudMove linear infinite;
+    }
+    .cloud::before, .cloud::after {
+      content: ""; position: absolute; background: inherit; border-radius: 50%;
+    }
+    .cloud.a { width: 120px; height: 40px; top: 12%; left: -20%; animation-duration: 48s; }
+    .cloud.a::before { width: 50px; height: 50px; top: -24px; left: 18px; }
+    .cloud.a::after { width: 66px; height: 66px; top: -30px; left: 48px; }
+    .cloud.b { width: 160px; height: 46px; top: 20%; left: -30%; animation-duration: 64s; animation-delay: -20s; }
+    .cloud.b::before { width: 60px; height: 60px; top: -28px; left: 26px; }
+    .cloud.b::after { width: 78px; height: 78px; top: -36px; left: 66px; }
+    .hill {
+      position: absolute; left: -10%; right: -10%; bottom: 14%; height: 34%;
+      border-radius: 50% 50% 0 0;
+      background: linear-gradient(180deg, #8fd18a, #62b36b);
+    }
+    .hill.back {
+      bottom: 18%; height: 38%; opacity: 0.75;
+      background: linear-gradient(180deg, #a8db9a, #79c27a);
+      transform: scaleX(1.05);
+    }
+    .ground {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 22%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.18), transparent 24%),
+        linear-gradient(180deg, #79c45d 0%, #5aa84a 55%, #4e9440 100%);
+    }
+    .ground::before {
+      content: ""; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(90deg, transparent 0 18px, rgba(70,140,50,0.12) 18px 20px);
+      opacity: 0.35;
+    }
+    .decor {
+      position: absolute; bottom: 18%; font-size: 42px; line-height: 1;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.12));
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .decor.d1 { left: 8%; font-size: 52px; }
+    .decor.d2 { left: 22%; bottom: 20%; font-size: 34px; }
+    .decor.d3 { right: 18%; bottom: 21%; font-size: 48px; }
+    .decor.d4 { right: 8%; bottom: 17%; font-size: 36px; }
+    @keyframes cloudMove {
+      from { transform: translateX(0); }
+      to { transform: translateX(140vw); }
+    }
+    /* pet-themed environments */
+    body.env-cat .sky { background: linear-gradient(180deg, #9ad0ff 0%, #ffe3f0 55%, #d9f5b8 100%); }
+    body.env-dog .sky { background: linear-gradient(180deg, #87c8f5 0%, #fff1c9 55%, #b7e38a 100%); }
+    body.env-bunny .sky { background: linear-gradient(180deg, #b7e0ff 0%, #ffe8f5 50%, #d8f7c6 100%); }
+    body.env-fox .sky { background: linear-gradient(180deg, #7eb6e8 0%, #ffd7a8 48%, #8fbf6e 100%); }
+    body.env-panda .sky { background: linear-gradient(180deg, #8ec9a8 0%, #d7f0ff 45%, #bfe39a 100%); }
+    body.env-fox .hill { background: linear-gradient(180deg, #7fba72, #4f8f4d); }
+    body.env-panda .hill { background: linear-gradient(180deg, #79c98c, #4f9a62); }
+
+    canvas#fx {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      z-index: 1; display: block; opacity: 0.35; mix-blend-mode: soft-light;
+    }
+    .aura {
+      position: fixed; width: 55vmax; height: 55vmax; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.22), transparent 65%);
+      filter: blur(40px); animation: drift 12s ease-in-out infinite alternate;
+      z-index: 1; pointer-events: none;
+    }
+    .aura.two {
+      background: radial-gradient(circle, rgba(255,220,120,0.2), transparent 65%);
+      animation-duration: 16s; animation-direction: alternate-reverse;
+      right: -10vmax; bottom: -10vmax;
+    }
+    .stage {
+      position: relative; z-index: 2; text-align: center;
+      padding: 24px; pointer-events: none;
+    }
+    h1 {
+      margin: 0; font-size: clamp(48px, 12vw, 96px); font-weight: 800;
+      letter-spacing: 0.04em; line-height: 1.05;
+      background: linear-gradient(90deg, #67e8f9, #a78bfa, #f472b6, #67e8f9);
+      background-size: 300% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: shine 4s linear infinite, floaty 3.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 18px rgba(167,139,250,0.45));
+    }
+    .ring {
+      position: absolute; inset: -28% -18%; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 0 40px rgba(103,232,249,0.15), inset 0 0 40px rgba(167,139,250,0.08);
+      animation: spin 18s linear infinite; pointer-events: none;
+    }
+    .ring::before, .ring::after {
+      content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%;
+      background: #67e8f9; box-shadow: 0 0 18px #67e8f9;
+      top: 50%; left: -5px; transform: translateY(-50%);
+    }
+    .ring::after {
+      left: auto; right: -5px; background: #f472b6; box-shadow: 0 0 18px #f472b6;
+    }
+    .sub {
+      margin-top: 18px; font-size: 13px; letter-spacing: 0.28em;
+      text-transform: uppercase; color: rgba(226,232,240,0.55);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    .cursor {
+      position: fixed; width: 14px; height: 14px; border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 0 20px rgba(167,139,250,0.9), 0 0 40px rgba(103,232,249,0.5);
+      transform: translate(-50%, -50%); pointer-events: none; z-index: 9;
+      mix-blend-mode: screen;
+    }
+
+    /* Character picker */
+    .picker {
+      position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+      z-index: 8; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      padding: 8px; border-radius: 18px;
+      background: rgba(15,23,42,0.55); border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px); max-width: calc(100vw - 24px);
+    }
+    .picker button {
+      appearance: none; border: 1px solid transparent; border-radius: 14px;
+      padding: 8px 10px; min-width: 64px; font: inherit; font-size: 12px;
+      color: #e2e8f0; background: rgba(255,255,255,0.05); cursor: pointer;
+      transition: 0.15s ease;
+    }
+    .picker button.active {
+      border-color: rgba(167,139,250,0.7);
+      background: rgba(167,139,250,0.22);
+    }
+    .picker button:hover { transform: translateY(-1px); background: rgba(255,255,255,0.1); }
+    .picker .emoji { display: block; font-size: 20px; line-height: 1.2; }
+
+    .hint {
+      position: fixed; top: 78px; left: 50%; transform: translateX(-50%);
+      z-index: 7; font-size: 12px; color: rgba(226,232,240,0.55);
+      pointer-events: none; white-space: nowrap;
+    }
+
+    /* Pet shell */
+    #pet {
+      position: fixed; left: 0; top: 0; width: 120px; height: 140px;
+      z-index: 5; transform: translate(-50%, -100%);
+      cursor: pointer; user-select: none; touch-action: none;
+    }
+    #pet .bubble {
+      position: absolute; left: 50%; top: -6px;
+      transform: translate(-50%, -100%) scale(0.92);
+      background: rgba(15,23,42,0.88); border: 1px solid rgba(255,255,255,0.12);
+      color: #e2e8f0; font-size: 18px; font-weight: 650; padding: 8px 14px; border-radius: 14px;
+      white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      transform-origin: 50% 100%;
+    }
+    #pet .bubble.show {
+      opacity: 1; transform: translate(-50%, -110%) scale(1);
+    }
+    #pet .shadow {
+      position: absolute; left: 50%; bottom: 2px; width: 58px; height: 14px;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(0,0,0,0.4), transparent 70%);
+      filter: blur(2px);
+    }
+    #pet .figure {
+      position: absolute; inset: 0 8px 10px; transform-origin: 50% 100%;
+    }
+
+    /* Shared limb animation */
+    #pet.walk .leg-l { animation: legL 0.55s ease-in-out infinite; }
+    #pet.walk .leg-r { animation: legR 0.55s ease-in-out infinite; }
+    #pet.walk .arm-l { animation: armL 0.55s ease-in-out infinite; }
+    #pet.walk .arm-r { animation: armR 0.55s ease-in-out infinite; }
+    #pet.walk .figure { animation: bob 0.55s ease-in-out infinite; }
+    #pet.happy .figure { animation: hop 0.9s ease; }
+    #pet.sleep .eye-l, #pet.sleep .eye-r {
+      height: 3px !important; border-radius: 2px !important;
+    }
+    #pet.sleep .eye-l::after, #pet.sleep .eye-r::after { display: none; }
+
+    .part { position: absolute; }
+    .head {
+      width: 58px; height: 52px; left: 50%; top: 8px;
+      transform: translateX(-50%); border-radius: 50% 50% 46% 46%;
+      z-index: 3;
+    }
+    .torso {
+      width: 46px; height: 40px; left: 50%; top: 52px;
+      transform: translateX(-50%); border-radius: 18px 18px 16px 16px;
+      z-index: 2;
+    }
+    .arm-l, .arm-r {
+      width: 14px; height: 28px; top: 56px; border-radius: 10px;
+      z-index: 1; transform-origin: 50% 8%;
+    }
+    .arm-l { left: 18px; }
+    .arm-r { right: 18px; }
+    .leg-l, .leg-r {
+      width: 15px; height: 26px; top: 88px; border-radius: 10px;
+      z-index: 1; transform-origin: 50% 10%;
+    }
+    .leg-l { left: 34px; }
+    .leg-r { right: 34px; }
+    .foot {
+      position: absolute; left: 50%; bottom: -3px; width: 18px; height: 8px;
+      transform: translateX(-50%); border-radius: 8px;
+    }
+    .eye-l, .eye-r {
+      position: absolute; width: 10px; height: 12px; background: #1e1b4b;
+      border-radius: 50%; top: 22px; animation: blink 5s infinite; z-index: 4;
+    }
+    .eye-l { left: 14px; }
+    .eye-r { right: 14px; }
+    .eye-l::after, .eye-r::after {
+      content: ""; position: absolute; width: 3px; height: 3px;
+      background: #fff; border-radius: 50%; top: 2px; left: 2px;
+    }
+    .blush-l, .blush-r {
+      position: absolute; width: 10px; height: 6px; top: 30px;
+      background: rgba(244,114,182,0.45); border-radius: 50%; filter: blur(0.5px);
+    }
+    .blush-l { left: 6px; }
+    .blush-r { right: 6px; }
+    .mouth {
+      position: absolute; width: 12px; height: 7px; left: 50%; top: 34px;
+      transform: translateX(-50%); border: 2px solid #312e81;
+      border-top: 0; border-radius: 0 0 12px 12px;
+    }
+    .ear-l, .ear-r {
+      position: absolute; z-index: 0;
+    }
+    .tail {
+      position: absolute; z-index: 0; transform-origin: left center;
+    }
+
+    /* Skins */
+    .skin-cat .head, .skin-cat .torso, .skin-cat .arm-l, .skin-cat .arm-r,
+    .skin-cat .leg-l, .skin-cat .leg-r, .skin-cat .foot {
+      background: linear-gradient(160deg, #fdba74, #fb923c);
+    }
+    .skin-cat .ear-l, .skin-cat .ear-r {
+      width: 0; height: 0; top: -2px; border-left: 10px solid transparent;
+      border-right: 10px solid transparent; border-bottom: 18px solid #fb923c;
+    }
+    .skin-cat .ear-l { left: 6px; transform: rotate(-12deg); }
+    .skin-cat .ear-r { right: 6px; transform: rotate(12deg); }
+    .skin-cat .ear-l::after, .skin-cat .ear-r::after {
+      content: ""; position: absolute; left: -5px; top: 6px;
+      border-left: 5px solid transparent; border-right: 5px solid transparent;
+      border-bottom: 10px solid #fecdd3;
+    }
+    .skin-cat .tail {
+      width: 34px; height: 10px; right: -8px; top: 70px;
+      background: #fb923c; border-radius: 10px;
+      animation: tail 1.2s ease-in-out infinite;
+    }
+
+    .skin-dog .head, .skin-dog .torso, .skin-dog .arm-l, .skin-dog .arm-r,
+    .skin-dog .leg-l, .skin-dog .leg-r, .skin-dog .foot {
+      background: linear-gradient(160deg, #fde68a, #f59e0b);
+    }
+    .skin-dog .ear-l, .skin-dog .ear-r {
+      width: 16px; height: 24px; top: 10px; background: #d97706; border-radius: 12px;
+    }
+    .skin-dog .ear-l { left: -2px; transform: rotate(18deg); }
+    .skin-dog .ear-r { right: -2px; transform: rotate(-18deg); }
+    .skin-dog .tail {
+      width: 28px; height: 12px; right: -4px; top: 68px;
+      background: #f59e0b; border-radius: 12px 12px 8px 8px;
+      animation: wag 0.35s ease-in-out infinite;
+    }
+
+    .skin-bunny .head, .skin-bunny .torso, .skin-bunny .arm-l, .skin-bunny .arm-r,
+    .skin-bunny .leg-l, .skin-bunny .leg-r, .skin-bunny .foot {
+      background: linear-gradient(160deg, #fbcfe8, #f9a8d4);
+    }
+    .skin-bunny .ear-l, .skin-bunny .ear-r {
+      width: 14px; height: 36px; top: -22px; background: #f9a8d4; border-radius: 12px;
+    }
+    .skin-bunny .ear-l { left: 10px; transform: rotate(-8deg); }
+    .skin-bunny .ear-r { right: 10px; transform: rotate(8deg); }
+    .skin-bunny .ear-l::after, .skin-bunny .ear-r::after {
+      content: ""; position: absolute; inset: 8px 4px 6px; background: #fecdd3; border-radius: 10px;
+    }
+    .skin-bunny .tail {
+      width: 16px; height: 16px; right: 8px; top: 78px;
+      background: #fff; border-radius: 50%; box-shadow: 0 0 0 2px #f9a8d4 inset;
+    }
+
+    .skin-fox .head, .skin-fox .torso, .skin-fox .arm-l, .skin-fox .arm-r,
+    .skin-fox .leg-l, .skin-fox .leg-r, .skin-fox .foot {
+      background: linear-gradient(160deg, #fdba74, #ea580c);
+    }
+    .skin-fox .ear-l, .skin-fox .ear-r {
+      width: 0; height: 0; top: -4px;
+      border-left: 11px solid transparent; border-right: 11px solid transparent;
+      border-bottom: 20px solid #ea580c;
+    }
+    .skin-fox .ear-l { left: 4px; transform: rotate(-10deg); }
+    .skin-fox .ear-r { right: 4px; transform: rotate(10deg); }
+    .skin-fox .cheek {
+      position: absolute; width: 14px; height: 12px; top: 28px;
+      background: #fff; border-radius: 50%; opacity: 0.9;
+    }
+    .skin-fox .cheek.l { left: 2px; }
+    .skin-fox .cheek.r { right: 2px; }
+    .skin-fox .tail {
+      width: 40px; height: 16px; right: -14px; top: 66px;
+      background: linear-gradient(90deg, #ea580c, #fff);
+      border-radius: 16px; animation: tail 1s ease-in-out infinite;
+    }
+
+    .skin-panda .head, .skin-panda .torso {
+      background: linear-gradient(160deg, #f8fafc, #e2e8f0);
+    }
+    .skin-panda .arm-l, .skin-panda .arm-r,
+    .skin-panda .leg-l, .skin-panda .leg-r, .skin-panda .foot {
+      background: #1e293b;
+    }
+    .skin-panda .ear-l, .skin-panda .ear-r {
+      width: 16px; height: 16px; top: 0; background: #1e293b; border-radius: 50%;
+    }
+    .skin-panda .ear-l { left: 4px; }
+    .skin-panda .ear-r { right: 4px; }
+    .skin-panda .eye-l, .skin-panda .eye-r {
+      width: 16px; height: 16px; background: #1e293b; top: 18px;
+    }
+    .skin-panda .eye-l::before, .skin-panda .eye-r::before {
+      content: ""; position: absolute; inset: 4px; background: #0f172a; border-radius: 50%;
+    }
+    .skin-panda .tail {
+      width: 12px; height: 12px; right: 14px; top: 82px;
+      background: #1e293b; border-radius: 50%;
+    }
+
+
+    .learn {
+      position: fixed; right: 16px; top: 50%; transform: translateY(-50%);
+      z-index: 8; width: min(280px, calc(100vw - 28px));
+      padding: 14px; border-radius: 18px;
+      background: rgba(15,23,42,0.72); border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px); color: #e2e8f0;
+    }
+    .learn h2 {
+      margin: 0 0 8px; font-size: 13px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #a5b4fc; font-weight: 650;
+    }
+    .learn .word {
+      font-size: 28px; font-weight: 750; line-height: 1.2; margin: 4px 0 2px;
+      color: #fff;
+    }
+
+    .learn .ipa-chip {
+      display: inline-block; margin: 2px 2px; padding: 2px 7px;
+      border-radius: 8px; background: rgba(103,232,249,0.12);
+      border: 1px solid rgba(103,232,249,0.28); color: #67e8f9;
+      font-size: 15px;
+    }
+    .learn .ipa {
+      font-family: "Lucida Sans Unicode", "Arial Unicode MS", ui-sans-serif, sans-serif;
+      color: #67e8f9; font-size: 16px; margin-bottom: 4px;
+    }
+    .learn .phonics {
+      color: #c4b5fd; font-size: 13px; margin-bottom: 2px;
+    }
+    .learn .zh { color: rgba(226,232,240,0.7); font-size: 13px; margin-bottom: 12px; }
+    .learn .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .learn button {
+      appearance: none; border: 0; border-radius: 999px; padding: 9px 12px;
+      font: inherit; font-size: 13px; color: #e2e8f0;
+      background: rgba(255,255,255,0.08); cursor: pointer;
+    }
+    .learn button.primary {
+      background: linear-gradient(180deg, #7eb6ff, #5b91f0); color: #061018; font-weight: 650;
+    }
+    .learn button:hover { filter: brightness(1.08); }
+    .learn .list {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+      max-height: 220px; overflow: auto; padding-right: 2px;
+    }
+    .learn .list button {
+      border-radius: 12px; text-align: left; padding: 8px 10px; font-size: 12px;
+      background: rgba(255,255,255,0.05);
+    }
+    .learn .list button.active {
+      outline: 1px solid rgba(167,139,250,0.7);
+      background: rgba(167,139,250,0.18);
+    }
+    .learn .meta {
+      margin-top: 8px; font-size: 11px; color: rgba(226,232,240,0.45);
+    }
+    @media (max-width: 820px) {
+      .learn {
+        right: 12px; left: 12px; top: auto; bottom: 78px; transform: none;
+        width: auto; max-height: 42vh; overflow: auto;
+      }
+    }
+
+
+
+    .mic-wrap {
+      position: fixed; left: 14px; bottom: 14px; z-index: 8;
+      display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+    }
+    .mic-btn {
+      appearance: none; border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px; padding: 12px 16px; font: inherit; font-size: 14px;
+      color: #e2e8f0; background: rgba(15,23,42,0.72); backdrop-filter: blur(10px);
+      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .mic-btn.listening {
+      background: rgba(239,68,68,0.28); border-color: rgba(248,113,113,0.7);
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.15);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .mic-status {
+      max-width: min(280px, 70vw); font-size: 12px; color: rgba(226,232,240,0.7);
+      background: rgba(15,23,42,0.55); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 8px 10px; line-height: 1.45;
+    }
+
+    .dlg-btn {
+      position: fixed; top: 14px; left: 14px; z-index: 11;
+      appearance: none; border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 12px;
+      color: #e2e8f0; background: rgba(15,23,42,0.72); backdrop-filter: blur(10px);
+      cursor: pointer;
+    }
+    .dlg-panel {
+      position: fixed; top: 52px; left: 14px; z-index: 11;
+      width: min(340px, calc(100vw - 28px)); max-height: min(70vh, 520px);
+      overflow: auto; padding: 12px; border-radius: 16px;
+      background: rgba(15,23,42,0.88); border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px); color: #e2e8f0; display: none;
+    }
+    .dlg-panel.open { display: block; }
+    .dlg-panel h3 {
+      margin: 0 0 8px; font-size: 13px; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #a5b4fc;
+    }
+    .dlg-panel .dlg-item {
+      width: 100%; text-align: left; appearance: none; border: 0;
+      border-radius: 12px; padding: 10px 10px; margin-bottom: 6px;
+      background: rgba(255,255,255,0.05); color: #e2e8f0; cursor: pointer;
+      font: inherit; font-size: 13px; line-height: 1.35;
+    }
+    .dlg-panel .dlg-item:hover { background: rgba(167,139,250,0.22); }
+    .dlg-panel .dlg-item .say {
+      color: #67e8f9; font-weight: 650; display: block; margin-bottom: 2px;
+    }
+    .dlg-panel .dlg-item .reply {
+      color: rgba(226,232,240,0.75); font-size: 12px;
+    }
+    .dlg-panel .dlg-tip {
+      font-size: 11px; color: rgba(226,232,240,0.45); margin-bottom: 8px;
+    }
+    .dock-toggle {
+      position: fixed; z-index: 10; appearance: none; border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 12px;
+      color: #e2e8f0; background: rgba(15,23,42,0.72); backdrop-filter: blur(10px);
+      cursor: pointer;
+    }
+    .dock-toggle.top { top: 14px; right: 14px; }
+    .dock-toggle.learn-btn { right: 14px; top: 54px; }
+    .dock-toggle.bottom { left: auto; right: 14px; bottom: 14px; transform: none; }
+    body.hide-picker .picker, body.hide-picker .hint { display: none; }
+    body.hide-learn .learn { display: none; }
+    body.hide-actions .panel { display: none; }
+    body.hide-picker .dock-toggle.top { opacity: 0.85; }
+    .learn.collapsed-inner .list { display: none; }
+
+    .panel {
+      position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+      z-index: 6; display: flex; gap: 10px; padding: 10px; border-radius: 999px;
+      background: rgba(15,23,42,0.55); border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+    }
+    .panel button {
+      appearance: none; border: 0; border-radius: 999px; padding: 10px 14px;
+      font: inherit; font-size: 13px; color: #e2e8f0;
+      background: rgba(255,255,255,0.06); cursor: pointer; transition: 0.15s ease;
+    }
+    .panel button:hover { background: rgba(167,139,250,0.28); transform: translateY(-1px); }
+
+
+    .fx-prop {
+      position: fixed; z-index: 7; pointer-events: none;
+      font-size: 42px; line-height: 1;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.35));
+    }
+    .fx-prop.ball { animation: ballBounce 3.2s ease-in-out forwards; }
+
+    .fx-prop.reject { animation: foodReject 2.6s ease-out forwards; }
+    #pet.reject-shake .figure { animation: rejectShake 1.1s ease-in-out; }
+    @keyframes foodReject {
+      0% { transform: translate(-50%, -40%) scale(0.6) rotate(0deg); opacity: 0; }
+      25% { opacity: 1; transform: translate(-50%, 0) scale(1.05) rotate(-8deg); }
+      55% { transform: translate(40px, -20%) scale(1) rotate(12deg); }
+      100% { transform: translate(90px, -80%) scale(0.7) rotate(25deg); opacity: 0; }
+    }
+    @keyframes rejectShake {
+      0%,100% { transform: scaleX(var(--face,1)) translateX(0); }
+      20% { transform: scaleX(var(--face,1)) translateX(-8px); }
+      40% { transform: scaleX(var(--face,1)) translateX(8px); }
+      60% { transform: scaleX(var(--face,1)) translateX(-6px); }
+      80% { transform: scaleX(var(--face,1)) translateX(6px); }
+    }
+    .fx-prop.food { animation: foodDrop 2.8s ease-out forwards; font-size: 46px; }
+    .fx-prop.zzz { animation: zzzFloat 4.4s ease-out forwards; font-size: 28px; color: #c4b5fd; }
+    .fx-prop.pethand { animation: petHand 2.2s ease-out forwards; font-size: 36px; }
+    .fx-burst {
+      position: fixed; z-index: 7; pointer-events: none; font-size: 22px;
+      animation: burstOut 1.8s ease-out forwards;
+    }
+    @keyframes ballBounce {
+      0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+      15% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+      35% { transform: translate(40px, -90px) scale(1); }
+      55% { transform: translate(90px, 10px) scale(1); }
+      75% { transform: translate(140px, -70px) scale(1); }
+      100% { transform: translate(190px, 30px) scale(0.85); opacity: 0; }
+    }
+    @keyframes foodDrop {
+      0% { transform: translate(-50%, -120%) scale(0.4) rotate(-20deg); opacity: 0; }
+      25% { opacity: 1; transform: translate(-50%, -40%) scale(1.1) rotate(8deg); }
+      55% { transform: translate(-50%, 0) scale(1) rotate(0deg); }
+      75% { transform: translate(-50%, -18%) scale(0.95); }
+      100% { transform: translate(-30%, -80%) scale(0.4); opacity: 0; }
+    }
+    @keyframes zzzFloat {
+      0% { transform: translate(-50%, 0) scale(0.7); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translate(30px, -90px) scale(1.2); opacity: 0; }
+    }
+    @keyframes petHand {
+      0% { transform: translate(-50%, -20%) rotate(-25deg) scale(0.8); opacity: 0; }
+      25% { opacity: 1; transform: translate(-10%, 10%) rotate(10deg) scale(1); }
+      50% { transform: translate(10%, -5%) rotate(-8deg) scale(1); }
+      100% { transform: translate(20%, -40%) rotate(0deg) scale(0.9); opacity: 0; }
+    }
+    @keyframes burstOut {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2); opacity: 0; }
+    }
+
+    .heart {
+      position: fixed; z-index: 7; pointer-events: none; font-size: 18px;
+      animation: heartUp 1.8s ease-out forwards;
+    }
+
+    @keyframes shine { to { background-position: 300% 50%; } }
+    @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes drift {
+      from { transform: translate(-20%, -10%) scale(1); }
+      to { transform: translate(15%, 20%) scale(1.15); }
+    }
+    @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:.9} }
+    @keyframes blink {
+      0%,46%,48%,96%,100%{transform:scaleY(1)} 47%,97%{transform:scaleY(.1)}
+    }
+    @keyframes legL { 0%,100%{transform:rotate(22deg)} 50%{transform:rotate(-22deg)} }
+    @keyframes legR { 0%,100%{transform:rotate(-22deg)} 50%{transform:rotate(22deg)} }
+    @keyframes armL { 0%,100%{transform:rotate(-18deg)} 50%{transform:rotate(18deg)} }
+    @keyframes armR { 0%,100%{transform:rotate(18deg)} 50%{transform:rotate(-18deg)} }
+    @keyframes bob { 0%,100%{transform:scaleX(var(--face,1)) translateY(0)} 50%{transform:scaleX(var(--face,1)) translateY(-3px)} }
+    @keyframes hop {
+      0%{transform:scaleX(var(--face,1)) translateY(0)} 40%{transform:scaleX(var(--face,1)) translateY(-16px)} 100%{transform:scaleX(var(--face,1)) translateY(0)}
+    }
+    @keyframes tail { 0%,100%{transform:rotate(-18deg)} 50%{transform:rotate(18deg)} }
+    @keyframes wag { 0%,100%{transform:rotate(-28deg)} 50%{transform:rotate(28deg)} }
+    @keyframes heartUp {
+      0%{opacity:1;transform:translate(-50%,0) scale(.8)}
+      100%{opacity:0;transform:translate(-50%,-60px) scale(1.3)}
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { animation:none!important; transition:none!important; }
+      body { cursor:auto; }
+      .cursor { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fx"></canvas>
+  <div class="aura"></div>
+  <div class="aura two"></div>
+  <div class="cursor" id="cursor"></div>
+
+  
+  
+  <button type="button" class="dlg-btn" id="dlgListBtn">对话列表</button>
+  <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
+    <h3>Supported Dialogs</h3>
+    <div class="dlg-tip">Click a line to hear the reply. Say the blue English with the mic.</div>
+    <div id="dlgList"></div>
+  </div>
+
+<button type="button" class="dock-toggle top" id="togglePicker" title="形象菜单">形象</button>
+  <button type="button" class="dock-toggle learn-btn" id="toggleLearn" title="英语菜单">英语</button>
+  <button type="button" class="dock-toggle bottom" id="toggleActions" title="操作菜单">操作</button>
+
+<div class="picker" id="picker"></div>
+  <div class="hint">长按宠物跟随 · 松开后自己闲逛</div>
+
+  <div class="scene" id="scene" aria-hidden="true">
+    <div class="sky"></div>
+    <div class="sun"></div>
+    <div class="cloud a"></div>
+    <div class="cloud b"></div>
+    <div class="hill back"></div>
+    <div class="hill"></div>
+    <div class="ground"></div>
+    <div class="decor d1" id="decor1">🌳</div>
+    <div class="decor d2" id="decor2">🌸</div>
+    <div class="decor d3" id="decor3">🏡</div>
+    <div class="decor d4" id="decor4">🌿</div>
+  </div>
+
+  <div id="pet" aria-label="互动宠物">
+    <div class="bubble" id="bubble">嗨～</div>
+    <div class="figure" id="figure"></div>
+    <div class="shadow"></div>
+  </div>
+
+
+  <aside class="learn" id="learn">
+    <h2>English · Phonics</h2>
+    <div class="word" id="enWord">Hello</div>
+    <div class="ipa" id="enIpa">/həˈloʊ/</div>
+    <div class="phonics" id="enPhonics">he-LLO</div>
+    <div class="zh" id="enZh">你好</div>
+    <div class="row">
+      <button type="button" class="primary" id="btnPlay">▶ 标准发音</button>
+      <button type="button" id="btnPhonics">拼读（音标）</button>
+      <button type="button" id="btnSlow">慢速再听</button>
+      <button type="button" id="btnNext">下一条</button>
+    </div>
+    <div class="list" id="enList"></div>
+    <div class="meta">可爱童声音色 AnaNeural · 非浏览器简易 TTS</div>
+  </aside>
+
+
+  <div class="mic-wrap" id="micWrap">
+    <button type="button" class="mic-btn" id="micBtn">🎤</button>
+  </div>
+
+  <div class="panel">
+    <button type="button" data-act="pet">摸摸</button>
+    <button type="button" data-act="feed">喂食</button>
+    <button type="button" data-act="play">玩耍</button>
+    <button type="button" data-act="sleep">睡觉</button>
+  </div>
+
+  <script>
+    const FORMS = [
+      { id: 'cat', name: '小猫', emoji: '🐱' },
+      { id: 'dog', name: '小狗', emoji: '🐶' },
+      { id: 'bunny', name: '兔子', emoji: '🐰' },
+      { id: 'fox', name: '狐狸', emoji: '🦊' },
+      { id: 'panda', name: '熊猫', emoji: '🐼' }
+    ];
+
+    const canvas = document.getElementById('fx');
+    const ctx = canvas.getContext('2d');
+    const cursor = document.getElementById('cursor');
+    const pet = document.getElementById('pet');
+    const figure = document.getElementById('figure');
+    const bubble = document.getElementById('bubble');
+    const picker = document.getElementById('picker');
+
+    let w = 0, h = 0, particles = [], mouse = { x: 0, y: 0 }, t = 0;
+
+    let currentAudio = null;
+
+    const state = {
+      x: innerWidth * 0.7,
+      y: innerHeight * 0.72,
+      vx: 0,
+      vy: 0,
+      facing: 1,
+      mode: 'wander', // wander | follow | sleep
+      target: { x: 0, y: 0 },
+      nextWanderAt: 0,
+      moodUntil: 0,
+      form: 'cat',
+      longPressTimer: null,
+      pressing: false,
+      holdUntil: 0,
+      holdPrevMode: null
+    };
+
+    function buildFigure(id) {
+      figure.className = 'figure skin-' + id;
+      figure.innerHTML = `
+        <div class="part tail"></div>
+        <div class="part arm-l"></div>
+        <div class="part arm-r"></div>
+        <div class="part leg-l"><div class="foot"></div></div>
+        <div class="part leg-r"><div class="foot"></div></div>
+        <div class="part torso"></div>
+        <div class="part head">
+          <div class="ear-l"></div>
+          <div class="ear-r"></div>
+          ${id === 'fox' ? '<div class="cheek l"></div><div class="cheek r"></div>' : ''}
+          <div class="eye-l"></div>
+          <div class="eye-r"></div>
+          <div class="blush-l"></div>
+          <div class="blush-r"></div>
+          <div class="mouth"></div>
+        </div>
+      `;
+    }
+
+    function renderPicker() {
+      picker.innerHTML = FORMS.map((f) => `
+        <button type="button" data-form="${f.id}" class="${f.id === state.form ? 'active' : ''}">
+          <span class="emoji">${f.emoji}</span>${f.name}
+        </button>
+      `).join('');
+    }
+
+    function applyEnv(id) {
+      document.body.classList.remove('env-cat','env-dog','env-bunny','env-fox','env-panda');
+      document.body.classList.add('env-' + id);
+      const themes = {
+        cat: ['🌳', '🧶', '🏠', '🌿'],
+        dog: ['🌳', '🎾', '🏡', '🌼'],
+        bunny: ['🌳', '🌸', '🥕', '🌿'],
+        fox: ['🌲', '🍂', '🍄', '🌿'],
+        panda: ['🎋', '🐼', '🍃', '🌸']
+      };
+      const t = themes[id] || themes.cat;
+      const ids = ['decor1','decor2','decor3','decor4'];
+      ids.forEach((nid, i) => {
+        const el = document.getElementById(nid);
+        if (el) el.textContent = t[i];
+      });
+    }
+
+    function setForm(id) {
+      state.form = id;
+      buildFigure(id);
+      applyEnv(id);
+      renderPicker();
+      say(FORMS.find((f) => f.id === id).name + '登场！');
+      localStorage.setItem('proto-pet-form', id);
+    }
+
+    function say(text, ms = 1400) {
+      bubble.textContent = text;
+      bubble.classList.add('show');
+      clearTimeout(say._t);
+      say._t = setTimeout(() => bubble.classList.remove('show'), ms);
+    }
+
+
+    function spawnProp(emoji, cls, x, y, ms = 3200) {
+      const el = document.createElement('div');
+      el.className = 'fx-prop ' + cls;
+      el.textContent = emoji;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), ms);
+      return el;
+    }
+
+    function burst(emojis, x, y) {
+      emojis.forEach((e, i) => {
+        const el = document.createElement('div');
+        el.className = 'fx-burst';
+        el.textContent = e;
+        const ang = (Math.PI * 2 * i) / emojis.length;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.setProperty('--dx', Math.cos(ang) * 56 + 'px');
+        el.style.setProperty('--dy', Math.sin(ang) * 40 - 20 + 'px');
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1800);
+      });
+    }
+
+    function actionVisual(kind) {
+      const x = state.x;
+      const y = state.y - 70;
+      if (kind === 'play' || kind === 'lets_play') {
+        spawnProp('⚽', 'ball', x + 30, y + 20, 3400);
+        burst(['✨', '⭐', '💫'], x, y);
+        setHappy(2400);
+      } else if (kind === 'feed' || kind === 'hungry' || kind === 'i_am_hungry') {
+        const foods = { cat: '🐟', dog: '🦴', bunny: '🥕', fox: '🍗', panda: '🎋' };
+        const food = foods[state.form] || '🍎';
+        spawnProp(food, 'food', x, y - 10, 3000);
+        setTimeout(() => burst(['😋', '✨', '💖'], x, y), 1000);
+        setHappy(2400);
+      } else if (kind === 'sleep' || kind === 'good_night' || kind === 'i_am_sleepy') {
+        spawnProp('Z', 'zzz', x + 24, y - 10, 4400);
+        setTimeout(() => spawnProp('z', 'zzz', x + 40, y - 24, 4000), 560);
+        setTimeout(() => spawnProp('💤', 'zzz', x + 18, y - 36, 4000), 1120);
+      } else if (kind === 'pet' || kind === 'love' || kind === 'i_love_you') {
+        spawnProp('🤚', 'pethand', x - 10, y - 8, 2400);
+        hearts(5);
+        burst(['💗', '✨', '💞'], x, y);
+      }
+    }
+
+    function hearts(n = 3) {
+      for (let i = 0; i < n; i++) {
+        const el = document.createElement('div');
+        el.className = 'heart';
+        el.textContent = ['💗','✨','💜'][i % 3];
+        el.style.left = state.x + (Math.random() * 40 - 20) + 'px';
+        el.style.top = state.y - 90 + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1800);
+      }
+    }
+
+
+    function holdStill(ms = 3600) {
+      const now = performance.now();
+      if (!state.holdUntil || now >= state.holdUntil) {
+        state.holdPrevMode = state.mode === 'follow' ? 'wander' : state.mode;
+      }
+      // freeze in place; keep sleep if already sleeping
+      if (state.mode !== 'sleep') state.mode = 'hold';
+      state.vx = 0;
+      state.vy = 0;
+      state.holdUntil = now + ms;
+      pet.classList.remove('walk');
+      clearTimeout(holdStill._t);
+      holdStill._t = setTimeout(() => {
+        if (performance.now() < state.holdUntil - 30) return;
+        if (state.mode === 'hold') {
+          state.mode = state.holdPrevMode === 'sleep' ? 'wander' : (state.holdPrevMode || 'wander');
+          if (state.mode === 'wander') pickWanderTarget();
+        }
+        state.holdPrevMode = null;
+      }, ms + 30);
+    }
+
+    function setHappy(ms = 1400) {
+      pet.classList.add('happy');
+      state.moodUntil = performance.now() + ms;
+    }
+
+    function pickWanderTarget() {
+      state.target.x = 80 + Math.random() * (w - 160);
+      state.target.y = 140 + Math.random() * (h - 220);
+      state.nextWanderAt = performance.now() + 1800 + Math.random() * 3200;
+    }
+
+
+    // Voice dialog: mic -> match preset -> English reply (neural audio)
+
+    let FOODS = null;
+    async function loadFoods() {
+      const res = await fetch('foods.json');
+      FOODS = await res.json();
+    }
+    loadFoods().then(() => { if (document.getElementById("dlgPanel").classList.contains("open")) renderDialogList(); });
+
+    function findFood(text) {
+      if (!FOODS || !FOODS.foods) return null;
+      const t = (text || '').toLowerCase();
+      // prefer longer trigger matches
+      let best = null, bestLen = 0;
+      for (const f of FOODS.foods) {
+        for (const trig of f.triggers) {
+          const g = trig.toLowerCase();
+          if (t.includes(g) && g.length >= bestLen) {
+            best = f; bestLen = g.length;
+          }
+        }
+      }
+      return best;
+    }
+
+    function petLikesFood(food) {
+      if (!FOODS || !food) return true;
+      const taste = FOODS.petTaste[state.form] || { like: [], dislike: [] };
+      if (taste.dislike && taste.dislike.includes(food.id)) return false;
+      if (taste.like && taste.like.length && !taste.like.includes(food.id)) {
+        // not explicitly liked and not disliked -> mild like for fruits etc.
+        // if it's in another pet specialty only, still allow unless disliked
+        return true;
+      }
+      return true;
+    }
+
+    function playLine(line) {
+      if (!line) return;
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      const audio = new Audio(line.audio);
+      currentAudio = audio;
+      audio.play().catch(() => {});
+      say(line.text, 4800);
+    }
+
+    function eatFood(food) {
+      if (!food) {
+        holdStill(2800);
+        playLine(FOODS && FOODS.askFood);
+        return;
+      }
+      const likes = petLikesFood(food);
+      holdStill(likes ? 4000 : 3600);
+      const x = state.x, y = state.y - 70;
+      if (likes) {
+        spawnProp(food.emoji, 'food', x, y - 10, 3000);
+        setTimeout(() => burst(['😋', '✨', '💖'], x, y), 1000);
+        setHappy(2400);
+        playLine(food.accept || (FOODS && FOODS.genericAccept));
+      } else {
+        spawnProp(food.emoji, 'reject', x, y - 10, 2800);
+        pet.classList.add('reject-shake');
+        setTimeout(() => pet.classList.remove('reject-shake'), 1200);
+        burst(['🙅', '💨', '✖️'], x, y);
+        playLine(food.reject || (FOODS && FOODS.genericReject));
+      }
+    }
+
+    function maybeHandleEatCommand(text) {
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return false;
+      // eat / have / feed + food
+      const isEat = /\b(eat|have|feed)\b/.test(t) || t.startsWith('eat ') || t.includes(' eat ');
+      if (!isEat) {
+        // bare food name only if preceded by eat intent words already required
+        return false;
+      }
+      const food = findFood(t);
+      eatFood(food);
+      return true;
+    }
+
+
+    let DIALOGS = null;
+    async function loadDialogs() {
+      const res = await fetch('dialogs.json');
+      DIALOGS = await res.json();
+    }
+    loadDialogs().then(() => renderDialogList());
+
+    // Dialog list panel (top-left)
+    function renderDialogList() {
+      const box = document.getElementById('dlgList');
+      if (!box || !DIALOGS || !DIALOGS.dialogs) return;
+      const dialogHtml = DIALOGS.dialogs
+        .filter((d) => d.id !== 'fallback')
+        .map((d) => {
+          const say = (d.triggers && d.triggers[0]) ? d.triggers[0] : d.id;
+          const more = (d.triggers && d.triggers.length > 1)
+            ? ` · also: ${d.triggers.slice(1, 3).join(', ')}`
+            : '';
+          return `<button type="button" class="dlg-item" data-dlg="${d.id}">
+            <span class="say">Say: ${say}${more}</span>
+            <span class="reply">Reply: ${d.reply}${d.zh ? '（' + d.zh + '）' : ''}</span>
+          </button>`;
+        }).join('');
+      let foodHtml = '';
+      if (FOODS && FOODS.foods) {
+        foodHtml = `<div class="dlg-tip" style="margin-top:10px">Eat foods (try: eat apple)</div>` + FOODS.foods.map((f) => {
+          return `<button type="button" class="dlg-item" data-eat="${f.id}">
+            <span class="say">Say: eat ${f.name} ${f.emoji}</span>
+            <span class="reply">Like / dislike depends on pet</span>
+          </button>`;
+        }).join('');
+      }
+      box.innerHTML = dialogHtml + foodHtml;
+    }
+
+    const dlgListBtn = document.getElementById('dlgListBtn');
+    const dlgPanel = document.getElementById('dlgPanel');
+    dlgListBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      renderDialogList();
+      dlgPanel.classList.toggle('open');
+    });
+    document.getElementById('dlgList').addEventListener('click', (e) => {
+      const eatBtn = e.target.closest('button[data-eat]');
+      if (eatBtn && FOODS) {
+        const f = FOODS.foods.find((x) => x.id === eatBtn.dataset.eat);
+        if (f) eatFood(f);
+        return;
+      }
+      const btn = e.target.closest('button[data-dlg]');
+      if (!btn || !DIALOGS) return;
+      const d = DIALOGS.dialogs.find((x) => x.id === btn.dataset.dlg);
+      if (d) speakDialog(d);
+    });
+    document.addEventListener('click', (e) => {
+      if (!dlgPanel.classList.contains('open')) return;
+      if (e.target.closest('#dlgPanel') || e.target.closest('#dlgListBtn')) return;
+      dlgPanel.classList.remove('open');
+    });
+
+
+
+    function matchDialog(text) {
+      if (!DIALOGS || !DIALOGS.dialogs) return null;
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return null;
+      let best = null;
+      let bestLen = 0;
+      for (const d of DIALOGS.dialogs) {
+        if (d.id === 'fallback') continue;
+        for (const trig of d.triggers) {
+          const g = trig.toLowerCase();
+          if (t.includes(g) && g.length >= bestLen) {
+            best = d;
+            bestLen = g.length;
+          }
+        }
+      }
+      return best || DIALOGS.dialogs.find((d) => d.id === 'fallback');
+    }
+
+    function speakDialog(d) {
+      if (!d) return;
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      const audio = new Audio(d.audio);
+      currentAudio = audio;
+      audio.play().catch(() => {});
+      say(d.reply, 5200);
+      setHappy(1800);
+      if (d.id === 'lets_play' || d.id === 'play') {
+        if (state.mode === 'sleep') pet.classList.remove('sleep');
+        holdStill(4000);
+        actionVisual('play');
+      } else if (d.id === 'good_night' || d.id === 'i_am_sleepy' || d.id === 'sleep') {
+        state.holdUntil = 0;
+        actionVisual('sleep');
+        state.mode = 'sleep';
+        pet.classList.add('sleep');
+        pet.classList.remove('walk', 'happy');
+        state.vx = 0; state.vy = 0;
+      } else if (d.id === 'i_am_hungry' || d.id === 'hungry') {
+        holdStill(3600);
+        actionVisual('feed');
+      } else if (d.id === 'i_love_you' || d.id === 'love') {
+        holdStill(3200);
+        actionVisual('pet');
+      } else if (d.id === 'hello' || d.id === 'greet' || d.id === 'good_morning') {
+        holdStill(2800);
+        hearts(3);
+        burst(['👋', '✨', '💖'], state.x, state.y - 70);
+      }
+    }
+
+    let lastHeard = '';
+    let recognizing = false;
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    if (SpeechRec) {
+      recognition = new SpeechRec();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 3;
+      recognition.continuous = false;
+      recognition.onstart = () => {
+        recognizing = true;
+        document.getElementById('micBtn').classList.add('listening');
+        document.getElementById('micBtn').textContent = '🎤...';
+      };
+      recognition.onend = () => {
+        recognizing = false;
+        document.getElementById('micBtn').classList.remove('listening');
+        document.getElementById('micBtn').textContent = '🎤';
+      };
+      recognition.onerror = (e) => {
+        recognizing = false;
+        document.getElementById('micBtn').classList.remove('listening');
+        document.getElementById('micBtn').textContent = '🎤';
+        const msg = {
+          'not-allowed': 'Microphone blocked. Please allow mic access and try again.',
+          'no-speech': 'No speech heard. Please try again.',
+          'audio-capture': 'No microphone found.',
+          'network': 'Speech recognition needs network. Check connection.'
+        }[e.error] || ('识别出错：' + e.error);
+        say(msg, 2400);
+      };
+      recognition.onresult = (ev) => {
+        const alts = [];
+        for (let i = 0; i < ev.results[0].length; i++) alts.push(ev.results[0][i].transcript);
+        lastHeard = alts[0] || '';
+        // Eat commands first: "eat apple"
+        let ate = false;
+        for (const a of alts) {
+          if (maybeHandleEatCommand(a)) { ate = true; break; }
+        }
+        if (ate) return;
+        let matched = null;
+        for (const a of alts) {
+          matched = matchDialog(a);
+          if (matched && matched.id !== 'fallback') break;
+        }
+        if (!matched) matched = matchDialog(lastHeard);
+        speakDialog(matched);
+      };
+    }
+
+    document.getElementById('micBtn').addEventListener('click', () => {
+      if (!recognition) {
+        say('Please use Chrome or Edge', 2400);
+        return;
+      }
+      if (recognizing) {
+        recognition.stop();
+        return;
+      }
+      try {
+        // Prefer Chinese; English triggers still match via lowercase includes
+        recognition.lang = 'en-US';
+        recognition.start();
+      } catch (err) {
+        say('Cannot start microphone', 2400);
+      }
+    });
+
+
+    let ACTION_LINES = null;
+
+    async function loadActions() {
+      const res = await fetch('actions.json');
+      ACTION_LINES = await res.json();
+    }
+    loadActions();
+
+    function speakAction(kind) {
+      if (!ACTION_LINES || !ACTION_LINES.actions || !ACTION_LINES.actions[kind]) return;
+      const list = ACTION_LINES.actions[kind];
+      const it = list[Math.floor(Math.random() * list.length)];
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      const audio = new Audio(it.audio);
+      currentAudio = audio;
+      audio.play().catch(() => {});
+      say(it.text, 4400);
+      // sync learning panel if possible
+      if (typeof showWord === 'function' && WORDS && WORDS.items) {
+        // keep panel as-is; bubble shows English
+      }
+    }
+
+    function act(kind) {
+      if (kind === 'pet') {
+        holdStill(3200);
+        setHappy(1800);
+        actionVisual('pet');
+        speakAction('pet');
+      } else if (kind === 'feed') {
+        holdStill(3600);
+        setHappy(2000);
+        actionVisual('feed');
+        speakAction('feed');
+      } else if (kind === 'play') {
+        if (state.mode === 'sleep') pet.classList.remove('sleep');
+        holdStill(4000);
+        setHappy(2000);
+        actionVisual('play');
+        // no knockback while showing play effect
+        speakAction('play');
+      } else if (kind === 'sleep') {
+        state.mode = 'sleep';
+        state.holdUntil = 0;
+        pet.classList.add('sleep');
+        pet.classList.remove('walk', 'happy');
+        state.vx = 0; state.vy = 0;
+        actionVisual('sleep');
+        speakAction('sleep');
+        setTimeout(() => {
+          if (state.mode === 'sleep') {
+            pet.classList.remove('sleep');
+            state.mode = 'wander';
+            pickWanderTarget();
+            say('Good morning', 3600);
+            const audio = new Audio('audio/good_morning.mp3');
+            currentAudio = audio;
+            audio.play().catch(() => {});
+          }
+        }, 9000);
+      }
+    }
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      particles = Array.from({ length: Math.min(110, Math.floor(w * h / 15000)) }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        z: Math.random() * 0.8 + 0.2,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        hue: 180 + Math.random() * 140
+      }));
+      state.x = Math.min(Math.max(60, state.x), w - 60);
+      state.y = Math.min(Math.max(120, state.y), h - 40);
+      pickWanderTarget();
+    }
+
+    function drawFx() {
+      t += 0.016;
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(148,163,184,0.05)';
+      const gap = 56;
+      const ox = (mouse.x * 0.02) % gap;
+      const oy = (mouse.y * 0.02) % gap;
+      for (let x = -gap + ox; x < w + gap; x += gap) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      }
+      for (let y = -gap + oy; y < h + gap; y += gap) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+      for (const p of particles) {
+        p.x += p.vx + Math.sin(t + p.y * 0.01) * 0.15;
+        p.y += p.vy + Math.cos(t + p.x * 0.01) * 0.15;
+        if (p.x < -20) p.x = w + 20;
+        if (p.x > w + 20) p.x = -20;
+        if (p.y < -20) p.y = h + 20;
+        if (p.y > h + 20) p.y = -20;
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${p.hue}, 90%, 70%, ${0.3 + p.z * 0.4})`;
+        ctx.shadowColor = `hsla(${p.hue}, 90%, 70%, 0.7)`;
+        ctx.shadowBlur = 10;
+        ctx.arc(p.x, p.y, 1.2 + p.z * 2.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+    }
+
+    function tickPet(now) {
+      if (now > state.moodUntil) pet.classList.remove('happy');
+
+      // resume from hold if timer elapsed (safety)
+      if (state.mode === 'hold' && performance.now() >= state.holdUntil) {
+        state.mode = state.holdPrevMode === 'sleep' ? 'wander' : (state.holdPrevMode || 'wander');
+        state.holdPrevMode = null;
+        if (state.mode === 'wander') pickWanderTarget();
+      }
+
+      let tx = state.x, ty = state.y;
+      if (state.mode === 'hold') {
+        tx = state.x; ty = state.y;
+        state.vx = 0; state.vy = 0;
+      } else if (state.mode === 'follow') {
+        tx = mouse.x;
+        ty = mouse.y + 10;
+      } else if (state.mode === 'wander') {
+        if (now > state.nextWanderAt || Math.hypot(state.target.x - state.x, state.target.y - state.y) < 18) {
+          pickWanderTarget();
+        }
+        tx = state.target.x;
+        ty = state.target.y;
+      }
+
+      if (state.mode !== 'sleep' && state.mode !== 'hold') {
+        const dx = tx - state.x;
+        const dy = ty - state.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const speed = state.mode === 'follow' ? 1.6 : 0.55;
+        if (dist > 8) {
+          state.vx += (dx / dist) * speed * 0.35;
+          state.vy += (dy / dist) * speed * 0.35;
+        }
+      } else {
+        state.vx = 0;
+        state.vy = 0;
+      }
+
+      state.vx *= 0.88;
+      state.vy *= 0.88;
+      state.x += state.vx;
+      state.y += state.vy;
+      state.x = Math.max(50, Math.min(w - 50, state.x));
+      state.y = Math.max(120, Math.min(h - 30, state.y));
+
+      const moving = Math.hypot(state.vx, state.vy) > 0.18 && state.mode !== 'sleep';
+      pet.classList.toggle('walk', moving);
+      if (Math.abs(state.vx) > 0.08) state.facing = state.vx < 0 ? -1 : 1;
+
+      pet.style.left = state.x + 'px';
+      pet.style.top = state.y + 'px';
+      pet.style.transform = 'translate(-50%, -100%)';
+      // face left/right on body only, keep bubble text unmirrored
+      figure.style.setProperty('--face', String(state.facing));
+      figure.style.transform = `scaleX(${state.facing})`;
+    }
+
+    function loop(now) {
+      drawFx();
+      tickPet(now || performance.now());
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    pet.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      pet.setPointerCapture(e.pointerId);
+      state.pressing = true;
+      clearTimeout(state.longPressTimer);
+      state.longPressTimer = setTimeout(() => {
+        if (!state.pressing) return;
+        state.mode = 'follow';
+        pet.classList.remove('sleep');
+        say('跟着你～');
+      }, 380);
+    });
+
+    function endPress() {
+      if (!state.pressing) return;
+      const wasFollow = state.mode === 'follow';
+      state.pressing = false;
+      clearTimeout(state.longPressTimer);
+      if (wasFollow) {
+        state.mode = 'wander';
+        pickWanderTarget();
+        say('我自己逛逛');
+      } else {
+        // short click: randomly pick and read an English item
+        playRandomWord();
+      }
+    }
+
+    pet.addEventListener('pointerup', endPress);
+    pet.addEventListener('pointercancel', endPress);
+
+    picker.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-form]');
+      if (!btn) return;
+      setForm(btn.dataset.form);
+    });
+
+    document.querySelectorAll('.panel button').forEach((btn) => {
+      btn.addEventListener('click', () => act(btn.dataset.act));
+    });
+
+
+    // English learning (neural audio, not browser TTS)
+    let WORDS = { items: [] };
+    let wordIndex = 0;
+    // currentAudio declared earlier for action speech
+
+
+    async function loadWords() {
+      const res = await fetch('words.json');
+      WORDS = await res.json();
+      const list = document.getElementById('enList');
+      list.innerHTML = WORDS.items.map((it, i) =>
+        `<button type="button" data-i="${i}">${it.text}</button>`
+      ).join('');
+      showWord(0);
+    }
+
+    function showWord(i) {
+      wordIndex = (i + WORDS.items.length) % WORDS.items.length;
+      const it = WORDS.items[wordIndex];
+      document.getElementById('enWord').textContent = it.text;
+      const segs = it.ipaSegments || [];
+      document.getElementById('enIpa').innerHTML = segs.length
+        ? segs.map((s) => `<span class="ipa-chip">/${s}/</span>`).join(' ')
+        : it.ipa;
+      document.getElementById('enPhonics').textContent = '音标逐个读 · ' + it.ipa;
+      document.getElementById('enZh').textContent = it.zh;
+      document.querySelectorAll('#enList button').forEach((b) => {
+        b.classList.toggle('active', Number(b.dataset.i) === wordIndex);
+      });
+    }
+
+    function stopAudio() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+    }
+
+    function playWord({ slow = false, phonics = false } = {}) {
+      const it = WORDS.items[wordIndex];
+      if (!it) return;
+      stopAudio();
+      const src = phonics && it.phonicsAudio ? it.phonicsAudio : it.audio;
+      const audio = new Audio(src);
+      audio.playbackRate = slow ? 0.78 : 1;
+      currentAudio = audio;
+      audio.play().catch(() => {});
+      say(phonics ? ('拼读：' + it.phonics) : it.text);
+      setHappy(1400);
+    }
+
+    function playRandomWord() {
+      if (!WORDS.items.length) return;
+      const i = Math.floor(Math.random() * WORDS.items.length);
+      showWord(i);
+      playWord();
+    }
+
+    document.getElementById('btnPlay').addEventListener('click', () => playWord());
+    document.getElementById('btnPhonics').addEventListener('click', () => playWord({ phonics: true }));
+    document.getElementById('btnSlow').addEventListener('click', () => playWord({ slow: true }));
+    document.getElementById('btnNext').addEventListener('click', () => { showWord(wordIndex + 1); playWord(); });
+
+    function applyDock(key, hidden) {
+      document.body.classList.toggle('hide-' + key, hidden);
+      localStorage.setItem('proto-hide-' + key, hidden ? '1' : '0');
+      const map = { picker: 'togglePicker', learn: 'toggleLearn', actions: 'toggleActions' };
+      const labels = { picker: '形象', learn: '英语', actions: '操作' };
+      const btn = document.getElementById(map[key]);
+      if (btn) btn.textContent = (hidden ? '展开' : '收起') + labels[key];
+    }
+    ['picker','learn','actions'].forEach((key) => {
+      // default collapsed unless user explicitly expanded (saved as '0')
+      const saved = localStorage.getItem('proto-hide-' + key);
+      applyDock(key, saved !== '0');
+    });
+    document.getElementById('togglePicker').addEventListener('click', () => {
+      applyDock('picker', !document.body.classList.contains('hide-picker'));
+    });
+    document.getElementById('toggleLearn').addEventListener('click', () => {
+      applyDock('learn', !document.body.classList.contains('hide-learn'));
+    });
+    document.getElementById('toggleActions').addEventListener('click', () => {
+      applyDock('actions', !document.body.classList.contains('hide-actions'));
+    });
+    document.getElementById('enList').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-i]');
+      if (!btn) return;
+      showWord(Number(btn.dataset.i));
+      playWord();
+    });
+
+    loadWords();
+
+    const saved = localStorage.getItem('proto-pet-form');
+    state.form = FORMS.some((f) => f.id === saved) ? saved : 'cat';
+    buildFigure(state.form);
+    applyEnv(state.form);
+    renderPicker();
+    resize();
+    mouse.x = state.x; mouse.y = state.y - 40;
+    say('选形象，长按我会跟着你', 2400);
+    loop();
+  </script>
+</body>
+</html>
