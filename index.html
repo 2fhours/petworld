@@ -448,6 +448,17 @@
       border-radius: 12px; padding: 8px 10px; line-height: 1.45;
     }
 
+
+    .preload-btn {
+      position: fixed; top: 14px; left: 110px; z-index: 11;
+      appearance: none; border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 12px;
+      color: #e2e8f0; background: rgba(15,23,42,0.72); backdrop-filter: blur(10px);
+      cursor: pointer; max-width: min(220px, calc(100vw - 160px));
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .preload-btn.busy { opacity: 0.9; cursor: wait; }
+    .preload-btn.done { border-color: rgba(52,211,153,0.55); }
     .dlg-btn {
       position: fixed; top: 14px; left: 14px; z-index: 11;
       appearance: none; border: 1px solid rgba(255,255,255,0.14);
@@ -619,6 +630,7 @@
   
   
   <button type="button" class="dlg-btn" id="dlgListBtn">对话列表</button>
+  <button type="button" class="preload-btn" id="preloadBtn">预下载音频</button>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
     <h3>Supported Dialogs</h3>
     <div class="dlg-tip">Click a line to hear the reply. Say the blue English with the mic.</div>
@@ -701,6 +713,123 @@
     let w = 0, h = 0, particles = [], mouse = { x: 0, y: 0 }, t = 0;
 
     let currentAudio = null;
+
+
+    // Local audio cache (Cache API)
+    const AUDIO_CACHE = 'petworld-audio-v1';
+    const audioUrlMemo = new Map();
+
+    async function listAllAudioPaths() {
+      const paths = new Set();
+      const add = (u) => { if (u && typeof u === 'string') paths.add(u.replace(/^\.\//, '')); };
+      try {
+        const [words, actions, dialogs, foods] = await Promise.all([
+          fetch('words.json').then((r) => r.json()),
+          fetch('actions.json').then((r) => r.json()),
+          fetch('dialogs.json').then((r) => r.json()),
+          fetch('foods.json').then((r) => r.json()),
+        ]);
+        (words.items || []).forEach((it) => { add(it.audio); add(it.phonicsAudio); });
+        Object.values(actions.actions || {}).forEach((arr) => arr.forEach((it) => add(it.audio)));
+        (dialogs.dialogs || []).forEach((it) => add(it.audio));
+        (foods.foods || []).forEach((it) => {
+          if (it.accept) add(it.accept.audio);
+          if (it.reject) add(it.reject.audio);
+        });
+        if (foods.genericAccept) add(foods.genericAccept.audio);
+        if (foods.genericReject) add(foods.genericReject.audio);
+        if (foods.askFood) add(foods.askFood.audio);
+        add('audio/good_morning.mp3');
+      } catch (e) {
+        console.warn('list audio failed', e);
+      }
+      return [...paths];
+    }
+
+    async function getPlayableUrl(path) {
+      if (!path) return path;
+      if (audioUrlMemo.has(path)) return audioUrlMemo.get(path);
+      try {
+        if (window.caches) {
+          const cache = await caches.open(AUDIO_CACHE);
+          const req = new Request(path, { cache: 'reload' });
+          let res = await cache.match(path);
+          if (!res) res = await cache.match(req);
+          if (res) {
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            audioUrlMemo.set(path, url);
+            return url;
+          }
+        }
+      } catch (e) {}
+      return path;
+    }
+
+    async function playCachedAudio(path, { rate = 1 } = {}) {
+      const url = await getPlayableUrl(path);
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      const audio = new Audio(url);
+      audio.playbackRate = rate;
+      currentAudio = audio;
+      try { await audio.play(); } catch (e) {}
+      return audio;
+    }
+
+    async function preloadAllAudio() {
+      const btn = document.getElementById('preloadBtn');
+      if (!btn || btn.classList.contains('busy')) return;
+      if (!window.caches) {
+        say('当前浏览器不支持缓存', 2400);
+        return;
+      }
+      btn.classList.add('busy');
+      btn.classList.remove('done');
+      const paths = await listAllAudioPaths();
+      const cache = await caches.open(AUDIO_CACHE);
+      let done = 0, fail = 0;
+      btn.textContent = `下载中 0/${paths.length}`;
+      for (const path of paths) {
+        try {
+          const hit = await cache.match(path);
+          if (!hit) {
+            const res = await fetch(path, { cache: 'reload' });
+            if (!res.ok) throw new Error('bad status');
+            await cache.put(path, res.clone());
+          }
+          done += 1;
+        } catch (e) {
+          fail += 1;
+        }
+        btn.textContent = `下载中 ${done + fail}/${paths.length}`;
+      }
+      btn.classList.remove('busy');
+      btn.classList.add('done');
+      btn.textContent = fail ? `已缓存 ${done}，失败 ${fail}` : `音频已缓存 ${done}`;
+      say(fail ? '部分音频缓存失败' : '音频已预下载到本地', 2200);
+      localStorage.setItem('proto-audio-preloaded', '1');
+    }
+
+    async function refreshPreloadButton() {
+      const btn = document.getElementById('preloadBtn');
+      if (!btn || !window.caches) return;
+      try {
+        const paths = await listAllAudioPaths();
+        const cache = await caches.open(AUDIO_CACHE);
+        let n = 0;
+        for (const path of paths) {
+          if (await cache.match(path)) n += 1;
+        }
+        if (n >= paths.length && paths.length) {
+          btn.classList.add('done');
+          btn.textContent = `音频已缓存 ${n}`;
+        } else if (n > 0) {
+          btn.textContent = `预下载音频 ${n}/${paths.length}`;
+        }
+      } catch (e) {}
+    }
+
+
 
     const state = {
       x: innerWidth * 0.7,
@@ -920,10 +1049,7 @@
 
     function playLine(line) {
       if (!line) return;
-      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-      const audio = new Audio(line.audio);
-      currentAudio = audio;
-      audio.play().catch(() => {});
+      playCachedAudio(line.audio);
       say(line.text, 4800);
     }
 
@@ -1001,6 +1127,10 @@
     }
 
     const dlgListBtn = document.getElementById('dlgListBtn');
+    const preloadBtn = document.getElementById('preloadBtn');
+    if (preloadBtn) preloadBtn.addEventListener('click', () => preloadAllAudio());
+    refreshPreloadButton();
+
     const dlgPanel = document.getElementById('dlgPanel');
     dlgListBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1048,10 +1178,7 @@
 
     function speakDialog(d) {
       if (!d) return;
-      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-      const audio = new Audio(d.audio);
-      currentAudio = audio;
-      audio.play().catch(() => {});
+      playCachedAudio(d.audio);
       say(d.reply, 5200);
       setHappy(1800);
       if (d.id === 'lets_play' || d.id === 'play') {
@@ -1162,9 +1289,7 @@
       const list = ACTION_LINES.actions[kind];
       const it = list[Math.floor(Math.random() * list.length)];
       if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-      const audio = new Audio(it.audio);
-      currentAudio = audio;
-      audio.play().catch(() => {});
+      playCachedAudio(it.audio);
       say(it.text, 4400);
       // sync learning panel if possible
       if (typeof showWord === 'function' && WORDS && WORDS.items) {
@@ -1204,9 +1329,7 @@
             state.mode = 'wander';
             pickWanderTarget();
             say('Good morning', 3600);
-            const audio = new Audio('audio/good_morning.mp3');
-            currentAudio = audio;
-            audio.play().catch(() => {});
+            playCachedAudio('audio/good_morning.mp3');
           }
         }, 9000);
       }
@@ -1416,10 +1539,7 @@
       if (!it) return;
       stopAudio();
       const src = phonics && it.phonicsAudio ? it.phonicsAudio : it.audio;
-      const audio = new Audio(src);
-      audio.playbackRate = slow ? 0.78 : 1;
-      currentAudio = audio;
-      audio.play().catch(() => {});
+      playCachedAudio(src, { rate: slow ? 0.78 : 1 });
       say(phonics ? ('拼读：' + it.phonics) : it.text);
       setHappy(1400);
     }

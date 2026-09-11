@@ -19,3 +19,7 @@ Open `http://127.0.0.1:8765`.
 ## Note
 
 Generated audio files are included under `audio/`.
+
+## GitHub Pages
+
+https://2fhours.github.io/petworld/
