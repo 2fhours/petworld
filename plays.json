@@ -1,0 +1,115 @@
+{
+  "voice": "en-US-AnaNeural",
+  "plays": [
+    {
+      "id": "soccer",
+      "emoji": "⚽",
+      "label": "Soccer",
+      "triggers": [
+        "soccer",
+        "football",
+        "play soccer",
+        "play football",
+        "kick the ball"
+      ],
+      "reply": "Let's play soccer!",
+      "audio": "audio/play_soccer.mp3"
+    },
+    {
+      "id": "basketball",
+      "emoji": "🏀",
+      "label": "Basketball",
+      "triggers": [
+        "basketball",
+        "play basketball",
+        "shoot hoops",
+        "hoops"
+      ],
+      "reply": "Let's play basketball!",
+      "audio": "audio/play_basketball.mp3"
+    },
+    {
+      "id": "swim",
+      "emoji": "🏊",
+      "label": "Swim",
+      "triggers": [
+        "swim",
+        "swimming",
+        "let's swim",
+        "go swimming",
+        "swim please"
+      ],
+      "reply": "Let's go swimming!",
+      "audio": "audio/play_swim.mp3"
+    },
+    {
+      "id": "dance",
+      "emoji": "💃",
+      "label": "Dance",
+      "triggers": [
+        "dance",
+        "dancing",
+        "let's dance",
+        "music"
+      ],
+      "reply": "Let's dance!",
+      "audio": "audio/play_dance.mp3"
+    },
+    {
+      "id": "run",
+      "emoji": "🏃",
+      "label": "Run",
+      "triggers": [
+        "run",
+        "running",
+        "let's run",
+        "go for a run",
+        "race"
+      ],
+      "reply": "Let's run!",
+      "audio": "audio/play_run.mp3"
+    },
+    {
+      "id": "jump",
+      "emoji": "🤸",
+      "label": "Jump",
+      "triggers": [
+        "jump",
+        "jumping",
+        "let's jump",
+        "hop"
+      ],
+      "reply": "Let's jump!",
+      "audio": "audio/play_jump.mp3"
+    },
+    {
+      "id": "frisbee",
+      "emoji": "🥏",
+      "label": "Frisbee",
+      "triggers": [
+        "frisbee",
+        "play frisbee",
+        "throw the disc"
+      ],
+      "reply": "Let's play frisbee!",
+      "audio": "audio/play_frisbee.mp3"
+    },
+    {
+      "id": "bike",
+      "emoji": "🚲",
+      "label": "Bike",
+      "triggers": [
+        "bike",
+        "bicycle",
+        "ride a bike",
+        "cycling"
+      ],
+      "reply": "Let's ride a bike!",
+      "audio": "audio/play_bike.mp3"
+    }
+  ],
+  "generic": {
+    "reply": "Let's play!",
+    "audio": "audio/play_generic.mp3"
+  }
+}
