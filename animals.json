@@ -1,0 +1,69 @@
+{
+  "voice": "en-US-AnaNeural",
+  "animals": [
+    {
+      "id": "cat",
+      "form": "cat",
+      "name": "cat",
+      "article": "a",
+      "triggers": [
+        "cat",
+        "kitten",
+        "kitty",
+        "猫"
+      ],
+      "reply": "I am a cat.",
+      "audio": "audio/iam_cat.mp3"
+    },
+    {
+      "id": "dog",
+      "form": "dog",
+      "name": "dog",
+      "article": "a",
+      "triggers": [
+        "dog",
+        "puppy",
+        "狗"
+      ],
+      "reply": "I am a dog.",
+      "audio": "audio/iam_dog.mp3"
+    },
+    {
+      "id": "bunny",
+      "form": "bunny",
+      "name": "rabbit",
+      "article": "a",
+      "triggers": [
+        "rabbit",
+        "bunny",
+        "兔子"
+      ],
+      "reply": "I am a rabbit.",
+      "audio": "audio/iam_bunny.mp3"
+    },
+    {
+      "id": "fox",
+      "form": "fox",
+      "name": "fox",
+      "article": "a",
+      "triggers": [
+        "fox",
+        "狐狸"
+      ],
+      "reply": "I am a fox.",
+      "audio": "audio/iam_fox.mp3"
+    },
+    {
+      "id": "panda",
+      "form": "panda",
+      "name": "panda",
+      "article": "a",
+      "triggers": [
+        "panda",
+        "熊猫"
+      ],
+      "reply": "I am a panda.",
+      "audio": "audio/iam_panda.mp3"
+    }
+  ]
+}

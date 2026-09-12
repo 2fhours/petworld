@@ -740,6 +740,9 @@
         if (foods.genericReject) add(foods.genericReject.audio);
         if (foods.askFood) add(foods.askFood.audio);
         add('audio/good_morning.mp3');
+        if (ANIMALS && ANIMALS.animals) {
+          ANIMALS.animals.forEach((a) => add(a.audio));
+        }
       } catch (e) {
         console.warn('list audio failed', e);
       }
@@ -896,12 +899,12 @@
       });
     }
 
-    function setForm(id) {
+    function setForm(id, opts = {}) {
       state.form = id;
       buildFigure(id);
       applyEnv(id);
       renderPicker();
-      say(FORMS.find((f) => f.id === id).name + '登场！');
+      if (!opts.silent) say(FORMS.find((f) => f.id === id).name + '登场！');
       localStorage.setItem('proto-pet-form', id);
     }
 
@@ -1012,6 +1015,67 @@
 
     // Voice dialog: mic -> match preset -> English reply (neural audio)
 
+
+    let ANIMALS = null;
+    async function loadAnimals() {
+      const res = await fetch('animals.json');
+      ANIMALS = await res.json();
+    }
+    loadAnimals();
+
+    function findAnimal(text) {
+      if (!ANIMALS || !ANIMALS.animals) return null;
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return null;
+      let best = null, bestLen = 0;
+      for (const a of ANIMALS.animals) {
+        for (const trig of a.triggers) {
+          const g = String(trig).toLowerCase();
+          // word-boundary-ish for english; substring for CJK
+          const isCjk = /[\u4e00-\u9fff]/.test(g);
+          const hit = isCjk ? t.includes(g) : (new RegExp(`(^|[^a-z])${g}([^a-z]|$)`)).test(t);
+          if (hit && g.length >= bestLen) {
+            best = a; bestLen = g.length;
+          }
+        }
+      }
+      return best;
+    }
+
+    function switchAnimal(animal) {
+      if (!animal) return false;
+      holdStill(2800);
+      setForm(animal.form, { silent: true });
+      hearts(3);
+      burst(['✨', '🐾', '💖'], state.x, state.y - 70);
+      playCachedAudio(animal.audio);
+      say(animal.reply, 3600);
+      return true;
+    }
+
+    function maybeHandleAnimalCommand(text) {
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return false;
+      // Avoid eating "fish" etc. stealing animal intent only for animal words
+      // Prefer explicit become/I am / change to patterns, or bare animal name
+      const animal = findAnimal(t);
+      if (!animal) return false;
+      const explicit = /\b(i am|i'm|im|be|become|change to|switch to|turn into)\b/.test(t)
+        || /我是|变成|切换|换/.test(text || '');
+      const bare = t === animal.name || t === animal.id || animal.triggers.some((g) => t === String(g).toLowerCase());
+      // Also allow "cat please" / just "cat"
+      const shortAnimal = animal.triggers.some((g) => {
+        const gg = String(g).toLowerCase();
+        return t === gg || t === `${gg}s` || t.startsWith(gg + ' ') || t.endsWith(' ' + gg);
+      });
+      if (explicit || bare || shortAnimal) {
+        // If it's an eat command with food, let eat handler win (checked first)
+        return switchAnimal(animal);
+      }
+      return false;
+    }
+
+
     let FOODS = null;
     async function loadFoods() {
       const res = await fetch('foods.json');
@@ -1114,6 +1178,15 @@
             <span class="reply">Reply: ${d.reply}${d.zh ? '（' + d.zh + '）' : ''}</span>
           </button>`;
         }).join('');
+      let animalHtml = '';
+      if (ANIMALS && ANIMALS.animals) {
+        animalHtml = `<div class="dlg-tip" style="margin-top:10px">Animals (say: cat / dog / rabbit)</div>` + ANIMALS.animals.map((a) => {
+          return `<button type="button" class="dlg-item" data-animal="${a.id}">
+            <span class="say">Say: ${a.triggers[0]}</span>
+            <span class="reply">Reply: ${a.reply}</span>
+          </button>`;
+        }).join('');
+      }
       let foodHtml = '';
       if (FOODS && FOODS.foods) {
         foodHtml = `<div class="dlg-tip" style="margin-top:10px">Eat foods (try: eat apple)</div>` + FOODS.foods.map((f) => {
@@ -1123,7 +1196,7 @@
           </button>`;
         }).join('');
       }
-      box.innerHTML = dialogHtml + foodHtml;
+      box.innerHTML = dialogHtml + animalHtml + foodHtml;
     }
 
     const dlgListBtn = document.getElementById('dlgListBtn');
@@ -1138,6 +1211,12 @@
       dlgPanel.classList.toggle('open');
     });
     document.getElementById('dlgList').addEventListener('click', (e) => {
+      const animalBtn = e.target.closest('button[data-animal]');
+      if (animalBtn && ANIMALS) {
+        const a = ANIMALS.animals.find((x) => x.id === animalBtn.dataset.animal);
+        if (a) switchAnimal(a);
+        return;
+      }
       const eatBtn = e.target.closest('button[data-eat]');
       if (eatBtn && FOODS) {
         const f = FOODS.foods.find((x) => x.id === eatBtn.dataset.eat);
@@ -1247,6 +1326,12 @@
           if (maybeHandleEatCommand(a)) { ate = true; break; }
         }
         if (ate) return;
+        // Animal switch: "cat" / "I am a dog"
+        let switched = false;
+        for (const a of alts) {
+          if (maybeHandleAnimalCommand(a)) { switched = true; break; }
+        }
+        if (switched) return;
         let matched = null;
         for (const a of alts) {
           matched = matchDialog(a);
