@@ -565,6 +565,44 @@
     }
     .preload-btn.busy { opacity: 0.9; cursor: wait; }
     .preload-btn.done { border-color: rgba(52,211,153,0.55); }
+
+    .growth {
+      position: fixed; left: 50%; top: 12px; transform: translateX(-50%);
+      z-index: 12; width: min(420px, calc(100vw - 160px));
+      padding: 8px 12px; border-radius: 16px;
+      background: rgba(15,23,42,0.72); border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px); color: #e2e8f0;
+      pointer-events: none;
+    }
+    .growth .row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; margin-bottom: 6px; font-size: 12px;
+    }
+    .growth .lv {
+      font-weight: 750; color: #fde68a; letter-spacing: 0.02em;
+    }
+    .growth .xptext { color: rgba(226,232,240,0.75); }
+    .growth .bar {
+      height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .growth .bar > i {
+      display: block; height: 100%; width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #34d399, #60a5fa, #a78bfa);
+      transition: width 0.35s ease;
+    }
+    .growth-pop {
+      position: fixed; z-index: 13; pointer-events: none;
+      font-size: 14px; font-weight: 700; color: #fde68a;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      animation: growthPop 1.2s ease-out forwards;
+    }
+    @keyframes growthPop {
+      0% { opacity: 0; transform: translate(-50%, 0) scale(0.8); }
+      20% { opacity: 1; transform: translate(-50%, -10px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -36px) scale(1.05); }
+    }
     .dlg-btn {
       position: fixed; top: 14px; left: 14px; z-index: 11;
       appearance: none; border: 1px solid rgba(255,255,255,0.14);
@@ -789,6 +827,10 @@
 
   
   
+  <div class="growth" id="growthBar" aria-label="growth">
+    <div class="row"><span class="lv" id="growthLv">Lv.1</span><span class="xptext" id="growthXp">0/20 XP</span></div>
+    <div class="bar"><i id="growthFill"></i></div>
+  </div>
   <button type="button" class="dlg-btn" id="dlgListBtn">对话列表</button>
   <button type="button" class="preload-btn" id="preloadBtn">预下载音频</button>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
@@ -875,6 +917,141 @@
     let w = 0, h = 0, particles = [], mouse = { x: 0, y: 0 }, t = 0;
 
     let currentAudio = null;
+
+
+    // ===== Growth V1: Level + XP + progress =====
+    const GROWTH_KEY = 'petworld-growth-v1';
+    const GROWTH_MAX_LEVEL = 20;
+    const GROWTH_DAILY_CAP = 50;
+
+    function xpNeededFor(level) {
+      // Lv1->2 needs 20, then +10 each level
+      return 20 + Math.max(0, level - 1) * 10;
+    }
+
+    function todayKey() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+
+    function defaultGrowth() {
+      return {
+        level: 1,
+        xp: 0,
+        totalXp: 0,
+        day: todayKey(),
+        gainedToday: 0,
+        lastAwardAt: {}, // key -> ts
+        heardWords: {},  // wordId -> count today-ish total listen
+        dailyEnglishDay: '',
+      };
+    }
+
+    let GROWTH = defaultGrowth();
+    try {
+      const raw = localStorage.getItem(GROWTH_KEY);
+      if (raw) GROWTH = Object.assign(defaultGrowth(), JSON.parse(raw));
+    } catch (e) {}
+    if (GROWTH.day !== todayKey()) {
+      GROWTH.day = todayKey();
+      GROWTH.gainedToday = 0;
+      GROWTH.heardWords = {};
+    }
+
+    function saveGrowth() {
+      try { localStorage.setItem(GROWTH_KEY, JSON.stringify(GROWTH)); } catch (e) {}
+    }
+
+    function petScaleForLevel(level) {
+      // Lv1 = 1.0, Lv20 ~= 1.28
+      return 1 + Math.min(Math.max(level, 1), GROWTH_MAX_LEVEL) * 0.014;
+    }
+
+    function applyPetGrowthScale() {
+      if (!pet) return;
+      const s = petScaleForLevel(GROWTH.level);
+      pet.style.setProperty('--grow', String(s));
+    }
+
+    function renderGrowth() {
+      const need = xpNeededFor(GROWTH.level);
+      const lvEl = document.getElementById('growthLv');
+      const xpEl = document.getElementById('growthXp');
+      const fill = document.getElementById('growthFill');
+      if (lvEl) lvEl.textContent = 'Lv.' + GROWTH.level;
+      if (xpEl) xpEl.textContent = (GROWTH.level >= GROWTH_MAX_LEVEL ? 'MAX' : (GROWTH.xp + '/' + need + ' XP'));
+      if (fill) {
+        const pct = GROWTH.level >= GROWTH_MAX_LEVEL ? 100 : Math.max(0, Math.min(100, (GROWTH.xp / need) * 100));
+        fill.style.width = pct + '%';
+      }
+      applyPetGrowthScale();
+    }
+
+    function growthPopup(text) {
+      const el = document.createElement('div');
+      el.className = 'growth-pop';
+      el.textContent = text;
+      el.style.left = (window.innerWidth / 2) + 'px';
+      el.style.top = '54px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1200);
+    }
+
+    function noteDailyFirstEnglish() {
+      if (GROWTH.day !== todayKey()) {
+        GROWTH.day = todayKey();
+        GROWTH.gainedToday = 0;
+        GROWTH.heardWords = {};
+      }
+      if (GROWTH.dailyEnglishDay === todayKey()) return;
+      GROWTH.dailyEnglishDay = todayKey();
+      saveGrowth();
+      awardXp(8, 'daily-english', { key: 'daily-english:' + todayKey(), cooldownMs: 0 });
+    }
+
+    function awardXp(amount, reason, opts = {}) {
+      const now = Date.now();
+      const key = opts.key || reason || 'x';
+      const cooldown = opts.cooldownMs != null ? opts.cooldownMs : 8000;
+      if (cooldown > 0) {
+        const last = GROWTH.lastAwardAt[key] || 0;
+        if (now - last < cooldown) return 0;
+      }
+      if (GROWTH.day !== todayKey()) {
+        GROWTH.day = todayKey();
+        GROWTH.gainedToday = 0;
+        GROWTH.heardWords = {};
+      }
+      if (GROWTH.gainedToday >= GROWTH_DAILY_CAP) return 0;
+      let gain = Math.max(0, amount|0);
+      gain = Math.min(gain, GROWTH_DAILY_CAP - GROWTH.gainedToday);
+      if (gain <= 0) return 0;
+
+      GROWTH.lastAwardAt[key] = now;
+      GROWTH.gainedToday += gain;
+      GROWTH.totalXp += gain;
+      GROWTH.xp += gain;
+
+      let leveled = 0;
+      while (GROWTH.level < GROWTH_MAX_LEVEL && GROWTH.xp >= xpNeededFor(GROWTH.level)) {
+        GROWTH.xp -= xpNeededFor(GROWTH.level);
+        GROWTH.level += 1;
+        leveled += 1;
+      }
+      if (GROWTH.level >= GROWTH_MAX_LEVEL) GROWTH.xp = 0;
+
+      saveGrowth();
+      renderGrowth();
+      growthPopup(leveled ? ('升级 Lv.' + GROWTH.level + '！') : ('+' + gain + ' XP'));
+      if (leveled) {
+        hearts(4);
+        burst(['⭐', '✨', '🎉'], state.x || innerWidth/2, (state.y || innerHeight/2) - 80);
+        say('Level ' + GROWTH.level + '!', 2400);
+      }
+      return gain;
+    }
+
+
 
 
     // Local audio cache (Cache API)
@@ -1282,6 +1459,8 @@
         playCachedAudio(PLAYS.generic.audio);
         say(PLAYS.generic.reply, 4400);
       }
+      noteDailyFirstEnglish();
+      awardXp(1, 'play', { key: 'play:' + ((play && play.id) || 'random'), cooldownMs: 20000 });
     }
 
     function maybeHandlePlayCommand(text) {
@@ -1334,6 +1513,8 @@
       burst(['✨', '🐾', '💖'], state.x, state.y - 70);
       playCachedAudio(animal.audio);
       say(animal.reply, 3600);
+      noteDailyFirstEnglish();
+      awardXp(3, 'animal', { key: 'animal:' + animal.id, cooldownMs: 15000 });
       return true;
     }
 
@@ -1415,12 +1596,14 @@
         setTimeout(() => burst(['😋', '✨', '💖'], x, y), 1000);
         setHappy(2400);
         playLine(food.accept || (FOODS && FOODS.genericAccept));
+        awardXp(1, 'feed', { key: 'feed-ok:' + food.id, cooldownMs: 20000 });
       } else {
         spawnProp(food.emoji, 'reject', x, y - 10, 2800);
         pet.classList.add('reject-shake');
         setTimeout(() => pet.classList.remove('reject-shake'), 1200);
         burst(['🙅', '💨', '✖️'], x, y);
         playLine(food.reject || (FOODS && FOODS.genericReject));
+        awardXp(1, 'feed', { key: 'feed-no:' + food.id, cooldownMs: 20000 });
       }
     }
 
@@ -1574,6 +1757,8 @@
       playCachedAudio(d.audio);
       say(d.reply, 5200);
       setHappy(1800);
+      noteDailyFirstEnglish();
+      awardXp(3, 'voice', { key: 'voice:' + d.id, cooldownMs: 12000 });
       if (d.id === 'good_night' || d.id === 'i_am_sleepy' || d.id === 'sleep') {
         state.holdUntil = 0;
         actionVisual('sleep');
@@ -1703,11 +1888,13 @@
         setHappy(1800);
         actionVisual('pet');
         speakAction('pet');
+        awardXp(1, 'pet', { key: 'act:pet', cooldownMs: 15000 });
       } else if (kind === 'feed') {
         holdStill(3600);
         setHappy(2000);
         actionVisual('feed');
         speakAction('feed');
+        awardXp(1, 'feed', { key: 'act:feed', cooldownMs: 15000 });
       } else if (kind === 'play') {
         startPlay(null);
       } else if (kind === 'sleep') {
@@ -1718,6 +1905,7 @@
         state.vx = 0; state.vy = 0;
         actionVisual('sleep');
         speakAction('sleep');
+        awardXp(1, 'sleep', { key: 'act:sleep', cooldownMs: 30000 });
         setTimeout(() => {
           if (state.mode === 'sleep') {
             pet.classList.remove('sleep');
@@ -1829,7 +2017,7 @@
 
       pet.style.left = state.x + 'px';
       pet.style.top = state.y + 'px';
-      pet.style.transform = 'translate(-50%, -100%)';
+      pet.style.transform = `translate(-50%, -100%) scale(var(--grow, 1))`;
       // face left/right on body only, keep bubble text unmirrored
       figure.style.setProperty('--face', String(state.facing));
       figure.style.transform = `scaleX(${state.facing})`;
@@ -1958,6 +2146,8 @@
       playCachedAudio(src, { rate: slow ? 0.78 : 1 });
       say(phonics ? ('拼读：' + it.phonics) : it.text);
       setHappy(1400);
+      if (phonics) awardXp(2, 'phonics', { key: 'phonics:' + it.id, cooldownMs: 15000 });
+      else awardXp(1, 'listen', { key: 'listen:' + it.id, cooldownMs: 12000 });
     }
 
     function playRandomWord() {
