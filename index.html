@@ -567,12 +567,7 @@
     .preload-btn.done { border-color: rgba(52,211,153,0.55); }
 
     .growth {
-      position: fixed; left: 50%; top: 10px; transform: translateX(-50%);
-      z-index: 12; width: min(220px, calc(100vw - 200px));
-      padding: 4px 8px; border-radius: 10px;
-      background: transparent; border: none;
-      color: #e2e8f0;
-      pointer-events: none;
+      display: none !important;
     }
     .growth .row {
       display: flex; align-items: center; justify-content: space-between;
@@ -827,10 +822,7 @@
 
   
   
-  <div class="growth" id="growthBar" aria-label="growth">
-    <div class="row"><span class="lv" id="growthLv">Lv.1</span><span class="xptext" id="growthXp">0/20 XP</span></div>
-    <div class="bar"><i id="growthFill"></i></div>
-  </div>
+  <div class="growth" id="growthBar" hidden aria-hidden="true"></div>
   <button type="button" class="dlg-btn" id="dlgListBtn">对话列表</button>
   <button type="button" class="preload-btn" id="preloadBtn">预下载音频</button>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
@@ -919,10 +911,12 @@
     let currentAudio = null;
 
 
-    // ===== Growth V1: Level + XP + progress =====
+    // ===== Growth V1: Level + XP (hidden; localStorage + cookie) =====
     const GROWTH_KEY = 'petworld-growth-v1';
+    const GROWTH_COOKIE = 'petworld_growth_v1';
     const GROWTH_MAX_LEVEL = 20;
     const GROWTH_DAILY_CAP = 50;
+    const GROWTH_COOKIE_DAYS = 400;
 
     function xpNeededFor(level) {
       // Lv1->2 needs 20, then +10 each level
@@ -947,19 +941,100 @@
       };
     }
 
-    let GROWTH = defaultGrowth();
-    try {
-      const raw = localStorage.getItem(GROWTH_KEY);
-      if (raw) GROWTH = Object.assign(defaultGrowth(), JSON.parse(raw));
-    } catch (e) {}
+    function growthScore(g) {
+      if (!g || typeof g !== 'object') return -1;
+      const total = Number(g.totalXp) || 0;
+      const level = Number(g.level) || 0;
+      const xp = Number(g.xp) || 0;
+      return total * 100000 + level * 1000 + xp;
+    }
+
+    function normalizeGrowth(raw) {
+      const g = Object.assign(defaultGrowth(), raw && typeof raw === 'object' ? raw : {});
+      g.level = Math.max(1, Math.min(GROWTH_MAX_LEVEL, Number(g.level) || 1));
+      g.xp = Math.max(0, Number(g.xp) || 0);
+      g.totalXp = Math.max(0, Number(g.totalXp) || 0);
+      g.gainedToday = Math.max(0, Number(g.gainedToday) || 0);
+      if (!g.lastAwardAt || typeof g.lastAwardAt !== 'object') g.lastAwardAt = {};
+      if (!g.heardWords || typeof g.heardWords !== 'object') g.heardWords = {};
+      return g;
+    }
+
+    function readGrowthLocal() {
+      try {
+        const raw = localStorage.getItem(GROWTH_KEY);
+        if (!raw) return null;
+        return normalizeGrowth(JSON.parse(raw));
+      } catch (e) { return null; }
+    }
+
+    function readGrowthCookie() {
+      try {
+        const m = document.cookie.match(/(?:^|; )petworld_growth_v1=([^;]*)/);
+        if (!m) return null;
+        return normalizeGrowth(JSON.parse(decodeURIComponent(m[1])));
+      } catch (e) { return null; }
+    }
+
+    function writeGrowthLocal(g) {
+      try { localStorage.setItem(GROWTH_KEY, JSON.stringify(g)); } catch (e) {}
+    }
+
+    function writeGrowthCookie(g) {
+      try {
+        // Prefer full state; fall back to compact core if cookie would be too large
+        let payload = JSON.stringify(g);
+        if (payload.length > 3500) {
+          payload = JSON.stringify({
+            level: g.level,
+            xp: g.xp,
+            totalXp: g.totalXp,
+            day: g.day,
+            gainedToday: g.gainedToday,
+            dailyEnglishDay: g.dailyEnglishDay || '',
+          });
+        }
+        const maxAge = GROWTH_COOKIE_DAYS * 86400;
+        document.cookie = GROWTH_COOKIE + '=' + encodeURIComponent(payload)
+          + '; path=/; max-age=' + maxAge + '; SameSite=Lax';
+      } catch (e) {}
+    }
+
+    function pickLargerGrowth(a, b) {
+      const sa = growthScore(a);
+      const sb = growthScore(b);
+      if (sa < 0 && sb < 0) return defaultGrowth();
+      if (sa >= sb) return a || defaultGrowth();
+      return b || defaultGrowth();
+    }
+
+    let GROWTH = pickLargerGrowth(readGrowthLocal(), readGrowthCookie());
     if (GROWTH.day !== todayKey()) {
       GROWTH.day = todayKey();
       GROWTH.gainedToday = 0;
       GROWTH.heardWords = {};
     }
+    // Sync both stores to the larger snapshot
+    writeGrowthLocal(GROWTH);
+    writeGrowthCookie(GROWTH);
 
     function saveGrowth() {
-      try { localStorage.setItem(GROWTH_KEY, JSON.stringify(GROWTH)); } catch (e) {}
+      // Always re-merge against cookie in case another tab wrote a higher value
+      const merged = pickLargerGrowth(GROWTH, readGrowthCookie());
+      if (growthScore(merged) > growthScore(GROWTH)) {
+        GROWTH = merged;
+      }
+      writeGrowthLocal(GROWTH);
+      writeGrowthCookie(GROWTH);
+      syncHiddenGrowthAttrs();
+    }
+
+    function syncHiddenGrowthAttrs() {
+      const root = document.documentElement;
+      root.dataset.petLevel = String(GROWTH.level);
+      root.dataset.petXp = String(GROWTH.xp);
+      root.dataset.petTotalXp = String(GROWTH.totalXp);
+      root.dataset.petGainedToday = String(GROWTH.gainedToday);
     }
 
     function petScaleForLevel(level) {
@@ -974,28 +1049,16 @@
     }
 
     function renderGrowth() {
-      const need = xpNeededFor(GROWTH.level);
-      const lvEl = document.getElementById('growthLv');
-      const xpEl = document.getElementById('growthXp');
-      const fill = document.getElementById('growthFill');
-      if (lvEl) lvEl.textContent = 'Lv.' + GROWTH.level;
-      if (xpEl) xpEl.textContent = (GROWTH.level >= GROWTH_MAX_LEVEL ? 'MAX' : (GROWTH.xp + '/' + need + ' XP'));
-      if (fill) {
-        const pct = GROWTH.level >= GROWTH_MAX_LEVEL ? 100 : Math.max(0, Math.min(100, (GROWTH.xp / need) * 100));
-        fill.style.width = pct + '%';
-      }
+      // XP bar UI hidden; only keep scale + data-* attrs
+      syncHiddenGrowthAttrs();
       applyPetGrowthScale();
     }
 
-    function growthPopup(text) {
-      const el = document.createElement('div');
-      el.className = 'growth-pop';
-      el.textContent = text;
-      el.style.left = (window.innerWidth / 2) + 'px';
-      el.style.top = '54px';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 1200);
+    function growthPopup(_text) {
+      // Hidden attribute mode: no floating XP text
     }
+
+    renderGrowth();
 
     function noteDailyFirstEnglish() {
       if (GROWTH.day !== todayKey()) {
