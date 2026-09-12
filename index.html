@@ -1526,11 +1526,22 @@
       const d = DIALOGS.dialogs.find((x) => x.id === btn.dataset.dlg);
       if (d) speakDialog(d);
     });
-    document.addEventListener('click', (e) => {
-      if (!dlgPanel.classList.contains('open')) return;
-      if (e.target.closest('#dlgPanel') || e.target.closest('#dlgListBtn')) return;
-      dlgPanel.classList.remove('open');
-    });
+    function collapseAllMenus(e) {
+      const keep = e && e.target && e.target.closest && e.target.closest([
+        '#dlgPanel', '#dlgListBtn', '#preloadBtn',
+        '.picker', '#togglePicker',
+        '.learn', '#toggleLearn',
+        '.panel', '#toggleActions',
+        '#micWrap', '#micBtn', '#pet'
+      ].join(','));
+      if (keep) return;
+      if (dlgPanel) dlgPanel.classList.remove('open');
+      // collapse docks if currently open
+      if (!document.body.classList.contains('hide-picker')) applyDock('picker', true);
+      if (!document.body.classList.contains('hide-learn')) applyDock('learn', true);
+      if (!document.body.classList.contains('hide-actions')) applyDock('actions', true);
+    }
+    document.addEventListener('click', collapseAllMenus);
 
 
 
