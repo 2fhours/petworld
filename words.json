@@ -2,78 +2,6 @@
   "voice": "en-US-AnaNeural",
   "items": [
     {
-      "id": "hello",
-      "text": "Hello",
-      "ipa": "/həˈloʊ/",
-      "zh": "你好",
-      "phonics": "he-LLO",
-      "audio": "audio/hello.mp3",
-      "phonicsAudio": "audio/hello_phonics.mp3",
-      "ipaSegments": [
-        "h",
-        "ə",
-        "l",
-        "oʊ"
-      ]
-    },
-    {
-      "id": "hi",
-      "text": "Hi",
-      "ipa": "/haɪ/",
-      "zh": "嗨",
-      "phonics": "HI",
-      "audio": "audio/hi.mp3",
-      "phonicsAudio": "audio/hi_phonics.mp3",
-      "ipaSegments": [
-        "h",
-        "aɪ"
-      ]
-    },
-    {
-      "id": "bye",
-      "text": "Bye",
-      "ipa": "/baɪ/",
-      "zh": "再见",
-      "phonics": "BYE",
-      "audio": "audio/bye.mp3",
-      "phonicsAudio": "audio/bye_phonics.mp3",
-      "ipaSegments": [
-        "b",
-        "aɪ"
-      ]
-    },
-    {
-      "id": "please",
-      "text": "Please",
-      "ipa": "/pliːz/",
-      "zh": "请",
-      "phonics": "PLEASE",
-      "audio": "audio/please.mp3",
-      "phonicsAudio": "audio/please_phonics.mp3",
-      "ipaSegments": [
-        "p",
-        "l",
-        "iː",
-        "z"
-      ]
-    },
-    {
-      "id": "thanks",
-      "text": "Thanks",
-      "ipa": "/θæŋks/",
-      "zh": "谢谢",
-      "phonics": "THANKS",
-      "audio": "audio/thanks.mp3",
-      "phonicsAudio": "audio/thanks_phonics.mp3",
-      "ipaSegments": [
-        "θ",
-        "æ",
-        "ŋ",
-        "k",
-        "s"
-      ]
-    },
-    {
       "id": "thank_you",
       "text": "Thank you",
       "ipa": "/ˈθæŋk juː/",
@@ -88,62 +16,6 @@
         "k",
         "j",
         "uː"
-      ]
-    },
-    {
-      "id": "sorry",
-      "text": "Sorry",
-      "ipa": "/ˈsɑːri/",
-      "zh": "对不起",
-      "phonics": "SOR-ry",
-      "audio": "audio/sorry.mp3",
-      "phonicsAudio": "audio/sorry_phonics.mp3",
-      "ipaSegments": [
-        "s",
-        "ɑː",
-        "r",
-        "i"
-      ]
-    },
-    {
-      "id": "yes",
-      "text": "Yes",
-      "ipa": "/jes/",
-      "zh": "是的",
-      "phonics": "YES",
-      "audio": "audio/yes.mp3",
-      "phonicsAudio": "audio/yes_phonics.mp3",
-      "ipaSegments": [
-        "j",
-        "e",
-        "s"
-      ]
-    },
-    {
-      "id": "no",
-      "text": "No",
-      "ipa": "/noʊ/",
-      "zh": "不",
-      "phonics": "NO",
-      "audio": "audio/no.mp3",
-      "phonicsAudio": "audio/no_phonics.mp3",
-      "ipaSegments": [
-        "n",
-        "oʊ"
-      ]
-    },
-    {
-      "id": "ok",
-      "text": "OK",
-      "ipa": "/ˌoʊˈkeɪ/",
-      "zh": "好的",
-      "phonics": "O-K",
-      "audio": "audio/ok.mp3",
-      "phonicsAudio": "audio/ok_phonics.mp3",
-      "ipaSegments": [
-        "oʊ",
-        "k",
-        "eɪ"
       ]
     },
     {
@@ -280,109 +152,6 @@
       ]
     },
     {
-      "id": "apple",
-      "text": "Apple",
-      "ipa": "/ˈæpl/",
-      "zh": "苹果",
-      "phonics": "AP-ple",
-      "audio": "audio/apple.mp3",
-      "phonicsAudio": "audio/apple_phonics.mp3",
-      "ipaSegments": [
-        "æ",
-        "p",
-        "l"
-      ]
-    },
-    {
-      "id": "book",
-      "text": "Book",
-      "ipa": "/bʊk/",
-      "zh": "书",
-      "phonics": "BOOK",
-      "audio": "audio/book.mp3",
-      "phonicsAudio": "audio/book_phonics.mp3",
-      "ipaSegments": [
-        "b",
-        "ʊ",
-        "k"
-      ]
-    },
-    {
-      "id": "cat",
-      "text": "Cat",
-      "ipa": "/kæt/",
-      "zh": "猫",
-      "phonics": "CAT",
-      "audio": "audio/cat.mp3",
-      "phonicsAudio": "audio/cat_phonics.mp3",
-      "ipaSegments": [
-        "k",
-        "æ",
-        "t"
-      ]
-    },
-    {
-      "id": "dog",
-      "text": "Dog",
-      "ipa": "/dɔːɡ/",
-      "zh": "狗",
-      "phonics": "DOG",
-      "audio": "audio/dog.mp3",
-      "phonicsAudio": "audio/dog_phonics.mp3",
-      "ipaSegments": [
-        "d",
-        "ɔː",
-        "ɡ"
-      ]
-    },
-    {
-      "id": "water",
-      "text": "Water",
-      "ipa": "/ˈwɔːtər/",
-      "zh": "水",
-      "phonics": "WA-ter",
-      "audio": "audio/water.mp3",
-      "phonicsAudio": "audio/water_phonics.mp3",
-      "ipaSegments": [
-        "w",
-        "ɔː",
-        "t",
-        "ə",
-        "r"
-      ]
-    },
-    {
-      "id": "school",
-      "text": "School",
-      "ipa": "/skuːl/",
-      "zh": "学校",
-      "phonics": "SCHOOL",
-      "audio": "audio/school.mp3",
-      "phonicsAudio": "audio/school_phonics.mp3",
-      "ipaSegments": [
-        "s",
-        "k",
-        "uː",
-        "l"
-      ]
-    },
-    {
-      "id": "friend",
-      "text": "Friend",
-      "ipa": "/frend/",
-      "zh": "朋友",
-      "phonics": "FRIEND",
-      "audio": "audio/friend.mp3",
-      "phonicsAudio": "audio/friend_phonics.mp3",
-      "ipaSegments": [
-        "f",
-        "r",
-        "e",
-        "n",
-        "d"
-      ]
-    },
-    {
       "id": "i_love_you",
       "text": "I love you",
       "ipa": "/aɪ lʌv juː/",
@@ -487,6 +256,2599 @@
         "b",
         "ʊ",
         "k"
+      ]
+    },
+    {
+      "id": "w_a",
+      "text": "A",
+      "ipa": "/ə/",
+      "zh": "一个",
+      "phonics": "A",
+      "audio": "audio/w_a.mp3",
+      "phonicsAudio": "audio/w_a_phonics.mp3",
+      "ipaSegments": [
+        "ə"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_afternoon",
+      "text": "Afternoon",
+      "ipa": "/ˌæftərˈnuːn/",
+      "zh": "下午",
+      "phonics": "af-ter-NOON",
+      "audio": "audio/w_afternoon.mp3",
+      "phonicsAudio": "audio/w_afternoon_phonics.mp3",
+      "ipaSegments": [
+        "æftər",
+        "nuːn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_again",
+      "text": "Again",
+      "ipa": "/əˈɡen/",
+      "zh": "再次",
+      "phonics": "a-GAIN",
+      "audio": "audio/w_again.mp3",
+      "phonicsAudio": "audio/w_again_phonics.mp3",
+      "ipaSegments": [
+        "ə",
+        "ɡen"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_age",
+      "text": "Age",
+      "ipa": "/eɪdʒ/",
+      "zh": "年龄",
+      "phonics": "AGE",
+      "audio": "audio/w_age.mp3",
+      "phonicsAudio": "audio/w_age_phonics.mp3",
+      "ipaSegments": [
+        "eɪdʒ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_am",
+      "text": "Am",
+      "ipa": "/æm/",
+      "zh": "是（我）",
+      "phonics": "AM",
+      "audio": "audio/w_am.mp3",
+      "phonicsAudio": "audio/w_am_phonics.mp3",
+      "ipaSegments": [
+        "æm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_and",
+      "text": "And",
+      "ipa": "/ænd/",
+      "zh": "和",
+      "phonics": "AND",
+      "audio": "audio/w_and.mp3",
+      "phonicsAudio": "audio/w_and_phonics.mp3",
+      "ipaSegments": [
+        "ænd"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_apple",
+      "text": "Apple",
+      "ipa": "/ˈæpl/",
+      "zh": "苹果",
+      "phonics": "AP-ple",
+      "audio": "audio/w_apple.mp3",
+      "phonicsAudio": "audio/w_apple_phonics.mp3",
+      "ipaSegments": [
+        "æpl"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_apples",
+      "text": "Apples",
+      "ipa": "/ˈæplz/",
+      "zh": "苹果（复数）",
+      "phonics": "AP-ples",
+      "audio": "audio/w_apples.mp3",
+      "phonicsAudio": "audio/w_apples_phonics.mp3",
+      "ipaSegments": [
+        "æplz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_are",
+      "text": "Are",
+      "ipa": "/ɑːr/",
+      "zh": "是",
+      "phonics": "ARE",
+      "audio": "audio/w_are.mp3",
+      "phonicsAudio": "audio/w_are_phonics.mp3",
+      "ipaSegments": [
+        "ɑːr"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_ball",
+      "text": "Ball",
+      "ipa": "/bɔːl/",
+      "zh": "球",
+      "phonics": "BALL",
+      "audio": "audio/w_ball.mp3",
+      "phonicsAudio": "audio/w_ball_phonics.mp3",
+      "ipaSegments": [
+        "bɔːl"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_bamboo",
+      "text": "Bamboo",
+      "ipa": "/ˌbæmˈbuː/",
+      "zh": "竹子",
+      "phonics": "bam-BOO",
+      "audio": "audio/w_bamboo.mp3",
+      "phonicsAudio": "audio/w_bamboo_phonics.mp3",
+      "ipaSegments": [
+        "bæm",
+        "buː"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_banana",
+      "text": "Banana",
+      "ipa": "/bəˈnænə/",
+      "zh": "香蕉",
+      "phonics": "ba-NA-na",
+      "audio": "audio/w_banana.mp3",
+      "phonicsAudio": "audio/w_banana_phonics.mp3",
+      "ipaSegments": [
+        "bə",
+        "nænə"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_basketball",
+      "text": "Basketball",
+      "ipa": "/ˈbæskɪtbɔːl/",
+      "zh": "篮球",
+      "phonics": "BAS-ket-ball",
+      "audio": "audio/w_basketball.mp3",
+      "phonicsAudio": "audio/w_basketball_phonics.mp3",
+      "ipaSegments": [
+        "bæskɪtbɔːl"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_bed",
+      "text": "Bed",
+      "ipa": "/bed/",
+      "zh": "床",
+      "phonics": "BED",
+      "audio": "audio/w_bed.mp3",
+      "phonicsAudio": "audio/w_bed_phonics.mp3",
+      "ipaSegments": [
+        "bed"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_bicycle",
+      "text": "Bicycle",
+      "ipa": "/ˈbaɪsɪkl/",
+      "zh": "自行车",
+      "phonics": "BI-cy-cle",
+      "audio": "audio/w_bicycle.mp3",
+      "phonicsAudio": "audio/w_bicycle_phonics.mp3",
+      "ipaSegments": [
+        "baɪsɪkl"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_bike",
+      "text": "Bike",
+      "ipa": "/baɪk/",
+      "zh": "自行车",
+      "phonics": "BIKE",
+      "audio": "audio/w_bike.mp3",
+      "phonicsAudio": "audio/w_bike_phonics.mp3",
+      "ipaSegments": [
+        "baɪk"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_bone",
+      "text": "Bone",
+      "ipa": "/boʊn/",
+      "zh": "骨头",
+      "phonics": "BONE",
+      "audio": "audio/w_bone.mp3",
+      "phonicsAudio": "audio/w_bone_phonics.mp3",
+      "ipaSegments": [
+        "boʊn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_bread",
+      "text": "Bread",
+      "ipa": "/bred/",
+      "zh": "面包",
+      "phonics": "BREAD",
+      "audio": "audio/w_bread.mp3",
+      "phonicsAudio": "audio/w_bread_phonics.mp3",
+      "ipaSegments": [
+        "bred"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_buddy",
+      "text": "Buddy",
+      "ipa": "/ˈbʌdi/",
+      "zh": "伙伴",
+      "phonics": "BUD-dy",
+      "audio": "audio/w_buddy.mp3",
+      "phonicsAudio": "audio/w_buddy_phonics.mp3",
+      "ipaSegments": [
+        "bʌdi"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_bunny",
+      "text": "Bunny",
+      "ipa": "/ˈbʌni/",
+      "zh": "兔子",
+      "phonics": "BUN-ny",
+      "audio": "audio/w_bunny.mp3",
+      "phonicsAudio": "audio/w_bunny_phonics.mp3",
+      "ipaSegments": [
+        "bʌni"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_bye",
+      "text": "Bye",
+      "ipa": "/baɪ/",
+      "zh": "再见",
+      "phonics": "BYE",
+      "audio": "audio/w_bye.mp3",
+      "phonicsAudio": "audio/w_bye_phonics.mp3",
+      "ipaSegments": [
+        "baɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_cake",
+      "text": "Cake",
+      "ipa": "/keɪk/",
+      "zh": "蛋糕",
+      "phonics": "CAKE",
+      "audio": "audio/w_cake.mp3",
+      "phonicsAudio": "audio/w_cake_phonics.mp3",
+      "ipaSegments": [
+        "keɪk"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_can",
+      "text": "Can",
+      "ipa": "/kæn/",
+      "zh": "可以",
+      "phonics": "CAN",
+      "audio": "audio/w_can.mp3",
+      "phonicsAudio": "audio/w_can_phonics.mp3",
+      "ipaSegments": [
+        "kæn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_carrot",
+      "text": "Carrot",
+      "ipa": "/ˈkærət/",
+      "zh": "胡萝卜",
+      "phonics": "CAR-rot",
+      "audio": "audio/w_carrot.mp3",
+      "phonicsAudio": "audio/w_carrot_phonics.mp3",
+      "ipaSegments": [
+        "kærət"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_carrots",
+      "text": "Carrots",
+      "ipa": "/ˈkærəts/",
+      "zh": "胡萝卜（复数）",
+      "phonics": "CAR-rots",
+      "audio": "audio/w_carrots.mp3",
+      "phonicsAudio": "audio/w_carrots_phonics.mp3",
+      "ipaSegments": [
+        "kærəts"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_cat",
+      "text": "Cat",
+      "ipa": "/kæt/",
+      "zh": "猫",
+      "phonics": "CAT",
+      "audio": "audio/w_cat.mp3",
+      "phonicsAudio": "audio/w_cat_phonics.mp3",
+      "ipaSegments": [
+        "kæt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_chicken",
+      "text": "Chicken",
+      "ipa": "/ˈtʃɪkɪn/",
+      "zh": "鸡肉/鸡",
+      "phonics": "CHICK-en",
+      "audio": "audio/w_chicken.mp3",
+      "phonicsAudio": "audio/w_chicken_phonics.mp3",
+      "ipaSegments": [
+        "tʃɪkɪn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_china",
+      "text": "China",
+      "ipa": "/ˈtʃaɪnə/",
+      "zh": "中国",
+      "phonics": "CHI-na",
+      "audio": "audio/w_china.mp3",
+      "phonicsAudio": "audio/w_china_phonics.mp3",
+      "ipaSegments": [
+        "tʃaɪnə"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_come",
+      "text": "Come",
+      "ipa": "/kʌm/",
+      "zh": "来",
+      "phonics": "COME",
+      "audio": "audio/w_come.mp3",
+      "phonicsAudio": "audio/w_come_phonics.mp3",
+      "ipaSegments": [
+        "kʌm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_cookie",
+      "text": "Cookie",
+      "ipa": "/ˈkʊki/",
+      "zh": "饼干",
+      "phonics": "COOK-ie",
+      "audio": "audio/w_cookie.mp3",
+      "phonicsAudio": "audio/w_cookie_phonics.mp3",
+      "ipaSegments": [
+        "kʊki"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_cookies",
+      "text": "Cookies",
+      "ipa": "/ˈkʊkiz/",
+      "zh": "饼干（复数）",
+      "phonics": "COOK-ies",
+      "audio": "audio/w_cookies.mp3",
+      "phonicsAudio": "audio/w_cookies_phonics.mp3",
+      "ipaSegments": [
+        "kʊkiz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_course",
+      "text": "Course",
+      "ipa": "/kɔːrs/",
+      "zh": "当然（of course）",
+      "phonics": "COURSE",
+      "audio": "audio/w_course.mp3",
+      "phonicsAudio": "audio/w_course_phonics.mp3",
+      "ipaSegments": [
+        "kɔːrs"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_cycling",
+      "text": "Cycling",
+      "ipa": "/ˈsaɪklɪŋ/",
+      "zh": "骑车",
+      "phonics": "CY-cling",
+      "audio": "audio/w_cycling.mp3",
+      "phonicsAudio": "audio/w_cycling_phonics.mp3",
+      "ipaSegments": [
+        "saɪklɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_dance",
+      "text": "Dance",
+      "ipa": "/dæns/",
+      "zh": "跳舞",
+      "phonics": "DANCE",
+      "audio": "audio/w_dance.mp3",
+      "phonicsAudio": "audio/w_dance_phonics.mp3",
+      "ipaSegments": [
+        "dæns"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_dancing",
+      "text": "Dancing",
+      "ipa": "/ˈdænsɪŋ/",
+      "zh": "跳舞",
+      "phonics": "DAN-cing",
+      "audio": "audio/w_dancing.mp3",
+      "phonicsAudio": "audio/w_dancing_phonics.mp3",
+      "ipaSegments": [
+        "dænsɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_day",
+      "text": "Day",
+      "ipa": "/deɪ/",
+      "zh": "天/白天",
+      "phonics": "DAY",
+      "audio": "audio/w_day.mp3",
+      "phonicsAudio": "audio/w_day_phonics.mp3",
+      "ipaSegments": [
+        "deɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_delicious",
+      "text": "Delicious",
+      "ipa": "/dɪˈlɪʃəs/",
+      "zh": "美味的",
+      "phonics": "de-LI-cious",
+      "audio": "audio/w_delicious.mp3",
+      "phonicsAudio": "audio/w_delicious_phonics.mp3",
+      "ipaSegments": [
+        "dɪ",
+        "lɪʃəs"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_disc",
+      "text": "Disc",
+      "ipa": "/dɪsk/",
+      "zh": "圆盘",
+      "phonics": "DISC",
+      "audio": "audio/w_disc.mp3",
+      "phonicsAudio": "audio/w_disc_phonics.mp3",
+      "ipaSegments": [
+        "dɪsk"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_do",
+      "text": "Do",
+      "ipa": "/duː/",
+      "zh": "做",
+      "phonics": "DO",
+      "audio": "audio/w_do.mp3",
+      "phonicsAudio": "audio/w_do_phonics.mp3",
+      "ipaSegments": [
+        "duː"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_dog",
+      "text": "Dog",
+      "ipa": "/dɔːɡ/",
+      "zh": "狗",
+      "phonics": "DOG",
+      "audio": "audio/w_dog.mp3",
+      "phonicsAudio": "audio/w_dog_phonics.mp3",
+      "ipaSegments": [
+        "dɔːɡ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_doing",
+      "text": "Doing",
+      "ipa": "/ˈduːɪŋ/",
+      "zh": "正在做",
+      "phonics": "DO-ing",
+      "audio": "audio/w_doing.mp3",
+      "phonicsAudio": "audio/w_doing_phonics.mp3",
+      "ipaSegments": [
+        "duːɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_dont",
+      "text": "Don't",
+      "ipa": "/doʊnt/",
+      "zh": "不要",
+      "phonics": "DON'T",
+      "audio": "audio/w_dont.mp3",
+      "phonicsAudio": "audio/w_dont_phonics.mp3",
+      "ipaSegments": [
+        "doʊnt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_dreams",
+      "text": "Dreams",
+      "ipa": "/driːmz/",
+      "zh": "梦",
+      "phonics": "DREAMS",
+      "audio": "audio/w_dreams.mp3",
+      "phonicsAudio": "audio/w_dreams_phonics.mp3",
+      "ipaSegments": [
+        "driːmz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_egg",
+      "text": "Egg",
+      "ipa": "/eɡ/",
+      "zh": "鸡蛋",
+      "phonics": "EGG",
+      "audio": "audio/w_egg.mp3",
+      "phonicsAudio": "audio/w_egg_phonics.mp3",
+      "ipaSegments": [
+        "eɡ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_english",
+      "text": "English",
+      "ipa": "/ˈɪŋɡlɪʃ/",
+      "zh": "英语",
+      "phonics": "ENG-lish",
+      "audio": "audio/w_english.mp3",
+      "phonicsAudio": "audio/w_english_phonics.mp3",
+      "ipaSegments": [
+        "ɪŋɡlɪʃ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_evening",
+      "text": "Evening",
+      "ipa": "/ˈiːvnɪŋ/",
+      "zh": "晚上",
+      "phonics": "EVE-ning",
+      "audio": "audio/w_evening.mp3",
+      "phonicsAudio": "audio/w_evening_phonics.mp3",
+      "ipaSegments": [
+        "iːvnɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_excuse",
+      "text": "Excuse",
+      "ipa": "/ɪkˈskjuːz/",
+      "zh": "打扰/原谅",
+      "phonics": "ex-CUSE",
+      "audio": "audio/w_excuse.mp3",
+      "phonicsAudio": "audio/w_excuse_phonics.mp3",
+      "ipaSegments": [
+        "ɪk",
+        "skjuːz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_feed",
+      "text": "Feed",
+      "ipa": "/fiːd/",
+      "zh": "喂",
+      "phonics": "FEED",
+      "audio": "audio/w_feed.mp3",
+      "phonicsAudio": "audio/w_feed_phonics.mp3",
+      "ipaSegments": [
+        "fiːd"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_feels",
+      "text": "Feels",
+      "ipa": "/fiːlz/",
+      "zh": "感觉",
+      "phonics": "FEELS",
+      "audio": "audio/w_feels.mp3",
+      "phonicsAudio": "audio/w_feels_phonics.mp3",
+      "ipaSegments": [
+        "fiːlz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_fine",
+      "text": "Fine",
+      "ipa": "/faɪn/",
+      "zh": "很好",
+      "phonics": "FINE",
+      "audio": "audio/w_fine.mp3",
+      "phonicsAudio": "audio/w_fine_phonics.mp3",
+      "ipaSegments": [
+        "faɪn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_fish",
+      "text": "Fish",
+      "ipa": "/fɪʃ/",
+      "zh": "鱼",
+      "phonics": "FISH",
+      "audio": "audio/w_fish.mp3",
+      "phonicsAudio": "audio/w_fish_phonics.mp3",
+      "ipaSegments": [
+        "fɪʃ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_five",
+      "text": "Five",
+      "ipa": "/faɪv/",
+      "zh": "五",
+      "phonics": "FIVE",
+      "audio": "audio/w_five.mp3",
+      "phonicsAudio": "audio/w_five_phonics.mp3",
+      "ipaSegments": [
+        "faɪv"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_food",
+      "text": "Food",
+      "ipa": "/fuːd/",
+      "zh": "食物",
+      "phonics": "FOOD",
+      "audio": "audio/w_food.mp3",
+      "phonicsAudio": "audio/w_food_phonics.mp3",
+      "ipaSegments": [
+        "fuːd"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_football",
+      "text": "Football",
+      "ipa": "/ˈfʊtbɔːl/",
+      "zh": "足球",
+      "phonics": "FOOT-ball",
+      "audio": "audio/w_football.mp3",
+      "phonicsAudio": "audio/w_football_phonics.mp3",
+      "ipaSegments": [
+        "fʊtbɔːl"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_for",
+      "text": "For",
+      "ipa": "/fɔːr/",
+      "zh": "为了",
+      "phonics": "FOR",
+      "audio": "audio/w_for.mp3",
+      "phonicsAudio": "audio/w_for_phonics.mp3",
+      "ipaSegments": [
+        "fɔːr"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_fox",
+      "text": "Fox",
+      "ipa": "/fɑːks/",
+      "zh": "狐狸",
+      "phonics": "FOX",
+      "audio": "audio/w_fox.mp3",
+      "phonicsAudio": "audio/w_fox_phonics.mp3",
+      "ipaSegments": [
+        "fɑːks"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_frisbee",
+      "text": "Frisbee",
+      "ipa": "/ˈfrɪzbi/",
+      "zh": "飞盘",
+      "phonics": "FRIS-bee",
+      "audio": "audio/w_frisbee.mp3",
+      "phonicsAudio": "audio/w_frisbee_phonics.mp3",
+      "ipaSegments": [
+        "frɪzbi"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_from",
+      "text": "From",
+      "ipa": "/frʌm/",
+      "zh": "来自",
+      "phonics": "FROM",
+      "audio": "audio/w_from.mp3",
+      "phonicsAudio": "audio/w_from_phonics.mp3",
+      "ipaSegments": [
+        "frʌm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_fun",
+      "text": "Fun",
+      "ipa": "/fʌn/",
+      "zh": "有趣",
+      "phonics": "FUN",
+      "audio": "audio/w_fun.mp3",
+      "phonicsAudio": "audio/w_fun_phonics.mp3",
+      "ipaSegments": [
+        "fʌn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_glad",
+      "text": "Glad",
+      "ipa": "/ɡlæd/",
+      "zh": "高兴的",
+      "phonics": "GLAD",
+      "audio": "audio/w_glad.mp3",
+      "phonicsAudio": "audio/w_glad_phonics.mp3",
+      "ipaSegments": [
+        "ɡlæd"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_go",
+      "text": "Go",
+      "ipa": "/ɡoʊ/",
+      "zh": "去",
+      "phonics": "GO",
+      "audio": "audio/w_go.mp3",
+      "phonicsAudio": "audio/w_go_phonics.mp3",
+      "ipaSegments": [
+        "ɡoʊ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_going",
+      "text": "Going",
+      "ipa": "/ˈɡoʊɪŋ/",
+      "zh": "正在去",
+      "phonics": "GO-ing",
+      "audio": "audio/w_going.mp3",
+      "phonicsAudio": "audio/w_going_phonics.mp3",
+      "ipaSegments": [
+        "ɡoʊɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_good",
+      "text": "Good",
+      "ipa": "/ɡʊd/",
+      "zh": "好的",
+      "phonics": "GOOD",
+      "audio": "audio/w_good.mp3",
+      "phonicsAudio": "audio/w_good_phonics.mp3",
+      "ipaSegments": [
+        "ɡʊd"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_goodbye",
+      "text": "Goodbye",
+      "ipa": "/ˌɡʊdˈbaɪ/",
+      "zh": "再见",
+      "phonics": "good-BYE",
+      "audio": "audio/w_goodbye.mp3",
+      "phonicsAudio": "audio/w_goodbye_phonics.mp3",
+      "ipaSegments": [
+        "ɡʊd",
+        "baɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_goodnight",
+      "text": "Goodnight",
+      "ipa": "/ˌɡʊdˈnaɪt/",
+      "zh": "晚安",
+      "phonics": "good-NIGHT",
+      "audio": "audio/w_goodnight.mp3",
+      "phonicsAudio": "audio/w_goodnight_phonics.mp3",
+      "ipaSegments": [
+        "ɡʊd",
+        "naɪt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_grape",
+      "text": "Grape",
+      "ipa": "/ɡreɪp/",
+      "zh": "葡萄",
+      "phonics": "GRAPE",
+      "audio": "audio/w_grape.mp3",
+      "phonicsAudio": "audio/w_grape_phonics.mp3",
+      "ipaSegments": [
+        "ɡreɪp"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_grapes",
+      "text": "Grapes",
+      "ipa": "/ɡreɪps/",
+      "zh": "葡萄（复数）",
+      "phonics": "GRAPES",
+      "audio": "audio/w_grapes.mp3",
+      "phonicsAudio": "audio/w_grapes_phonics.mp3",
+      "ipaSegments": [
+        "ɡreɪps"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_great",
+      "text": "Great",
+      "ipa": "/ɡreɪt/",
+      "zh": "太棒了",
+      "phonics": "GREAT",
+      "audio": "audio/w_great.mp3",
+      "phonicsAudio": "audio/w_great_phonics.mp3",
+      "ipaSegments": [
+        "ɡreɪt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_happy",
+      "text": "Happy",
+      "ipa": "/ˈhæpi/",
+      "zh": "开心的",
+      "phonics": "HAP-py",
+      "audio": "audio/w_happy.mp3",
+      "phonicsAudio": "audio/w_happy_phonics.mp3",
+      "ipaSegments": [
+        "hæpi"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_have",
+      "text": "Have",
+      "ipa": "/hæv/",
+      "zh": "有",
+      "phonics": "HAVE",
+      "audio": "audio/w_have.mp3",
+      "phonicsAudio": "audio/w_have_phonics.mp3",
+      "ipaSegments": [
+        "hæv"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_hello",
+      "text": "Hello",
+      "ipa": "/həˈloʊ/",
+      "zh": "你好",
+      "phonics": "he-LLO",
+      "audio": "audio/w_hello.mp3",
+      "phonicsAudio": "audio/w_hello_phonics.mp3",
+      "ipaSegments": [
+        "hə",
+        "loʊ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_help",
+      "text": "Help",
+      "ipa": "/help/",
+      "zh": "帮助",
+      "phonics": "HELP",
+      "audio": "audio/w_help.mp3",
+      "phonicsAudio": "audio/w_help_phonics.mp3",
+      "ipaSegments": [
+        "help"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_hey",
+      "text": "Hey",
+      "ipa": "/heɪ/",
+      "zh": "嘿",
+      "phonics": "HEY",
+      "audio": "audio/w_hey.mp3",
+      "phonicsAudio": "audio/w_hey_phonics.mp3",
+      "ipaSegments": [
+        "heɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_hi",
+      "text": "Hi",
+      "ipa": "/haɪ/",
+      "zh": "嗨",
+      "phonics": "HI",
+      "audio": "audio/w_hi.mp3",
+      "phonicsAudio": "audio/w_hi_phonics.mp3",
+      "ipaSegments": [
+        "haɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_hoops",
+      "text": "Hoops",
+      "ipa": "/huːps/",
+      "zh": "篮筐",
+      "phonics": "HOOPS",
+      "audio": "audio/w_hoops.mp3",
+      "phonicsAudio": "audio/w_hoops_phonics.mp3",
+      "ipaSegments": [
+        "huːps"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_hop",
+      "text": "Hop",
+      "ipa": "/hɑːp/",
+      "zh": "跳",
+      "phonics": "HOP",
+      "audio": "audio/w_hop.mp3",
+      "phonicsAudio": "audio/w_hop_phonics.mp3",
+      "ipaSegments": [
+        "hɑːp"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_how",
+      "text": "How",
+      "ipa": "/haʊ/",
+      "zh": "怎样",
+      "phonics": "HOW",
+      "audio": "audio/w_how.mp3",
+      "phonicsAudio": "audio/w_how_phonics.mp3",
+      "ipaSegments": [
+        "haʊ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_hows",
+      "text": "How's",
+      "ipa": "/haʊz/",
+      "zh": "怎样（how's）",
+      "phonics": "HOW'S",
+      "audio": "audio/w_hows.mp3",
+      "phonicsAudio": "audio/w_hows_phonics.mp3",
+      "ipaSegments": [
+        "haʊz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_hungry",
+      "text": "Hungry",
+      "ipa": "/ˈhʌŋɡri/",
+      "zh": "饿的",
+      "phonics": "HUN-gry",
+      "audio": "audio/w_hungry.mp3",
+      "phonicsAudio": "audio/w_hungry_phonics.mp3",
+      "ipaSegments": [
+        "hʌŋɡri"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_i",
+      "text": "I",
+      "ipa": "/aɪ/",
+      "zh": "我",
+      "phonics": "I",
+      "audio": "audio/w_i.mp3",
+      "phonicsAudio": "audio/w_i_phonics.mp3",
+      "ipaSegments": [
+        "aɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_im",
+      "text": "I'm",
+      "ipa": "/aɪm/",
+      "zh": "我是",
+      "phonics": "I'M",
+      "audio": "audio/w_im.mp3",
+      "phonicsAudio": "audio/w_im_phonics.mp3",
+      "ipaSegments": [
+        "aɪm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_is",
+      "text": "Is",
+      "ipa": "/ɪz/",
+      "zh": "是",
+      "phonics": "IS",
+      "audio": "audio/w_is.mp3",
+      "phonicsAudio": "audio/w_is_phonics.mp3",
+      "ipaSegments": [
+        "ɪz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_it",
+      "text": "It",
+      "ipa": "/ɪt/",
+      "zh": "它",
+      "phonics": "IT",
+      "audio": "audio/w_it.mp3",
+      "phonicsAudio": "audio/w_it_phonics.mp3",
+      "ipaSegments": [
+        "ɪt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_its",
+      "text": "It's",
+      "ipa": "/ɪts/",
+      "zh": "它是",
+      "phonics": "IT'S",
+      "audio": "audio/w_its.mp3",
+      "phonicsAudio": "audio/w_its_phonics.mp3",
+      "ipaSegments": [
+        "ɪts"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_jump",
+      "text": "Jump",
+      "ipa": "/dʒʌmp/",
+      "zh": "跳",
+      "phonics": "JUMP",
+      "audio": "audio/w_jump.mp3",
+      "phonicsAudio": "audio/w_jump_phonics.mp3",
+      "ipaSegments": [
+        "dʒʌmp"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_jumping",
+      "text": "Jumping",
+      "ipa": "/ˈdʒʌmpɪŋ/",
+      "zh": "跳跃",
+      "phonics": "JUMP-ing",
+      "audio": "audio/w_jumping.mp3",
+      "phonicsAudio": "audio/w_jumping_phonics.mp3",
+      "ipaSegments": [
+        "dʒʌmpɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_kick",
+      "text": "Kick",
+      "ipa": "/kɪk/",
+      "zh": "踢",
+      "phonics": "KICK",
+      "audio": "audio/w_kick.mp3",
+      "phonicsAudio": "audio/w_kick_phonics.mp3",
+      "ipaSegments": [
+        "kɪk"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_kitten",
+      "text": "Kitten",
+      "ipa": "/ˈkɪtn/",
+      "zh": "小猫",
+      "phonics": "KIT-ten",
+      "audio": "audio/w_kitten.mp3",
+      "phonicsAudio": "audio/w_kitten_phonics.mp3",
+      "ipaSegments": [
+        "kɪtn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_kitty",
+      "text": "Kitty",
+      "ipa": "/ˈkɪti/",
+      "zh": "猫咪",
+      "phonics": "KIT-ty",
+      "audio": "audio/w_kitty.mp3",
+      "phonicsAudio": "audio/w_kitty_phonics.mp3",
+      "ipaSegments": [
+        "kɪti"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_later",
+      "text": "Later",
+      "ipa": "/ˈleɪtər/",
+      "zh": "稍后",
+      "phonics": "LA-ter",
+      "audio": "audio/w_later.mp3",
+      "phonicsAudio": "audio/w_later_phonics.mp3",
+      "ipaSegments": [
+        "leɪtər"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_learn",
+      "text": "Learn",
+      "ipa": "/lɜːrn/",
+      "zh": "学习",
+      "phonics": "LEARN",
+      "audio": "audio/w_learn.mp3",
+      "phonicsAudio": "audio/w_learn_phonics.mp3",
+      "ipaSegments": [
+        "lɜːrn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_lets",
+      "text": "Let's",
+      "ipa": "/lets/",
+      "zh": "让我们",
+      "phonics": "LET'S",
+      "audio": "audio/w_lets.mp3",
+      "phonicsAudio": "audio/w_lets_phonics.mp3",
+      "ipaSegments": [
+        "lets"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_like",
+      "text": "Like",
+      "ipa": "/laɪk/",
+      "zh": "喜欢",
+      "phonics": "LIKE",
+      "audio": "audio/w_like.mp3",
+      "phonicsAudio": "audio/w_like_phonics.mp3",
+      "ipaSegments": [
+        "laɪk"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_live",
+      "text": "Live",
+      "ipa": "/lɪv/",
+      "zh": "居住",
+      "phonics": "LIVE",
+      "audio": "audio/w_live.mp3",
+      "phonicsAudio": "audio/w_live_phonics.mp3",
+      "ipaSegments": [
+        "lɪv"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_lot",
+      "text": "Lot",
+      "ipa": "/lɑːt/",
+      "zh": "很多",
+      "phonics": "LOT",
+      "audio": "audio/w_lot.mp3",
+      "phonicsAudio": "audio/w_lot_phonics.mp3",
+      "ipaSegments": [
+        "lɑːt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_love",
+      "text": "Love",
+      "ipa": "/lʌv/",
+      "zh": "爱",
+      "phonics": "LOVE",
+      "audio": "audio/w_love.mp3",
+      "phonicsAudio": "audio/w_love_phonics.mp3",
+      "ipaSegments": [
+        "lʌv"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_me",
+      "text": "Me",
+      "ipa": "/miː/",
+      "zh": "我",
+      "phonics": "ME",
+      "audio": "audio/w_me.mp3",
+      "phonicsAudio": "audio/w_me_phonics.mp3",
+      "ipaSegments": [
+        "miː"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_meat",
+      "text": "Meat",
+      "ipa": "/miːt/",
+      "zh": "肉",
+      "phonics": "MEAT",
+      "audio": "audio/w_meat.mp3",
+      "phonicsAudio": "audio/w_meat_phonics.mp3",
+      "ipaSegments": [
+        "miːt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_meet",
+      "text": "Meet",
+      "ipa": "/miːt/",
+      "zh": "见面",
+      "phonics": "MEET",
+      "audio": "audio/w_meet.mp3",
+      "phonicsAudio": "audio/w_meet_phonics.mp3",
+      "ipaSegments": [
+        "miːt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_milk",
+      "text": "Milk",
+      "ipa": "/mɪlk/",
+      "zh": "牛奶",
+      "phonics": "MILK",
+      "audio": "audio/w_milk.mp3",
+      "phonicsAudio": "audio/w_milk_phonics.mp3",
+      "ipaSegments": [
+        "mɪlk"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_more",
+      "text": "More",
+      "ipa": "/mɔːr/",
+      "zh": "更多",
+      "phonics": "MORE",
+      "audio": "audio/w_more.mp3",
+      "phonicsAudio": "audio/w_more_phonics.mp3",
+      "ipaSegments": [
+        "mɔːr"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_morning",
+      "text": "Morning",
+      "ipa": "/ˈmɔːrnɪŋ/",
+      "zh": "早上",
+      "phonics": "MOR-ning",
+      "audio": "audio/w_morning.mp3",
+      "phonicsAudio": "audio/w_morning_phonics.mp3",
+      "ipaSegments": [
+        "mɔːrnɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_much",
+      "text": "Much",
+      "ipa": "/mʌtʃ/",
+      "zh": "很多",
+      "phonics": "MUCH",
+      "audio": "audio/w_much.mp3",
+      "phonicsAudio": "audio/w_much_phonics.mp3",
+      "ipaSegments": [
+        "mʌtʃ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_music",
+      "text": "Music",
+      "ipa": "/ˈmjuːzɪk/",
+      "zh": "音乐",
+      "phonics": "MU-sic",
+      "audio": "audio/w_music.mp3",
+      "phonicsAudio": "audio/w_music_phonics.mp3",
+      "ipaSegments": [
+        "mjuːzɪk"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_my",
+      "text": "My",
+      "ipa": "/maɪ/",
+      "zh": "我的",
+      "phonics": "MY",
+      "audio": "audio/w_my.mp3",
+      "phonicsAudio": "audio/w_my_phonics.mp3",
+      "ipaSegments": [
+        "maɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_name",
+      "text": "Name",
+      "ipa": "/neɪm/",
+      "zh": "名字",
+      "phonics": "NAME",
+      "audio": "audio/w_name.mp3",
+      "phonicsAudio": "audio/w_name_phonics.mp3",
+      "ipaSegments": [
+        "neɪm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_nice",
+      "text": "Nice",
+      "ipa": "/naɪs/",
+      "zh": "好的",
+      "phonics": "NICE",
+      "audio": "audio/w_nice.mp3",
+      "phonicsAudio": "audio/w_nice_phonics.mp3",
+      "ipaSegments": [
+        "naɪs"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_night",
+      "text": "Night",
+      "ipa": "/naɪt/",
+      "zh": "夜晚",
+      "phonics": "NIGHT",
+      "audio": "audio/w_night.mp3",
+      "phonicsAudio": "audio/w_night_phonics.mp3",
+      "ipaSegments": [
+        "naɪt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_no",
+      "text": "No",
+      "ipa": "/noʊ/",
+      "zh": "不",
+      "phonics": "NO",
+      "audio": "audio/w_no.mp3",
+      "phonicsAudio": "audio/w_no_phonics.mp3",
+      "ipaSegments": [
+        "noʊ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_nope",
+      "text": "Nope",
+      "ipa": "/noʊp/",
+      "zh": "不（口语）",
+      "phonics": "NOPE",
+      "audio": "audio/w_nope.mp3",
+      "phonicsAudio": "audio/w_nope_phonics.mp3",
+      "ipaSegments": [
+        "noʊp"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_of",
+      "text": "Of",
+      "ipa": "/ʌv/",
+      "zh": "的",
+      "phonics": "OF",
+      "audio": "audio/w_of.mp3",
+      "phonicsAudio": "audio/w_of_phonics.mp3",
+      "ipaSegments": [
+        "ʌv"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_ok",
+      "text": "OK",
+      "ipa": "/ˌoʊˈkeɪ/",
+      "zh": "好的",
+      "phonics": "O-K",
+      "audio": "audio/w_ok.mp3",
+      "phonicsAudio": "audio/w_ok_phonics.mp3",
+      "ipaSegments": [
+        "oʊ",
+        "keɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_okay",
+      "text": "Okay",
+      "ipa": "/ˌoʊˈkeɪ/",
+      "zh": "好的",
+      "phonics": "O-KAY",
+      "audio": "audio/w_okay.mp3",
+      "phonicsAudio": "audio/w_okay_phonics.mp3",
+      "ipaSegments": [
+        "oʊ",
+        "keɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_old",
+      "text": "Old",
+      "ipa": "/oʊld/",
+      "zh": "年老的/岁",
+      "phonics": "OLD",
+      "audio": "audio/w_old.mp3",
+      "phonicsAudio": "audio/w_old_phonics.mp3",
+      "ipaSegments": [
+        "oʊld"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_on",
+      "text": "On",
+      "ipa": "/ɑːn/",
+      "zh": "在…上",
+      "phonics": "ON",
+      "audio": "audio/w_on.mp3",
+      "phonicsAudio": "audio/w_on_phonics.mp3",
+      "ipaSegments": [
+        "ɑːn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_orange",
+      "text": "Orange",
+      "ipa": "/ˈɔːrɪndʒ/",
+      "zh": "橙子",
+      "phonics": "OR-ange",
+      "audio": "audio/w_orange.mp3",
+      "phonicsAudio": "audio/w_orange_phonics.mp3",
+      "ipaSegments": [
+        "ɔːrɪndʒ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_panda",
+      "text": "Panda",
+      "ipa": "/ˈpændə/",
+      "zh": "熊猫",
+      "phonics": "PAN-da",
+      "audio": "audio/w_panda.mp3",
+      "phonicsAudio": "audio/w_panda_phonics.mp3",
+      "ipaSegments": [
+        "pændə"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_play",
+      "text": "Play",
+      "ipa": "/pleɪ/",
+      "zh": "玩",
+      "phonics": "PLAY",
+      "audio": "audio/w_play.mp3",
+      "phonicsAudio": "audio/w_play_phonics.mp3",
+      "ipaSegments": [
+        "pleɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_please",
+      "text": "Please",
+      "ipa": "/pliːz/",
+      "zh": "请",
+      "phonics": "PLEASE",
+      "audio": "audio/w_please.mp3",
+      "phonicsAudio": "audio/w_please_phonics.mp3",
+      "ipaSegments": [
+        "pliːz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_pleased",
+      "text": "Pleased",
+      "ipa": "/pliːzd/",
+      "zh": "高兴的",
+      "phonics": "PLEASED",
+      "audio": "audio/w_pleased.mp3",
+      "phonicsAudio": "audio/w_pleased_phonics.mp3",
+      "ipaSegments": [
+        "pliːzd"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_problem",
+      "text": "Problem",
+      "ipa": "/ˈprɑːbləm/",
+      "zh": "问题",
+      "phonics": "PROB-lem",
+      "audio": "audio/w_problem.mp3",
+      "phonicsAudio": "audio/w_problem_phonics.mp3",
+      "ipaSegments": [
+        "prɑːbləm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_puppy",
+      "text": "Puppy",
+      "ipa": "/ˈpʌpi/",
+      "zh": "小狗",
+      "phonics": "PUP-py",
+      "audio": "audio/w_puppy.mp3",
+      "phonicsAudio": "audio/w_puppy_phonics.mp3",
+      "ipaSegments": [
+        "pʌpi"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_rabbit",
+      "text": "Rabbit",
+      "ipa": "/ˈræbɪt/",
+      "zh": "兔子",
+      "phonics": "RAB-bit",
+      "audio": "audio/w_rabbit.mp3",
+      "phonicsAudio": "audio/w_rabbit_phonics.mp3",
+      "ipaSegments": [
+        "ræbɪt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_race",
+      "text": "Race",
+      "ipa": "/reɪs/",
+      "zh": "赛跑",
+      "phonics": "RACE",
+      "audio": "audio/w_race.mp3",
+      "phonicsAudio": "audio/w_race_phonics.mp3",
+      "ipaSegments": [
+        "reɪs"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_rice",
+      "text": "Rice",
+      "ipa": "/raɪs/",
+      "zh": "米饭",
+      "phonics": "RICE",
+      "audio": "audio/w_rice.mp3",
+      "phonicsAudio": "audio/w_rice_phonics.mp3",
+      "ipaSegments": [
+        "raɪs"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_ride",
+      "text": "Ride",
+      "ipa": "/raɪd/",
+      "zh": "骑",
+      "phonics": "RIDE",
+      "audio": "audio/w_ride.mp3",
+      "phonicsAudio": "audio/w_ride_phonics.mp3",
+      "ipaSegments": [
+        "raɪd"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_run",
+      "text": "Run",
+      "ipa": "/rʌn/",
+      "zh": "跑",
+      "phonics": "RUN",
+      "audio": "audio/w_run.mp3",
+      "phonicsAudio": "audio/w_run_phonics.mp3",
+      "ipaSegments": [
+        "rʌn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_running",
+      "text": "Running",
+      "ipa": "/ˈrʌnɪŋ/",
+      "zh": "跑步",
+      "phonics": "RUN-ning",
+      "audio": "audio/w_running.mp3",
+      "phonicsAudio": "audio/w_running_phonics.mp3",
+      "ipaSegments": [
+        "rʌnɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_say",
+      "text": "Say",
+      "ipa": "/seɪ/",
+      "zh": "说",
+      "phonics": "SAY",
+      "audio": "audio/w_say.mp3",
+      "phonicsAudio": "audio/w_say_phonics.mp3",
+      "ipaSegments": [
+        "seɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_see",
+      "text": "See",
+      "ipa": "/siː/",
+      "zh": "看见",
+      "phonics": "SEE",
+      "audio": "audio/w_see.mp3",
+      "phonicsAudio": "audio/w_see_phonics.mp3",
+      "ipaSegments": [
+        "siː"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_shoot",
+      "text": "Shoot",
+      "ipa": "/ʃuːt/",
+      "zh": "投篮",
+      "phonics": "SHOOT",
+      "audio": "audio/w_shoot.mp3",
+      "phonicsAudio": "audio/w_shoot_phonics.mp3",
+      "ipaSegments": [
+        "ʃuːt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_sleep",
+      "text": "Sleep",
+      "ipa": "/sliːp/",
+      "zh": "睡觉",
+      "phonics": "SLEEP",
+      "audio": "audio/w_sleep.mp3",
+      "phonicsAudio": "audio/w_sleep_phonics.mp3",
+      "ipaSegments": [
+        "sliːp"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_sleepy",
+      "text": "Sleepy",
+      "ipa": "/ˈsliːpi/",
+      "zh": "困的",
+      "phonics": "SLEE-py",
+      "audio": "audio/w_sleepy.mp3",
+      "phonicsAudio": "audio/w_sleepy_phonics.mp3",
+      "ipaSegments": [
+        "sliːpi"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_so",
+      "text": "So",
+      "ipa": "/soʊ/",
+      "zh": "如此",
+      "phonics": "SO",
+      "audio": "audio/w_so.mp3",
+      "phonicsAudio": "audio/w_so_phonics.mp3",
+      "ipaSegments": [
+        "soʊ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_soccer",
+      "text": "Soccer",
+      "ipa": "/ˈsɑːkər/",
+      "zh": "足球",
+      "phonics": "SOC-cer",
+      "audio": "audio/w_soccer.mp3",
+      "phonicsAudio": "audio/w_soccer_phonics.mp3",
+      "ipaSegments": [
+        "sɑːkər"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_soon",
+      "text": "Soon",
+      "ipa": "/suːn/",
+      "zh": "很快",
+      "phonics": "SOON",
+      "audio": "audio/w_soon.mp3",
+      "phonicsAudio": "audio/w_soon_phonics.mp3",
+      "ipaSegments": [
+        "suːn"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_sorry",
+      "text": "Sorry",
+      "ipa": "/ˈsɑːri/",
+      "zh": "对不起",
+      "phonics": "SOR-ry",
+      "audio": "audio/w_sorry.mp3",
+      "phonicsAudio": "audio/w_sorry_phonics.mp3",
+      "ipaSegments": [
+        "sɑːri"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_sunny",
+      "text": "Sunny",
+      "ipa": "/ˈsʌni/",
+      "zh": "晴朗的",
+      "phonics": "SUN-ny",
+      "audio": "audio/w_sunny.mp3",
+      "phonicsAudio": "audio/w_sunny_phonics.mp3",
+      "ipaSegments": [
+        "sʌni"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_sure",
+      "text": "Sure",
+      "ipa": "/ʃʊr/",
+      "zh": "当然",
+      "phonics": "SURE",
+      "audio": "audio/w_sure.mp3",
+      "phonicsAudio": "audio/w_sure_phonics.mp3",
+      "ipaSegments": [
+        "ʃʊr"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_sweet",
+      "text": "Sweet",
+      "ipa": "/swiːt/",
+      "zh": "甜的/美好的",
+      "phonics": "SWEET",
+      "audio": "audio/w_sweet.mp3",
+      "phonicsAudio": "audio/w_sweet_phonics.mp3",
+      "ipaSegments": [
+        "swiːt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_swim",
+      "text": "Swim",
+      "ipa": "/swɪm/",
+      "zh": "游泳",
+      "phonics": "SWIM",
+      "audio": "audio/w_swim.mp3",
+      "phonicsAudio": "audio/w_swim_phonics.mp3",
+      "ipaSegments": [
+        "swɪm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_swimming",
+      "text": "Swimming",
+      "ipa": "/ˈswɪmɪŋ/",
+      "zh": "游泳",
+      "phonics": "SWIM-ming",
+      "audio": "audio/w_swimming.mp3",
+      "phonicsAudio": "audio/w_swimming_phonics.mp3",
+      "ipaSegments": [
+        "swɪmɪŋ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_thank",
+      "text": "Thank",
+      "ipa": "/θæŋk/",
+      "zh": "感谢",
+      "phonics": "THANK",
+      "audio": "audio/w_thank.mp3",
+      "phonicsAudio": "audio/w_thank_phonics.mp3",
+      "ipaSegments": [
+        "θæŋk"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_thanks",
+      "text": "Thanks",
+      "ipa": "/θæŋks/",
+      "zh": "谢谢",
+      "phonics": "THANKS",
+      "audio": "audio/w_thanks.mp3",
+      "phonicsAudio": "audio/w_thanks_phonics.mp3",
+      "ipaSegments": [
+        "θæŋks"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_that",
+      "text": "That",
+      "ipa": "/ðæt/",
+      "zh": "那",
+      "phonics": "THAT",
+      "audio": "audio/w_that.mp3",
+      "phonicsAudio": "audio/w_that_phonics.mp3",
+      "ipaSegments": [
+        "ðæt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_thats",
+      "text": "That's",
+      "ipa": "/ðæts/",
+      "zh": "那是",
+      "phonics": "THAT'S",
+      "audio": "audio/w_thats.mp3",
+      "phonicsAudio": "audio/w_thats_phonics.mp3",
+      "ipaSegments": [
+        "ðæts"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_the",
+      "text": "The",
+      "ipa": "/ðə/",
+      "zh": "这/那",
+      "phonics": "THE",
+      "audio": "audio/w_the.mp3",
+      "phonicsAudio": "audio/w_the_phonics.mp3",
+      "ipaSegments": [
+        "ðə"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_there",
+      "text": "There",
+      "ipa": "/ðer/",
+      "zh": "那里",
+      "phonics": "THERE",
+      "audio": "audio/w_there.mp3",
+      "phonicsAudio": "audio/w_there_phonics.mp3",
+      "ipaSegments": [
+        "ðer"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_this",
+      "text": "This",
+      "ipa": "/ðɪs/",
+      "zh": "这",
+      "phonics": "THIS",
+      "audio": "audio/w_this.mp3",
+      "phonicsAudio": "audio/w_this_phonics.mp3",
+      "ipaSegments": [
+        "ðɪs"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_throw",
+      "text": "Throw",
+      "ipa": "/θroʊ/",
+      "zh": "扔",
+      "phonics": "THROW",
+      "audio": "audio/w_throw.mp3",
+      "phonicsAudio": "audio/w_throw_phonics.mp3",
+      "ipaSegments": [
+        "θroʊ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_time",
+      "text": "Time",
+      "ipa": "/taɪm/",
+      "zh": "时间",
+      "phonics": "TIME",
+      "audio": "audio/w_time.mp3",
+      "phonicsAudio": "audio/w_time_phonics.mp3",
+      "ipaSegments": [
+        "taɪm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_to",
+      "text": "To",
+      "ipa": "/tuː/",
+      "zh": "到",
+      "phonics": "TO",
+      "audio": "audio/w_to.mp3",
+      "phonicsAudio": "audio/w_to_phonics.mp3",
+      "ipaSegments": [
+        "tuː"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_today",
+      "text": "Today",
+      "ipa": "/təˈdeɪ/",
+      "zh": "今天",
+      "phonics": "to-DAY",
+      "audio": "audio/w_today.mp3",
+      "phonicsAudio": "audio/w_today_phonics.mp3",
+      "ipaSegments": [
+        "tə",
+        "deɪ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_tomorrow",
+      "text": "Tomorrow",
+      "ipa": "/təˈmɑːroʊ/",
+      "zh": "明天",
+      "phonics": "to-MOR-row",
+      "audio": "audio/w_tomorrow.mp3",
+      "phonicsAudio": "audio/w_tomorrow_phonics.mp3",
+      "ipaSegments": [
+        "tə",
+        "mɑːroʊ"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_too",
+      "text": "Too",
+      "ipa": "/tuː/",
+      "zh": "也",
+      "phonics": "TOO",
+      "audio": "audio/w_too.mp3",
+      "phonicsAudio": "audio/w_too_phonics.mp3",
+      "ipaSegments": [
+        "tuː"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_very",
+      "text": "Very",
+      "ipa": "/ˈveri/",
+      "zh": "非常",
+      "phonics": "VER-y",
+      "audio": "audio/w_very.mp3",
+      "phonicsAudio": "audio/w_very_phonics.mp3",
+      "ipaSegments": [
+        "veri"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_want",
+      "text": "Want",
+      "ipa": "/wɑːnt/",
+      "zh": "想要",
+      "phonics": "WANT",
+      "audio": "audio/w_want.mp3",
+      "phonicsAudio": "audio/w_want_phonics.mp3",
+      "ipaSegments": [
+        "wɑːnt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_weather",
+      "text": "Weather",
+      "ipa": "/ˈweðər/",
+      "zh": "天气",
+      "phonics": "WEATH-er",
+      "audio": "audio/w_weather.mp3",
+      "phonicsAudio": "audio/w_weather_phonics.mp3",
+      "ipaSegments": [
+        "weðər"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_welcome",
+      "text": "Welcome",
+      "ipa": "/ˈwelkəm/",
+      "zh": "欢迎",
+      "phonics": "WEL-come",
+      "audio": "audio/w_welcome.mp3",
+      "phonicsAudio": "audio/w_welcome_phonics.mp3",
+      "ipaSegments": [
+        "welkəm"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_what",
+      "text": "What",
+      "ipa": "/wʌt/",
+      "zh": "什么",
+      "phonics": "WHAT",
+      "audio": "audio/w_what.mp3",
+      "phonicsAudio": "audio/w_what_phonics.mp3",
+      "ipaSegments": [
+        "wʌt"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_whats",
+      "text": "What's",
+      "ipa": "/wʌts/",
+      "zh": "什么（what's）",
+      "phonics": "WHAT'S",
+      "audio": "audio/w_whats.mp3",
+      "phonicsAudio": "audio/w_whats_phonics.mp3",
+      "ipaSegments": [
+        "wʌts"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_where",
+      "text": "Where",
+      "ipa": "/wer/",
+      "zh": "哪里",
+      "phonics": "WHERE",
+      "audio": "audio/w_where.mp3",
+      "phonicsAudio": "audio/w_where_phonics.mp3",
+      "ipaSegments": [
+        "wer"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_with",
+      "text": "With",
+      "ipa": "/wɪð/",
+      "zh": "和",
+      "phonics": "WITH",
+      "audio": "audio/w_with.mp3",
+      "phonicsAudio": "audio/w_with_phonics.mp3",
+      "ipaSegments": [
+        "wɪð"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_worry",
+      "text": "Worry",
+      "ipa": "/ˈwɜːri/",
+      "zh": "担心",
+      "phonics": "WOR-ry",
+      "audio": "audio/w_worry.mp3",
+      "phonicsAudio": "audio/w_worry_phonics.mp3",
+      "ipaSegments": [
+        "wɜːri"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_yeah",
+      "text": "Yeah",
+      "ipa": "/jeə/",
+      "zh": "是啊",
+      "phonics": "YEAH",
+      "audio": "audio/w_yeah.mp3",
+      "phonicsAudio": "audio/w_yeah_phonics.mp3",
+      "ipaSegments": [
+        "jeə"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_years",
+      "text": "Years",
+      "ipa": "/jɪrz/",
+      "zh": "年",
+      "phonics": "YEARS",
+      "audio": "audio/w_years.mp3",
+      "phonicsAudio": "audio/w_years_phonics.mp3",
+      "ipaSegments": [
+        "jɪrz"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_yep",
+      "text": "Yep",
+      "ipa": "/jep/",
+      "zh": "是的",
+      "phonics": "YEP",
+      "audio": "audio/w_yep.mp3",
+      "phonicsAudio": "audio/w_yep_phonics.mp3",
+      "ipaSegments": [
+        "jep"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_yes",
+      "text": "Yes",
+      "ipa": "/jes/",
+      "zh": "是的",
+      "phonics": "YES",
+      "audio": "audio/w_yes.mp3",
+      "phonicsAudio": "audio/w_yes_phonics.mp3",
+      "ipaSegments": [
+        "jes"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_you",
+      "text": "You",
+      "ipa": "/juː/",
+      "zh": "你",
+      "phonics": "YOU",
+      "audio": "audio/w_you.mp3",
+      "phonicsAudio": "audio/w_you_phonics.mp3",
+      "ipaSegments": [
+        "juː"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_youre",
+      "text": "You're",
+      "ipa": "/jʊr/",
+      "zh": "你是",
+      "phonics": "YOU'RE",
+      "audio": "audio/w_youre.mp3",
+      "phonicsAudio": "audio/w_youre_phonics.mp3",
+      "ipaSegments": [
+        "jʊr"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_your",
+      "text": "Your",
+      "ipa": "/jʊr/",
+      "zh": "你的",
+      "phonics": "YOUR",
+      "audio": "audio/w_your.mp3",
+      "phonicsAudio": "audio/w_your_phonics.mp3",
+      "ipaSegments": [
+        "jʊr"
+      ],
+      "tags": [
+        "command-vocab"
+      ]
+    },
+    {
+      "id": "w_yummy",
+      "text": "Yummy",
+      "ipa": "/ˈjʌmi/",
+      "zh": "好吃",
+      "phonics": "YUM-my",
+      "audio": "audio/w_yummy.mp3",
+      "phonicsAudio": "audio/w_yummy_phonics.mp3",
+      "ipaSegments": [
+        "jʌmi"
+      ],
+      "tags": [
+        "command-vocab"
       ]
     }
   ]

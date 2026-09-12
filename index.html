@@ -403,6 +403,17 @@
       background: linear-gradient(180deg, #7eb6ff, #5b91f0); color: #061018; font-weight: 650;
     }
     .learn button:hover { filter: brightness(1.08); }
+
+    .learn .search {
+      width: 100%; box-sizing: border-box; margin: 0 0 10px;
+      border: 1px solid rgba(255,255,255,0.14); border-radius: 12px;
+      padding: 9px 12px; font: inherit; font-size: 13px;
+      color: #e2e8f0; background: rgba(255,255,255,0.06); outline: none;
+    }
+    .learn .search::placeholder { color: rgba(226,232,240,0.4); }
+    .learn .search-meta {
+      font-size: 11px; color: rgba(226,232,240,0.45); margin: -4px 0 8px;
+    }
     .learn .list {
       display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
       max-height: 220px; overflow: auto; padding-right: 2px;
@@ -731,6 +742,8 @@
       <button type="button" id="btnSlow">慢速再听</button>
       <button type="button" id="btnNext">下一条</button>
     </div>
+    <input class="search" id="enSearch" type="search" placeholder="搜索单词 / Search words" autocomplete="off" />
+    <div class="search-meta" id="enSearchMeta"></div>
     <div class="list" id="enList"></div>
     <div class="meta">可爱童声音色 AnaNeural · 非浏览器简易 TTS</div>
   </aside>
@@ -1755,14 +1768,36 @@
     // currentAudio declared earlier for action speech
 
 
+    let wordFilter = '';
+    function visibleWordIndexes() {
+      const q = (wordFilter || '').trim().toLowerCase();
+      const items = WORDS.items || [];
+      if (!q) return items.map((_, i) => i);
+      return items.map((it, i) => i).filter((i) => {
+        const it = items[i];
+        const bag = [it.text, it.zh, it.ipa, it.phonics, it.id].join(' ').toLowerCase();
+        return bag.includes(q);
+      });
+    }
+
+    function renderWordList(activeIndex = wordIndex) {
+      const list = document.getElementById('enList');
+      const meta = document.getElementById('enSearchMeta');
+      if (!list) return;
+      const idxs = visibleWordIndexes();
+      if (meta) meta.textContent = wordFilter.trim() ? `找到 ${idxs.length} 个` : `共 ${ (WORDS.items||[]).length } 个单词`;
+      list.innerHTML = idxs.map((i) => {
+        const it = WORDS.items[i];
+        return `<button type="button" data-i="${i}" class="${i === activeIndex ? 'active' : ''}">${it.text}</button>`;
+      }).join('');
+    }
+
     async function loadWords() {
       const res = await fetch('words.json');
       WORDS = await res.json();
-      const list = document.getElementById('enList');
-      list.innerHTML = WORDS.items.map((it, i) =>
-        `<button type="button" data-i="${i}">${it.text}</button>`
-      ).join('');
-      showWord(0);
+      const idxs = visibleWordIndexes();
+      showWord(idxs[0] || 0);
+      renderWordList(wordIndex);
     }
 
     function showWord(i) {
@@ -1775,9 +1810,7 @@
         : it.ipa;
       document.getElementById('enPhonics').textContent = '音标逐个读 · ' + it.ipa;
       document.getElementById('enZh').textContent = it.zh;
-      document.querySelectorAll('#enList button').forEach((b) => {
-        b.classList.toggle('active', Number(b.dataset.i) === wordIndex);
-      });
+      renderWordList(wordIndex);
     }
 
     function stopAudio() {
@@ -1804,6 +1837,15 @@
       playWord();
     }
 
+    const enSearch = document.getElementById('enSearch');
+    if (enSearch) {
+      enSearch.addEventListener('input', () => {
+        wordFilter = enSearch.value || '';
+        const idxs = visibleWordIndexes();
+        if (idxs.length && !idxs.includes(wordIndex)) showWord(idxs[0]);
+        else renderWordList(wordIndex);
+      });
+    }
     document.getElementById('btnPlay').addEventListener('click', () => playWord());
     document.getElementById('btnPhonics').addEventListener('click', () => playWord({ phonics: true }));
     document.getElementById('btnSlow').addEventListener('click', () => playWord({ slow: true }));
