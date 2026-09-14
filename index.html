@@ -2334,7 +2334,10 @@
       const cls = map[id] || 'play-dance';
       pet.classList.add('acting', cls);
       pet.classList.remove('walk', 'sleep');
-      clearPetPlayPose._t = setTimeout(() => clearPetPlayPose(), ms);
+      // ms <= 0 means keep pose until clearPetPlayPose() (used while singing)
+      if (ms > 0 && isFinite(ms)) {
+        clearPetPlayPose._t = setTimeout(() => clearPetPlayPose(), ms);
+      }
     }
 
     function playVisual(play) {
@@ -2459,8 +2462,9 @@
         song = SONGS.songs[Math.floor(Math.random() * SONGS.songs.length)];
       }
       if (!song) return;
-      setHappy(2400);
-      setPetPlayPose('dance', 5000);
+      setHappy(2800);
+      // Dance for the whole song; cleared in stopSing / onended
+      setPetPlayPose('dance', 0);
       burst(['🎵', song.emoji || '🎤', '✨'], state.x, state.y - 70);
       say(song.title || 'Sing!', 3200);
       noteDailyFirstEnglish();
@@ -2475,21 +2479,25 @@
         const audio = new Audio(url);
         songAudio = audio;
         currentAudio = audio;
-        const durMs = Math.max(8000, Math.min(45000, ((audio.duration || 30) * 1000) || 30000));
-        holdStill(durMs);
+        const applySongHold = () => {
+          const ms = Math.max(5000, Math.ceil(((audio.duration && isFinite(audio.duration)) ? audio.duration : 40) * 1000) + 400);
+          holdStill(ms);
+        };
+        applySongHold();
         audio.onended = () => {
           if (songAudio === audio) songAudio = null;
           if (currentAudio === audio) currentAudio = null;
           state.holdUntil = 0;
           if (typeof clearPetPlayPose === 'function') clearPetPlayPose();
         };
-        audio.onloadedmetadata = () => {
-          const ms = Math.max(8000, Math.min(45000, (audio.duration || 30) * 1000));
-          holdStill(ms);
+        audio.onerror = () => {
+          if (songAudio === audio) stopSing();
         };
+        audio.onloadedmetadata = () => applySongHold();
         await audio.play();
       } catch (e) {
         console.warn('sing play failed', e);
+        if (typeof clearPetPlayPose === 'function') clearPetPlayPose();
       }
     }
 
