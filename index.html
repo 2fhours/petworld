@@ -908,24 +908,7 @@
       background-image: repeating-linear-gradient(90deg, transparent 0 28px, rgba(80,60,40,0.2) 28px 30px);
     }
 
-    .scene-bar {
-      position: fixed; top: 78px; left: 50%; transform: translateX(-50%);
-      z-index: 8; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
-      padding: 6px 8px; border-radius: 14px;
-      background: rgba(15,23,42,0.5); border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(8px); max-width: calc(100vw - 24px);
-    }
-    body.hide-picker .scene-bar { display: none; }
-    .scene-bar button {
-      appearance: none; border: 1px solid transparent; border-radius: 12px;
-      padding: 6px 10px; font: inherit; font-size: 11px;
-      color: #e2e8f0; background: rgba(255,255,255,0.06); cursor: pointer;
-    }
-    .scene-bar button.active {
-      border-color: rgba(103,232,249,0.7);
-      background: rgba(103,232,249,0.18);
-    }
-    .scene-bar button:hover { background: rgba(255,255,255,0.12); }
+
 
     /* Word Atlas */
     .atlas-btn {
@@ -1041,12 +1024,6 @@
 
 <div class="picker" id="picker"></div>
 
-  <div class="scene-bar" id="sceneBar" aria-label="Scenes">
-    <button type="button" data-scene="meadow" class="active">🌳 Garden</button>
-    <button type="button" data-scene="farm">🌾 Farm</button>
-    <button type="button" data-scene="beach">🌊 Beach</button>
-    <button type="button" data-scene="bedroom">🛏️ Bedroom</button>
-  </div>
 
   <div class="hint">长按宠物跟随 · 松开后自己闲逛</div>
 
@@ -1586,9 +1563,6 @@
       else document.body.classList.add('scene-meadow');
       applySceneDecor();
       saveScene();
-      document.querySelectorAll('#sceneBar [data-scene]').forEach((b) => {
-        b.classList.toggle('active', b.dataset.scene === id);
-      });
       if (opts.manual) sceneManualAt = Date.now();
       if (!opts.silent) {
         const lab = SCENES[id].label;
@@ -2908,7 +2882,7 @@
     function collapseAllMenus(e) {
       const keep = e && e.target && e.target.closest && e.target.closest([
         '#dlgPanel', '#dlgListBtn', '#preloadBtn', '#leftTools',
-        '.picker', '#togglePicker', '#sceneBar',
+        '.picker', '#togglePicker',
         '.learn', '#toggleLearn', '#atlasPanel', '#btnAtlas',
         '.panel', '#toggleActions',
         '#adModalBackdrop', '#adDemoOverlay',
@@ -3520,14 +3494,6 @@
         if (!cell || !WORDS) return;
         const idx = WORDS.items.findIndex((x) => x.id === cell.dataset.atlasId);
         if (idx >= 0) { showWord(idx); playWord(); }
-      });
-    }
-    const sceneBar = document.getElementById('sceneBar');
-    if (sceneBar) {
-      sceneBar.addEventListener('click', (e) => {
-        const btn = e.target.closest('button[data-scene]');
-        if (!btn) return;
-        setScene(btn.dataset.scene, { manual: true });
       });
     }
     const adWatchBtn = document.getElementById('adWatchBtn');
