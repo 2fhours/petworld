@@ -330,6 +330,64 @@
       position: absolute; z-index: 0; transform-origin: left center;
     }
 
+
+    /* Wearables (hat / clothes / glasses) */
+    .wear { pointer-events: none; }
+    .wear[hidden] { display: none !important; }
+    .wear-hat {
+      position: absolute; left: 50%; top: -10px; z-index: 6;
+      width: 52px; height: 28px; transform: translateX(-50%);
+    }
+    .wear-hat::before {
+      content: ""; position: absolute; left: 50%; bottom: 6px;
+      width: 34px; height: 20px; transform: translateX(-50%);
+      background: var(--wear-hat, #ef4444);
+      border-radius: 14px 14px 6px 6px;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.12);
+    }
+    .wear-hat::after {
+      content: ""; position: absolute; left: 50%; bottom: 2px;
+      width: 52px; height: 10px; transform: translateX(-50%);
+      background: var(--wear-hat, #ef4444);
+      border-radius: 999px;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.12);
+    }
+    .wear-clothes {
+      position: absolute; left: 50%; top: 2px; z-index: 5;
+      width: 42px; height: 34px; transform: translateX(-50%);
+      background: var(--wear-clothes, #3b82f6);
+      border-radius: 12px 12px 10px 10px;
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,0.12);
+    }
+    .wear-clothes::before {
+      content: ""; position: absolute; left: 50%; top: 8px;
+      width: 8px; height: 8px; transform: translateX(-50%);
+      background: rgba(255,255,255,0.55); border-radius: 50%;
+    }
+    .wear-glasses {
+      position: absolute; left: 50%; top: 20px; z-index: 7;
+      width: 44px; height: 14px; transform: translateX(-50%);
+    }
+    .wear-glasses::before, .wear-glasses::after {
+      content: ""; position: absolute; top: 0;
+      width: 16px; height: 14px;
+      border: 2.5px solid var(--wear-glasses, #1e293b);
+      border-radius: 6px; background: rgba(255,255,255,0.12);
+      box-sizing: border-box;
+    }
+    .wear-glasses::before { left: 2px; }
+    .wear-glasses::after { right: 2px; }
+    .head .wear-glasses {
+      /* bridge */
+    }
+    .wear-glasses {
+      background: linear-gradient(90deg,
+        transparent 0, transparent 42%,
+        var(--wear-glasses, #1e293b) 42%, var(--wear-glasses, #1e293b) 58%,
+        transparent 58%);
+      background-size: 100% 2.5px; background-repeat: no-repeat; background-position: center 5px;
+    }
+
     /* Skins */
     .skin-cat .head, .skin-cat .torso, .skin-cat .arm-l, .skin-cat .arm-r,
     .skin-cat .leg-l, .skin-cat .leg-r, .skin-cat .foot {
@@ -505,7 +563,7 @@
         border-radius: 18px 18px 14px 14px;
       }
       .mic-wrap { bottom: 14px; z-index: 20; }
-      .preload-btn { max-width: min(160px, calc(100vw - 200px)); }
+      .preload-btn { max-width: min(160px, calc(100vw - 28px)); }
       .dlg-panel { max-height: min(50vh, 420px); }
     }
     @media (pointer: coarse) {
@@ -554,12 +612,17 @@
     }
 
 
+    .left-tools {
+      position: fixed; top: 14px; left: 14px; z-index: 12;
+      display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+      pointer-events: none;
+    }
+    .left-tools > * { pointer-events: auto; }
     .preload-btn {
-      position: fixed; top: 14px; left: 110px; z-index: 11;
       appearance: none; border: 1px solid rgba(255,255,255,0.14);
       border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 12px;
       color: #e2e8f0; background: rgba(15,23,42,0.72); backdrop-filter: blur(10px);
-      cursor: pointer; max-width: min(220px, calc(100vw - 160px));
+      cursor: pointer; max-width: min(220px, calc(100vw - 28px));
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .preload-btn.busy { opacity: 0.9; cursor: wait; }
@@ -569,16 +632,16 @@
       position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
       z-index: 10; pointer-events: none;
       padding: 4px 10px; border-radius: 999px;
-      background: rgba(15,23,42,0.28); border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(15,23,42,0.28); border: 1px solid rgba(251,113,133,0.22);
       backdrop-filter: blur(6px);
-      font-size: 11px; font-weight: 700; color: #fde68a;
+      font-size: 11px; font-weight: 700; color: #fb7185;
       letter-spacing: 0.04em;
     }
-    .growth .lv { color: #fde68a; }
+    .growth .lv { color: #fda4af; }
     .growth .row, .growth .xptext, .growth .bar { display: none; }
     .growth-pop {
       position: fixed; z-index: 13; pointer-events: none;
-      font-size: 14px; font-weight: 700; color: #fde68a;
+      font-size: 14px; font-weight: 700; color: #fb7185;
       text-shadow: 0 2px 8px rgba(0,0,0,0.35);
       animation: growthPop 1.2s ease-out forwards;
     }
@@ -588,14 +651,13 @@
       100% { opacity: 0; transform: translate(-50%, -36px) scale(1.05); }
     }
     .dlg-btn {
-      position: fixed; top: 14px; left: 14px; z-index: 11;
       appearance: none; border: 1px solid rgba(255,255,255,0.14);
       border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 12px;
       color: #e2e8f0; background: rgba(15,23,42,0.72); backdrop-filter: blur(10px);
       cursor: pointer;
     }
     .dlg-panel {
-      position: fixed; top: 52px; left: 14px; z-index: 11;
+      position: fixed; top: 96px; left: 14px; z-index: 11;
       width: min(340px, calc(100vw - 28px)); max-height: min(70vh, 520px);
       overflow: auto; padding: 12px; border-radius: 16px;
       background: rgba(15,23,42,0.88); border: 1px solid rgba(255,255,255,0.12);
@@ -637,9 +699,9 @@
     body.hide-picker .dock-toggle.top { opacity: 0.85; }
     .panel {
       position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
-      z-index: 6; display: flex; gap: 10px; padding: 10px; border-radius: 999px;
+      z-index: 6; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 22px;
       background: rgba(15,23,42,0.55); border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px); max-width: calc(100vw - 28px); justify-content: center;
     }
     .panel button {
       appearance: none; border: 0; border-radius: 999px; padding: 10px 14px;
@@ -806,12 +868,14 @@
 
   
   
-  <div class="growth" id="growthBar" aria-live="polite"><span class="lv" id="growthLv">Lv.1</span></div>
-  <button type="button" class="dlg-btn" id="dlgListBtn">对话列表</button>
-  <button type="button" class="preload-btn" id="preloadBtn">预下载音频</button>
+  <div class="growth" id="growthBar" aria-live="polite"><span class="lv" id="growthLv">❤️ 1</span></div>
+  <div class="left-tools" id="leftTools">
+    <button type="button" class="dlg-btn" id="dlgListBtn">对话列表</button>
+    <button type="button" class="preload-btn" id="preloadBtn">预下载音频</button>
+  </div>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
     <h3>Supported Dialogs</h3>
-    <div class="dlg-tip">Click a line to hear the reply. Say the blue English with the mic.</div>
+    <div class="dlg-tip">Click a line to hear the reply. Say the blue English with the mic. Outfit: say “red hat” / “黄帽子”.</div>
     <div id="dlgList"></div>
   </div>
 
@@ -875,6 +939,9 @@
     <button type="button" data-act="feed">喂食</button>
     <button type="button" data-act="play">玩耍</button>
     <button type="button" data-act="sleep">睡觉</button>
+    <button type="button" data-wear="hat" title="Cycle hat color">帽子</button>
+    <button type="button" data-wear="clothes" title="Cycle clothes color">衣服</button>
+    <button type="button" data-wear="glasses" title="Cycle glasses color">眼镜</button>
   </div>
 
   <script>
@@ -1051,9 +1118,9 @@
     }
 
     function petScaleForLevel(level) {
-      // Lv1 = 1.0, Lv20 ~= 1.266
+      // Lv1 = 1.0, Lv20 ~= 1.532
       const lv = Math.min(Math.max(level, 1), GROWTH_MAX_LEVEL);
-      return 1 + (lv - 1) * 0.014;
+      return 1 + (lv - 1) * 0.028;
     }
 
     function applyPetGrowthScale() {
@@ -1066,7 +1133,7 @@
       syncHiddenGrowthAttrs();
       applyPetGrowthScale();
       const lv = document.getElementById('growthLv');
-      if (lv) lv.textContent = 'Lv.' + GROWTH.level;
+      if (lv) lv.textContent = '❤️ ' + GROWTH.level;
     }
 
     function growthPopup(text, { levelUp = false } = {}) {
@@ -1127,11 +1194,11 @@
 
       saveGrowth();
       renderGrowth();
-      if (leveled) growthPopup('升级 Lv.' + GROWTH.level + '！', { levelUp: true });
+      if (leveled) growthPopup('爱心 +1！❤️ ' + GROWTH.level, { levelUp: true });
       if (leveled) {
         hearts(4);
         burst(['⭐', '✨', '🎉'], state.x || innerWidth/2, (state.y || innerHeight/2) - 80);
-        say('Level ' + GROWTH.level + '!', 2400);
+        say('更喜欢你了！', 2400);
       }
       return gain;
     }
@@ -1338,7 +1405,9 @@
         <div class="part arm-r"></div>
         <div class="part leg-l"><div class="foot"></div></div>
         <div class="part leg-r"><div class="foot"></div></div>
-        <div class="part torso"></div>
+        <div class="part torso">
+          <div class="wear wear-clothes" hidden></div>
+        </div>
         <div class="part head">
           <div class="ear-l"></div>
           <div class="ear-r"></div>
@@ -1348,8 +1417,11 @@
           <div class="blush-l"></div>
           <div class="blush-r"></div>
           <div class="mouth"></div>
+          <div class="wear wear-glasses" hidden></div>
+          <div class="wear wear-hat" hidden></div>
         </div>
       `;
+      if (typeof applyOutfit === 'function') applyOutfit();
     }
 
     function renderPicker() {
@@ -1384,6 +1456,8 @@
       buildFigure(id);
       applyEnv(id);
       renderPicker();
+      if (typeof applyPetGrowthScale === 'function') applyPetGrowthScale();
+      if (typeof applyOutfit === 'function') applyOutfit();
       if (!opts.silent) say(FORMS.find((f) => f.id === id).name + '登场！');
       localStorage.setItem('proto-pet-form', id);
     }
@@ -1503,6 +1577,111 @@
     }
     loadPlays();
 
+    // --- Outfit / wearables (persistent) ---
+    const OUTFIT_KEY = 'petworld-outfit-v1';
+    const WEAR_COLORS = {
+      red: '#ef4444', yellow: '#facc15', blue: '#3b82f6', green: '#22c55e',
+      pink: '#f472b6', purple: '#a78bfa', orange: '#fb923c', white: '#f8fafc', black: '#1e293b'
+    };
+    const WEAR_COLOR_IDS = Object.keys(WEAR_COLORS);
+    const WEAR_COLOR_ALIASES = {
+      red: ['red', '红', '红色'],
+      yellow: ['yellow', '黄', '黄色'],
+      blue: ['blue', '蓝', '蓝色'],
+      green: ['green', '绿', '绿色'],
+      pink: ['pink', '粉', '粉色', '粉红色'],
+      purple: ['purple', '紫', '紫色'],
+      orange: ['orange', '橙', '橙色', '橘色', '桔色'],
+      white: ['white', '白', '白色'],
+      black: ['black', '黑', '黑色']
+    };
+    const WEAR_SLOT_ALIASES = {
+      hat: ['hat', 'cap', '帽子', '帽'],
+      clothes: ['clothes', 'shirt', '上衣', '衣服', '衣'],
+      glasses: ['glasses', 'sunglasses', '眼镜', '墨镜']
+    };
+    const WEAR_DEFAULTS = { hat: 'red', clothes: 'blue', glasses: 'black' };
+    let OUTFIT = { hat: null, clothes: null, glasses: null };
+    let lastWearSlot = null;
+
+    function loadOutfit() {
+      try {
+        const raw = localStorage.getItem(OUTFIT_KEY);
+        if (raw) {
+          const o = JSON.parse(raw);
+          OUTFIT = {
+            hat: o.hat && o.hat.color ? { color: o.hat.color } : null,
+            clothes: o.clothes && o.clothes.color ? { color: o.clothes.color } : null,
+            glasses: o.glasses && o.glasses.color ? { color: o.glasses.color } : null
+          };
+        }
+      } catch (e) {}
+      return OUTFIT;
+    }
+    function saveOutfit() {
+      try { localStorage.setItem(OUTFIT_KEY, JSON.stringify(OUTFIT)); } catch (e) {}
+    }
+    function applyOutfit() {
+      if (!figure) return;
+      const map = {
+        hat: figure.querySelector('.wear-hat'),
+        clothes: figure.querySelector('.wear-clothes'),
+        glasses: figure.querySelector('.wear-glasses')
+      };
+      for (const slot of ['hat', 'clothes', 'glasses']) {
+        const node = map[slot];
+        if (!node) continue;
+        const piece = OUTFIT[slot];
+        if (!piece || !piece.color) {
+          node.hidden = true;
+          continue;
+        }
+        const hex = WEAR_COLORS[piece.color] || piece.color;
+        node.hidden = false;
+        const varName = slot === 'hat' ? '--wear-hat' : (slot === 'clothes' ? '--wear-clothes' : '--wear-glasses');
+        node.style.setProperty(varName, hex);
+        figure.style.setProperty(varName, hex);
+      }
+    }
+    function wearPiece(slot, colorId) {
+      if (!WEAR_SLOT_ALIASES[slot]) return;
+      const c = WEAR_COLORS[colorId] ? colorId : (WEAR_DEFAULTS[slot] || 'red');
+      OUTFIT[slot] = { color: c };
+      lastWearSlot = slot;
+      saveOutfit();
+      applyOutfit();
+      if (typeof awardXp === 'function') awardXp(1, 'outfit', { key: 'outfit:' + slot + ':' + c, cooldownMs: 6000 });
+    }
+    function removePiece(slot) {
+      if (slot === 'all') {
+        OUTFIT = { hat: null, clothes: null, glasses: null };
+        lastWearSlot = null;
+      } else if (WEAR_SLOT_ALIASES[slot]) {
+        OUTFIT[slot] = null;
+      } else {
+        return;
+      }
+      saveOutfit();
+      applyOutfit();
+      if (typeof awardXp === 'function') awardXp(1, 'outfit-off', { key: 'outfit-off:' + slot, cooldownMs: 6000 });
+    }
+    function cycleWearSlot(slot) {
+      const order = [null].concat(WEAR_COLOR_IDS);
+      const cur = OUTFIT[slot] && OUTFIT[slot].color;
+      let idx = order.indexOf(cur);
+      if (idx < 0) idx = 0;
+      const next = order[(idx + 1) % order.length];
+      if (next == null) {
+        removePiece(slot);
+        say('OK, no ' + slot + '.', 1600);
+      } else {
+        wearPiece(slot, next);
+        say('Nice ' + next + ' ' + slot + '!', 1600);
+      }
+    }
+    loadOutfit();
+
+
     function matchTrigger(text, trigger) {
       const t = (text || '').toLowerCase().trim();
       const g = String(trigger || '').toLowerCase().trim();
@@ -1512,6 +1691,69 @@
       const esc = g.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       return new RegExp('(^|[^a-z0-9])' + esc + '([^a-z0-9]|$)').test(t);
     }
+
+    function detectWearColor(text) {
+      const t = (text || '').toLowerCase();
+      let best = null, bestLen = 0;
+      for (const [id, aliases] of Object.entries(WEAR_COLOR_ALIASES)) {
+        for (const a of aliases) {
+          if (matchTrigger(t, a) && a.length >= bestLen) { best = id; bestLen = a.length; }
+        }
+      }
+      return best;
+    }
+    function detectWearSlot(text) {
+      const t = (text || '').toLowerCase();
+      let best = null, bestLen = 0;
+      for (const [slot, aliases] of Object.entries(WEAR_SLOT_ALIASES)) {
+        for (const a of aliases) {
+          if (matchTrigger(t, a) && a.length >= bestLen) { best = slot; bestLen = a.length; }
+        }
+      }
+      return best;
+    }
+    function maybeHandleOutfitCommand(text) {
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return false;
+      const naked = /naked|no outfit|脱掉全部|脱光|全部脱掉/.test(t);
+      if (naked) {
+        removePiece('all');
+        say('OK, no outfit.', 1600);
+        return true;
+      }
+      const slot = detectWearSlot(t);
+      const isRemove = /no\s+(hat|cap|clothes|shirt|glasses|sunglasses)/.test(t)
+        || /take\s+off/.test(t)
+        || /脱掉|摘掉|摘下|摘帽子|脱掉帽子|脱掉衣服|脱掉眼镜|摘眼镜/.test(t)
+        || (matchTrigger(t, 'no') && !!slot);
+      if (isRemove && (slot || /脱掉|take\s+off|摘/.test(t) || matchTrigger(t, 'no'))) {
+        if (slot) {
+          removePiece(slot);
+          say('OK, no ' + slot + '.', 1600);
+          return true;
+        }
+        if (lastWearSlot) {
+          removePiece(lastWearSlot);
+          say('OK, no ' + lastWearSlot + '.', 1600);
+          return true;
+        }
+        if (/naked|no outfit|脱掉全部|全部/.test(t)) {
+          removePiece('all');
+          say('OK, no outfit.', 1600);
+          return true;
+        }
+      }
+      if (!slot) return false;
+      const color = detectWearColor(t);
+      const wearIntent = /wear|put on|戴|穿|换|戴上|穿上/.test(t) || !!color
+        || /hat|cap|帽子|clothes|shirt|衣服|上衣|glasses|sunglasses|眼镜/.test(t);
+      if (!wearIntent) return false;
+      const useColor = color || WEAR_DEFAULTS[slot] || 'red';
+      wearPiece(slot, useColor);
+      say('Nice ' + useColor + ' ' + slot + '!', 1600);
+      return true;
+    }
+
 
     function findPlay(text) {
       if (!PLAYS || !PLAYS.plays) return null;
@@ -1863,7 +2105,7 @@
     });
     function collapseAllMenus(e) {
       const keep = e && e.target && e.target.closest && e.target.closest([
-        '#dlgPanel', '#dlgListBtn', '#preloadBtn',
+        '#dlgPanel', '#dlgListBtn', '#preloadBtn', '#leftTools',
         '.picker', '#togglePicker',
         '.learn', '#toggleLearn',
         '.panel', '#toggleActions',
@@ -1991,6 +2233,12 @@
         for (let i = 0; i < ev.results[0].length; i++) alts.push(ev.results[0][i].transcript);
         lastHeard = alts[0] || '';
         let actionNote = '';
+        // Outfit wearables before dialog match
+        let suited = false;
+        for (const a of alts) {
+          if (maybeHandleOutfitCommand(a)) { suited = true; actionNote = '服装'; break; }
+        }
+        if (suited) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         // Eat commands first: "eat apple"
         let ate = false;
         for (const a of alts) {
@@ -2278,7 +2526,13 @@
     });
 
     document.querySelectorAll('.panel button').forEach((btn) => {
-      btn.addEventListener('click', () => act(btn.dataset.act));
+      btn.addEventListener('click', () => {
+        if (btn.dataset.wear) {
+          cycleWearSlot(btn.dataset.wear);
+          return;
+        }
+        if (btn.dataset.act) act(btn.dataset.act);
+      });
     });
 
 
@@ -2422,6 +2676,8 @@
     state.form = FORMS.some((f) => f.id === saved) ? saved : 'cat';
     buildFigure(state.form);
     applyEnv(state.form);
+    applyOutfit();
+    applyPetGrowthScale();
     renderPicker();
     resize();
     mouse.x = state.x; mouse.y = state.y - 40;
