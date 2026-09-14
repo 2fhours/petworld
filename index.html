@@ -2016,6 +2016,20 @@
       const box = document.getElementById('dlgList');
       if (!box) return;
       const parts = [];
+      const DIALOG_ICON = {
+        hello: '👋', good_morning: '🌅', good_afternoon: '☀️', good_evening: '🌆', good_night: '🌙',
+        how_are_you: '💬', im_fine: '😊', whats_your_name: '📛', nice_to_meet_you: '🤝',
+        how_old_are_you: '🎂', where_are_you_from: '🌍', thank_you: '🙏', please: '🥺',
+        sorry: '😔', yes: '✅', no: '❌', lets_play: '🎮', i_am_hungry: '😋', i_am_sleepy: '😴',
+        i_love_you: '💖', how_is_the_weather: '🌤️', what_time_is_it: '⏰', can_you_help_me: '🆘',
+        see_you: '👋', bye: '👋'
+      };
+      const ANIMAL_ICON = { cat: '🐱', dog: '🐶', bunny: '🐰', fox: '🦊', panda: '🐼' };
+      const SLOT_ICON = { hat: '🎩', clothes: '👕', glasses: '👓' };
+      const COLOR_SWATCH = {
+        red: '🔴', yellow: '🟡', blue: '🔵', green: '🟢', pink: '💗',
+        purple: '🟣', orange: '🟠', white: '⚪', black: '⚫'
+      };
 
       // A. Dialogs
       if (DIALOGS && DIALOGS.dialogs) {
@@ -2023,12 +2037,13 @@
         parts.push(DIALOGS.dialogs
           .filter((d) => d.id !== 'fallback')
           .map((d) => {
+            const icon = d.emoji || DIALOG_ICON[d.id] || '💬';
             const primary = (d.triggers && d.triggers[0]) ? d.triggers[0] : d.id;
             const more = (d.triggers && d.triggers.length > 1)
               ? ` · also: ${d.triggers.slice(1, 3).join(', ')}`
               : '';
             return `<button type="button" class="dlg-item" data-dlg="${d.id}">
-            <span class="say">Say: ${primary}${more}</span>
+            <span class="say">${icon} Say: ${primary}${more}</span>
             <span class="reply">Reply: ${d.reply}</span>
           </button>`;
           }).join(''));
@@ -2038,9 +2053,10 @@
       if (PLAYS && PLAYS.plays) {
         parts.push(`<div class="dlg-tip" style="margin-top:10px">Play</div>`);
         parts.push(PLAYS.plays.map((p) => {
+          const icon = p.emoji || '🎮';
           const trigs = (p.triggers || []).slice(0, 3).join(' / ');
           return `<button type="button" class="dlg-item" data-play="${p.id}">
-            <span class="say">Say: ${trigs} ${p.emoji || ''}</span>
+            <span class="say">${icon} Say: ${trigs}</span>
             <span class="reply">Reply: ${p.reply}</span>
           </button>`;
         }).join(''));
@@ -2050,10 +2066,11 @@
       if (ANIMALS && ANIMALS.animals) {
         parts.push(`<div class="dlg-tip" style="margin-top:10px">Animals</div>`);
         parts.push(ANIMALS.animals.map((a) => {
+          const icon = a.emoji || ANIMAL_ICON[a.id] || '🐾';
           const name = a.name || a.id;
           const trig = (a.triggers && a.triggers[0]) ? a.triggers[0] : name;
           return `<button type="button" class="dlg-item" data-animal="${a.id}">
-            <span class="say">Say: ${trig} / I am a ${name}</span>
+            <span class="say">${icon} Say: ${trig} / I am a ${name}</span>
             <span class="reply">Reply: ${a.reply}</span>
           </button>`;
         }).join(''));
@@ -2063,39 +2080,41 @@
       if (FOODS && FOODS.foods) {
         parts.push(`<div class="dlg-tip" style="margin-top:10px">Eat</div>`);
         parts.push(FOODS.foods.map((f) => {
+          const icon = f.emoji || '🍽️';
           return `<button type="button" class="dlg-item" data-eat="${f.id}">
-            <span class="say">Say: eat ${f.name} ${f.emoji || ''}</span>
+            <span class="say">${icon} Say: eat ${f.name}</span>
             <span class="reply">Like / dislike depends on pet</span>
           </button>`;
         }).join(''));
       }
 
-      // E. Outfit — every color × slot + remove examples
+      // E. Outfit
       const outfitSlots = ['hat', 'clothes', 'glasses'];
       const outfitColors = ['red', 'yellow', 'blue', 'green', 'pink', 'purple', 'orange', 'white', 'black'];
       parts.push(`<div class="dlg-tip" style="margin-top:10px">Outfit</div>`);
       for (const slot of outfitSlots) {
         for (const color of outfitColors) {
+          const icon = (COLOR_SWATCH[color] || '🎨') + (SLOT_ICON[slot] || '👔');
           parts.push(`<button type="button" class="dlg-item" data-outfit="${slot}:${color}">
-            <span class="say">Say: ${color} ${slot}</span>
+            <span class="say">${icon} Say: ${color} ${slot}</span>
             <span class="reply">Wear ${color} ${slot}</span>
           </button>`);
         }
       }
       parts.push(`<button type="button" class="dlg-item" data-outfit-off="hat">
-            <span class="say">Say: no hat / take off hat</span>
+            <span class="say">🚫🎩 Say: no hat / take off hat</span>
             <span class="reply">Remove hat</span>
           </button>`);
       parts.push(`<button type="button" class="dlg-item" data-outfit-off="clothes">
-            <span class="say">Say: no clothes</span>
+            <span class="say">🚫👕 Say: no clothes</span>
             <span class="reply">Remove clothes</span>
           </button>`);
       parts.push(`<button type="button" class="dlg-item" data-outfit-off="glasses">
-            <span class="say">Say: no glasses</span>
+            <span class="say">🚫👓 Say: no glasses</span>
             <span class="reply">Remove glasses</span>
           </button>`);
       parts.push(`<button type="button" class="dlg-item" data-outfit-off="all">
-            <span class="say">Say: no outfit / naked</span>
+            <span class="say">🧺 Say: no outfit / naked</span>
             <span class="reply">Remove all outfit</span>
           </button>`);
 
