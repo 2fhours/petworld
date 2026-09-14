@@ -2703,11 +2703,11 @@
       const btn = document.getElementById(map[key]);
       if (btn) btn.textContent = (hidden ? '展开' : '收起') + labels[key];
     }
+    // Always start with all menus closed on page enter
     ['picker','learn','actions'].forEach((key) => {
-      // default collapsed unless user explicitly expanded (saved as '0')
-      const saved = localStorage.getItem('proto-hide-' + key);
-      applyDock(key, saved !== '0', false);
+      applyDock(key, true, true);
     });
+    if (dlgPanel) dlgPanel.classList.remove('open');
     document.getElementById('togglePicker').addEventListener('click', () => {
       const opening = document.body.classList.contains('hide-picker');
       if (opening && dlgPanel) dlgPanel.classList.remove('open');
