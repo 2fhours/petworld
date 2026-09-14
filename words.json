@@ -5163,6 +5163,274 @@
         "eɪ",
         "m"
       ]
+    },
+    {
+      "id": "sing",
+      "text": "Sing",
+      "ipa": "/sɪŋ/",
+      "zh": "唱",
+      "phonics": "SING",
+      "audio": "audio/sing.mp3",
+      "phonicsAudio": "audio/sing_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "ɪ",
+        "ŋ"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "song",
+      "text": "Song",
+      "ipa": "/sɔːŋ/",
+      "zh": "歌曲",
+      "phonics": "SONG",
+      "audio": "audio/song.mp3",
+      "phonicsAudio": "audio/song_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "ɔː",
+        "ŋ"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "twinkle",
+      "text": "Twinkle",
+      "ipa": "/ˈtwɪŋkl/",
+      "zh": "闪烁",
+      "phonics": "TWIN-kle",
+      "audio": "audio/twinkle.mp3",
+      "phonicsAudio": "audio/twinkle_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "w",
+        "ɪ",
+        "ŋ",
+        "k",
+        "l"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "star",
+      "text": "Star",
+      "ipa": "/stɑːr/",
+      "zh": "星星",
+      "phonics": "STAR",
+      "audio": "audio/star.mp3",
+      "phonicsAudio": "audio/star_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "t",
+        "ɑː",
+        "r"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "mary",
+      "text": "Mary",
+      "ipa": "/ˈmeəri/",
+      "zh": "玛丽",
+      "phonics": "MA-ry",
+      "audio": "audio/mary.mp3",
+      "phonicsAudio": "audio/mary_phonics.mp3",
+      "ipaSegments": [
+        "m",
+        "eə",
+        "r",
+        "i"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "lamb",
+      "text": "Lamb",
+      "ipa": "/læm/",
+      "zh": "小羊",
+      "phonics": "LAMB",
+      "audio": "audio/lamb.mp3",
+      "phonicsAudio": "audio/lamb_phonics.mp3",
+      "ipaSegments": [
+        "l",
+        "æ",
+        "m"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "row",
+      "text": "Row",
+      "ipa": "/roʊ/",
+      "zh": "划",
+      "phonics": "ROW",
+      "audio": "audio/row.mp3",
+      "phonicsAudio": "audio/row_phonics.mp3",
+      "ipaSegments": [
+        "r",
+        "oʊ"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "boat",
+      "text": "Boat",
+      "ipa": "/boʊt/",
+      "zh": "船",
+      "phonics": "BOAT",
+      "audio": "audio/boat.mp3",
+      "phonicsAudio": "audio/boat_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "oʊ",
+        "t"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "alphabet",
+      "text": "Alphabet",
+      "ipa": "/ˈælfəbet/",
+      "zh": "字母表",
+      "phonics": "AL-pha-bet",
+      "audio": "audio/alphabet.mp3",
+      "phonicsAudio": "audio/alphabet_phonics.mp3",
+      "ipaSegments": [
+        "æ",
+        "l",
+        "f",
+        "ə",
+        "b",
+        "e",
+        "t"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "abc",
+      "text": "ABC",
+      "ipa": "/ˌeɪ biː ˈsiː/",
+      "zh": "ABC",
+      "phonics": "A-B-C",
+      "audio": "audio/abc.mp3",
+      "phonicsAudio": "audio/abc_phonics.mp3",
+      "ipaSegments": [
+        "eɪ",
+        "b",
+        "iː",
+        "s",
+        "iː"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "stop_singing",
+      "text": "Stop singing",
+      "ipa": "/stɒp ˈsɪŋɪŋ/",
+      "zh": "停止唱歌",
+      "phonics": "STOP SING-ing",
+      "audio": "audio/stop_singing.mp3",
+      "phonicsAudio": "audio/stop_singing_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "t",
+        "ɒ",
+        "p",
+        "s",
+        "ɪ",
+        "ŋ",
+        "ɪ",
+        "ŋ"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "baa",
+      "text": "Baa",
+      "ipa": "/bɑː/",
+      "zh": "咩",
+      "phonics": "BAA",
+      "audio": "audio/baa.mp3",
+      "phonicsAudio": "audio/baa_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "ɑː"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "sheep",
+      "text": "Sheep",
+      "ipa": "/ʃiːp/",
+      "zh": "羊",
+      "phonics": "SHEEP",
+      "audio": "audio/sheep.mp3",
+      "phonicsAudio": "audio/sheep_phonics.mp3",
+      "ipaSegments": [
+        "ʃ",
+        "iː",
+        "p"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
+    },
+    {
+      "id": "farm",
+      "text": "Farm",
+      "ipa": "/fɑːrm/",
+      "zh": "农场",
+      "phonics": "FARM",
+      "audio": "audio/farm.mp3",
+      "phonicsAudio": "audio/farm_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "ɑː",
+        "r",
+        "m"
+      ],
+      "tags": [
+        "command-vocab",
+        "songs"
+      ]
     }
   ]
 }

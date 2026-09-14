@@ -875,7 +875,7 @@
   </div>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
     <h3>Supported Dialogs</h3>
-    <div class="dlg-tip">Click a line to try it. Say the blue English with the mic. Outfits: “red hat”, “blue clothes”, “no hat”.</div>
+    <div class="dlg-tip">Click a line to try it. Say the blue English with the mic. Songs: “sing twinkle”, “stop singing”. Outfits: “red hat”, “blue clothes”, “no hat”.</div>
     <div id="dlgList"></div>
   </div>
 
@@ -938,6 +938,7 @@
     <button type="button" data-act="pet">Pet</button>
     <button type="button" data-act="feed">Feed</button>
     <button type="button" data-act="play">Play</button>
+    <button type="button" data-act="sing">Sing</button>
     <button type="button" data-act="sleep">Sleep</button>
     <button type="button" data-wear="hat" title="Cycle hat color">Hat</button>
     <button type="button" data-wear="clothes" title="Cycle clothes color">Clothes</button>
@@ -1214,13 +1215,14 @@
       const paths = new Set();
       const add = (u) => { if (u && typeof u === 'string') paths.add(u.replace(/^\.\//, '')); };
       try {
-        const [words, actions, dialogs, foods, plays, animals] = await Promise.all([
+        const [words, actions, dialogs, foods, plays, animals, songs] = await Promise.all([
           fetch('words.json').then((r) => r.json()),
           fetch('actions.json').then((r) => r.json()),
           fetch('dialogs.json').then((r) => r.json()),
           fetch('foods.json').then((r) => r.json()),
           fetch('plays.json').then((r) => r.json()).catch(() => null),
           fetch('animals.json').then((r) => r.json()).catch(() => null),
+          fetch('songs.json').then((r) => r.json()).catch(() => null),
         ]);
         (words.items || []).forEach((it) => { add(it.audio); add(it.phonicsAudio); });
         Object.values(actions.actions || {}).forEach((arr) => arr.forEach((it) => add(it.audio)));
@@ -1241,6 +1243,10 @@
         const animalsSrc = animals || ANIMALS;
         if (animalsSrc && animalsSrc.animals) {
           animalsSrc.animals.forEach((a) => add(a.audio));
+        }
+        const songsSrc = songs || SONGS;
+        if (songsSrc && songsSrc.songs) {
+          songsSrc.songs.forEach((s) => add(s.audio));
         }
       } catch (e) {
         console.warn('list audio failed', e);
@@ -1865,6 +1871,104 @@
     }
 
 
+    let SONGS = null;
+    let songAudio = null;
+    async function loadSongs() {
+      const res = await fetch('songs.json');
+      SONGS = await res.json();
+    }
+    loadSongs().then(() => { if (document.getElementById("dlgPanel") && document.getElementById("dlgPanel").classList.contains("open")) renderDialogList(); });
+
+    function findSong(text) {
+      if (!SONGS || !SONGS.songs) return null;
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return null;
+      let best = null, bestLen = 0;
+      for (const s of SONGS.songs) {
+        for (const trig of (s.triggers || [])) {
+          const g = String(trig).toLowerCase();
+          if (matchTrigger(t, g) && g.length >= bestLen) {
+            best = s; bestLen = g.length;
+          }
+        }
+      }
+      return best;
+    }
+
+    function stopSing() {
+      if (songAudio) {
+        try { songAudio.pause(); songAudio.currentTime = 0; } catch (e) {}
+        songAudio = null;
+      }
+      if (currentAudio) {
+        try { currentAudio.pause(); } catch (e) {}
+        currentAudio = null;
+      }
+      state.holdUntil = 0;
+      if (typeof clearPetPlayPose === 'function') clearPetPlayPose();
+    }
+
+    async function startSing(song) {
+      stopSing();
+      if (state.mode === 'sleep') pet.classList.remove('sleep');
+      if (!song && SONGS && SONGS.songs && SONGS.songs.length) {
+        song = SONGS.songs[Math.floor(Math.random() * SONGS.songs.length)];
+      }
+      if (!song) return;
+      setHappy(2400);
+      setPetPlayPose('dance', 5000);
+      burst(['🎵', song.emoji || '🎤', '✨'], state.x, state.y - 70);
+      say(song.title || 'Sing!', 3200);
+      noteDailyFirstEnglish();
+      awardXp(2, 'sing', { key: 'sing:' + (song.id || 'random'), cooldownMs: 20000 });
+      try {
+        const url = await getPlayableUrl(song.audio);
+        const audio = new Audio(url);
+        songAudio = audio;
+        currentAudio = audio;
+        const durMs = Math.max(8000, Math.min(45000, ((audio.duration || 30) * 1000) || 30000));
+        holdStill(durMs);
+        audio.onended = () => {
+          if (songAudio === audio) songAudio = null;
+          if (currentAudio === audio) currentAudio = null;
+          state.holdUntil = 0;
+          if (typeof clearPetPlayPose === 'function') clearPetPlayPose();
+        };
+        audio.onloadedmetadata = () => {
+          const ms = Math.max(8000, Math.min(45000, (audio.duration || 30) * 1000));
+          holdStill(ms);
+        };
+        await audio.play();
+      } catch (e) {
+        console.warn('sing play failed', e);
+      }
+    }
+
+    function maybeHandleSingCommand(text) {
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return false;
+      // stop
+      if (/\b(stop singing|stop song|stop music|quiet)\b/.test(t)) {
+        stopSing();
+        say('OK, quiet.', 1600);
+        return true;
+      }
+      const song = findSong(t);
+      const bareSing = /\b(sing a song|let's sing|lets sing)\b/.test(t) || /^sing$/.test(t) || /^sing please$/.test(t);
+      // sing <song> via triggers (or "sing twinkle")
+      if (song && (/\bsing\b/.test(t) || (song.triggers || []).some((g) => String(g).split(/\s+/).length >= 2 && matchTrigger(t, g)))) {
+        startSing(song);
+        return true;
+      }
+      // bare sing → random
+      if (bareSing || (/\bsing\b/.test(t) && !song)) {
+        startSing(null);
+        return true;
+      }
+      return false;
+    }
+
+
     let ANIMALS = null;
     async function loadAnimals() {
       const res = await fetch('animals.json');
@@ -2062,6 +2166,23 @@
         }).join(''));
       }
 
+      // B2. Songs
+      if (SONGS && SONGS.songs) {
+        parts.push(`<div class="dlg-tip" style="margin-top:10px">Songs</div>`);
+        parts.push(SONGS.songs.map((s) => {
+          const icon = s.emoji || '🎵';
+          const trig = (s.triggers && s.triggers[0]) ? s.triggers[0] : s.id;
+          return `<button type="button" class="dlg-item" data-song="${s.id}">
+            <span class="say">${icon} Say: sing ${trig}</span>
+            <span class="reply">${s.title}${s.zh ? ' · ' + s.zh : ''}</span>
+          </button>`;
+        }).join(''));
+        parts.push(`<button type="button" class="dlg-item" data-song-stop="1">
+            <span class="say">🔇 Say: stop singing</span>
+            <span class="reply">Stop the song</span>
+          </button>`);
+      }
+
       // C. Animals
       if (ANIMALS && ANIMALS.animals) {
         parts.push(`<div class="dlg-tip" style="margin-top:10px">Animals</div>`);
@@ -2163,6 +2284,18 @@
       if (playBtn && PLAYS) {
         const pl = PLAYS.plays.find((x) => x.id === playBtn.dataset.play);
         if (pl) startPlay(pl);
+        return;
+      }
+      const songStopBtn = e.target.closest('button[data-song-stop]');
+      if (songStopBtn) {
+        stopSing();
+        say('OK, quiet.', 1600);
+        return;
+      }
+      const songBtn = e.target.closest('button[data-song]');
+      if (songBtn && SONGS) {
+        const sg = SONGS.songs.find((x) => x.id === songBtn.dataset.song);
+        if (sg) startSing(sg);
         return;
       }
       const animalBtn = e.target.closest('button[data-animal]');
@@ -2335,6 +2468,11 @@
           if (maybeHandlePlayCommand(a)) { played = true; actionNote = 'Play'; break; }
         }
         if (played) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+        let sang = false;
+        for (const a of alts) {
+          if (maybeHandleSingCommand(a)) { sang = true; actionNote = 'Sing'; break; }
+        }
+        if (sang) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         let matched = null;
         for (const a of alts) {
           matched = matchDialog(a);
@@ -2426,7 +2564,10 @@
         }
       } else if (kind === 'play') {
         startPlay(null);
+      } else if (kind === 'sing') {
+        startSing(null);
       } else if (kind === 'sleep') {
+        if (typeof stopSing === 'function') stopSing();
         state.mode = 'sleep';
         state.holdUntil = 0;
         clearPetPlayPose();
