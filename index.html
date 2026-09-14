@@ -875,7 +875,7 @@
   </div>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
     <h3>Supported Dialogs</h3>
-    <div class="dlg-tip">Click a line to hear the reply. Say the blue English with the mic. Outfit: say “red hat” / “黄帽子”.</div>
+    <div class="dlg-tip">Click a line to try it. Say the blue English with the mic. Outfits: “red hat”, “blue clothes”, “no hat”.</div>
     <div id="dlgList"></div>
   </div>
 
@@ -935,13 +935,13 @@
   </div>
 
   <div class="panel">
-    <button type="button" data-act="pet">摸摸</button>
-    <button type="button" data-act="feed">喂食</button>
-    <button type="button" data-act="play">玩耍</button>
-    <button type="button" data-act="sleep">睡觉</button>
-    <button type="button" data-wear="hat" title="Cycle hat color">帽子</button>
-    <button type="button" data-wear="clothes" title="Cycle clothes color">衣服</button>
-    <button type="button" data-wear="glasses" title="Cycle glasses color">眼镜</button>
+    <button type="button" data-act="pet">Pet</button>
+    <button type="button" data-act="feed">Feed</button>
+    <button type="button" data-act="play">Play</button>
+    <button type="button" data-act="sleep">Sleep</button>
+    <button type="button" data-wear="hat" title="Cycle hat color">Hat</button>
+    <button type="button" data-wear="clothes" title="Cycle clothes color">Clothes</button>
+    <button type="button" data-wear="glasses" title="Cycle glasses color">Glasses</button>
   </div>
 
   <script>
@@ -1575,7 +1575,7 @@
       const res = await fetch('plays.json');
       PLAYS = await res.json();
     }
-    loadPlays();
+    loadPlays().then(() => { if (document.getElementById("dlgPanel") && document.getElementById("dlgPanel").classList.contains("open")) renderDialogList(); });
 
     // --- Outfit / wearables (persistent) ---
     const OUTFIT_KEY = 'petworld-outfit-v1';
@@ -1585,20 +1585,20 @@
     };
     const WEAR_COLOR_IDS = Object.keys(WEAR_COLORS);
     const WEAR_COLOR_ALIASES = {
-      red: ['red', '红', '红色'],
-      yellow: ['yellow', '黄', '黄色'],
-      blue: ['blue', '蓝', '蓝色'],
-      green: ['green', '绿', '绿色'],
-      pink: ['pink', '粉', '粉色', '粉红色'],
-      purple: ['purple', '紫', '紫色'],
-      orange: ['orange', '橙', '橙色', '橘色', '桔色'],
-      white: ['white', '白', '白色'],
-      black: ['black', '黑', '黑色']
+      red: ['red'],
+      yellow: ['yellow'],
+      blue: ['blue'],
+      green: ['green'],
+      pink: ['pink'],
+      purple: ['purple'],
+      orange: ['orange'],
+      white: ['white'],
+      black: ['black']
     };
     const WEAR_SLOT_ALIASES = {
-      hat: ['hat', 'cap', '帽子', '帽'],
-      clothes: ['clothes', 'shirt', '上衣', '衣服', '衣'],
-      glasses: ['glasses', 'sunglasses', '眼镜', '墨镜']
+      hat: ['hat', 'cap'],
+      clothes: ['clothes', 'shirt'],
+      glasses: ['glasses', 'sunglasses']
     };
     const WEAR_DEFAULTS = { hat: 'red', clothes: 'blue', glasses: 'black' };
     let OUTFIT = { hat: null, clothes: null, glasses: null };
@@ -1715,7 +1715,7 @@
     function maybeHandleOutfitCommand(text) {
       const t = (text || '').toLowerCase().trim();
       if (!t) return false;
-      const naked = /naked|no outfit|脱掉全部|脱光|全部脱掉/.test(t);
+      const naked = /naked|no outfit/.test(t);
       if (naked) {
         removePiece('all');
         say('OK, no outfit.', 1600);
@@ -1724,9 +1724,8 @@
       const slot = detectWearSlot(t);
       const isRemove = /no\s+(hat|cap|clothes|shirt|glasses|sunglasses)/.test(t)
         || /take\s+off/.test(t)
-        || /脱掉|摘掉|摘下|摘帽子|脱掉帽子|脱掉衣服|脱掉眼镜|摘眼镜/.test(t)
         || (matchTrigger(t, 'no') && !!slot);
-      if (isRemove && (slot || /脱掉|take\s+off|摘/.test(t) || matchTrigger(t, 'no'))) {
+      if (isRemove && (slot || /take\s+off/.test(t) || matchTrigger(t, 'no'))) {
         if (slot) {
           removePiece(slot);
           say('OK, no ' + slot + '.', 1600);
@@ -1737,7 +1736,7 @@
           say('OK, no ' + lastWearSlot + '.', 1600);
           return true;
         }
-        if (/naked|no outfit|脱掉全部|全部/.test(t)) {
+        if (/naked|no outfit/.test(t)) {
           removePiece('all');
           say('OK, no outfit.', 1600);
           return true;
@@ -1745,8 +1744,8 @@
       }
       if (!slot) return false;
       const color = detectWearColor(t);
-      const wearIntent = /wear|put on|戴|穿|换|戴上|穿上/.test(t) || !!color
-        || /hat|cap|帽子|clothes|shirt|衣服|上衣|glasses|sunglasses|眼镜/.test(t);
+      const wearIntent = /wear|put on/.test(t) || !!color
+        || /hat|cap|clothes|shirt|glasses|sunglasses/.test(t);
       if (!wearIntent) return false;
       const useColor = color || WEAR_DEFAULTS[slot] || 'red';
       wearPiece(slot, useColor);
@@ -1858,7 +1857,7 @@
         startPlay(play);
         return true;
       }
-      if (/\b(let's play|lets play|play with me|come and play)\b/.test(t) || /玩耍|一起玩|玩游戏/.test(text || '')) {
+      if (/\b(let's play|lets play|play with me|come and play)\b/.test(t)) {
         startPlay(null);
         return true;
       }
@@ -1871,7 +1870,7 @@
       const res = await fetch('animals.json');
       ANIMALS = await res.json();
     }
-    loadAnimals();
+    loadAnimals().then(() => { if (document.getElementById("dlgPanel") && document.getElementById("dlgPanel").classList.contains("open")) renderDialogList(); });
 
     function findAnimal(text) {
       if (!ANIMALS || !ANIMALS.animals) return null;
@@ -1909,8 +1908,7 @@
       // Prefer explicit become/I am / change to patterns, or bare animal name
       const animal = findAnimal(t);
       if (!animal) return false;
-      const explicit = /\b(i am|i'm|im|be|become|change to|switch to|turn into)\b/.test(t)
-        || /我是|变成|切换|换/.test(text || '');
+      const explicit = /\b(i am|i'm|im|be|become|change to|switch to|turn into)\b/.test(t);
       const bare = t === animal.name || t === animal.id || animal.triggers.some((g) => t === String(g).toLowerCase());
       // Also allow "cat please" / just "cat"
       const shortAnimal = animal.triggers.some((g) => {
@@ -2016,47 +2014,92 @@
     // Dialog list panel (top-left)
     function renderDialogList() {
       const box = document.getElementById('dlgList');
-      if (!box || !DIALOGS || !DIALOGS.dialogs) return;
-      const dialogHtml = DIALOGS.dialogs
-        .filter((d) => d.id !== 'fallback')
-        .map((d) => {
-          const say = (d.triggers && d.triggers[0]) ? d.triggers[0] : d.id;
-          const more = (d.triggers && d.triggers.length > 1)
-            ? ` · also: ${d.triggers.slice(1, 3).join(', ')}`
-            : '';
-          return `<button type="button" class="dlg-item" data-dlg="${d.id}">
-            <span class="say">Say: ${say}${more}</span>
-            <span class="reply">Reply: ${d.reply}${d.zh ? '（' + d.zh + '）' : ''}</span>
+      if (!box) return;
+      const parts = [];
+
+      // A. Dialogs
+      if (DIALOGS && DIALOGS.dialogs) {
+        parts.push(`<div class="dlg-tip" style="margin-top:4px">Dialogs</div>`);
+        parts.push(DIALOGS.dialogs
+          .filter((d) => d.id !== 'fallback')
+          .map((d) => {
+            const primary = (d.triggers && d.triggers[0]) ? d.triggers[0] : d.id;
+            const more = (d.triggers && d.triggers.length > 1)
+              ? ` · also: ${d.triggers.slice(1, 3).join(', ')}`
+              : '';
+            return `<button type="button" class="dlg-item" data-dlg="${d.id}">
+            <span class="say">Say: ${primary}${more}</span>
+            <span class="reply">Reply: ${d.reply}</span>
           </button>`;
-        }).join('');
-      let playHtml = '';
+          }).join(''));
+      }
+
+      // B. Play
       if (PLAYS && PLAYS.plays) {
-        playHtml = `<div class="dlg-tip" style="margin-top:10px">Play (say: swim / basketball)</div>` + PLAYS.plays.map((p) => {
+        parts.push(`<div class="dlg-tip" style="margin-top:10px">Play</div>`);
+        parts.push(PLAYS.plays.map((p) => {
+          const trigs = (p.triggers || []).slice(0, 3).join(' / ');
           return `<button type="button" class="dlg-item" data-play="${p.id}">
-            <span class="say">Say: ${p.triggers[0]} ${p.emoji}</span>
+            <span class="say">Say: ${trigs} ${p.emoji || ''}</span>
             <span class="reply">Reply: ${p.reply}</span>
           </button>`;
-        }).join('');
+        }).join(''));
       }
-      let animalHtml = '';
+
+      // C. Animals
       if (ANIMALS && ANIMALS.animals) {
-        animalHtml = `<div class="dlg-tip" style="margin-top:10px">Animals (say: cat / dog / rabbit)</div>` + ANIMALS.animals.map((a) => {
+        parts.push(`<div class="dlg-tip" style="margin-top:10px">Animals</div>`);
+        parts.push(ANIMALS.animals.map((a) => {
+          const name = a.name || a.id;
+          const trig = (a.triggers && a.triggers[0]) ? a.triggers[0] : name;
           return `<button type="button" class="dlg-item" data-animal="${a.id}">
-            <span class="say">Say: ${a.triggers[0]}</span>
+            <span class="say">Say: ${trig} / I am a ${name}</span>
             <span class="reply">Reply: ${a.reply}</span>
           </button>`;
-        }).join('');
+        }).join(''));
       }
-      let foodHtml = '';
+
+      // D. Eat
       if (FOODS && FOODS.foods) {
-        foodHtml = `<div class="dlg-tip" style="margin-top:10px">Eat foods (try: eat apple)</div>` + FOODS.foods.map((f) => {
+        parts.push(`<div class="dlg-tip" style="margin-top:10px">Eat</div>`);
+        parts.push(FOODS.foods.map((f) => {
           return `<button type="button" class="dlg-item" data-eat="${f.id}">
-            <span class="say">Say: eat ${f.name} ${f.emoji}</span>
+            <span class="say">Say: eat ${f.name} ${f.emoji || ''}</span>
             <span class="reply">Like / dislike depends on pet</span>
           </button>`;
-        }).join('');
+        }).join(''));
       }
-      box.innerHTML = dialogHtml + playHtml + animalHtml + foodHtml;
+
+      // E. Outfit — every color × slot + remove examples
+      const outfitSlots = ['hat', 'clothes', 'glasses'];
+      const outfitColors = ['red', 'yellow', 'blue', 'green', 'pink', 'purple', 'orange', 'white', 'black'];
+      parts.push(`<div class="dlg-tip" style="margin-top:10px">Outfit</div>`);
+      for (const slot of outfitSlots) {
+        for (const color of outfitColors) {
+          parts.push(`<button type="button" class="dlg-item" data-outfit="${slot}:${color}">
+            <span class="say">Say: ${color} ${slot}</span>
+            <span class="reply">Wear ${color} ${slot}</span>
+          </button>`);
+        }
+      }
+      parts.push(`<button type="button" class="dlg-item" data-outfit-off="hat">
+            <span class="say">Say: no hat / take off hat</span>
+            <span class="reply">Remove hat</span>
+          </button>`);
+      parts.push(`<button type="button" class="dlg-item" data-outfit-off="clothes">
+            <span class="say">Say: no clothes</span>
+            <span class="reply">Remove clothes</span>
+          </button>`);
+      parts.push(`<button type="button" class="dlg-item" data-outfit-off="glasses">
+            <span class="say">Say: no glasses</span>
+            <span class="reply">Remove glasses</span>
+          </button>`);
+      parts.push(`<button type="button" class="dlg-item" data-outfit-off="all">
+            <span class="say">Say: no outfit / naked</span>
+            <span class="reply">Remove all outfit</span>
+          </button>`);
+
+      box.innerHTML = parts.join('');
     }
 
     const dlgListBtn = document.getElementById('dlgListBtn');
@@ -2080,6 +2123,23 @@
       }
     });
     document.getElementById('dlgList').addEventListener('click', (e) => {
+      const outfitBtn = e.target.closest('button[data-outfit]');
+      if (outfitBtn) {
+        const [slot, color] = String(outfitBtn.dataset.outfit || '').split(':');
+        if (slot && color) {
+          wearPiece(slot, color);
+          say('Nice ' + color + ' ' + slot + '!', 1600);
+        }
+        return;
+      }
+      const outfitOffBtn = e.target.closest('button[data-outfit-off]');
+      if (outfitOffBtn) {
+        const slot = outfitOffBtn.dataset.outfitOff;
+        removePiece(slot);
+        if (slot === 'all') say('OK, no outfit.', 1600);
+        else say('OK, no ' + slot + '.', 1600);
+        return;
+      }
       const playBtn = e.target.closest('button[data-play]');
       if (playBtn && PLAYS) {
         const pl = PLAYS.plays.find((x) => x.id === playBtn.dataset.play);
@@ -2236,24 +2296,24 @@
         // Outfit wearables before dialog match
         let suited = false;
         for (const a of alts) {
-          if (maybeHandleOutfitCommand(a)) { suited = true; actionNote = '服装'; break; }
+          if (maybeHandleOutfitCommand(a)) { suited = true; actionNote = 'Outfit'; break; }
         }
         if (suited) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         // Eat commands first: "eat apple"
         let ate = false;
         for (const a of alts) {
-          if (maybeHandleEatCommand(a)) { ate = true; actionNote = '喂食'; break; }
+          if (maybeHandleEatCommand(a)) { ate = true; actionNote = 'Feed'; break; }
         }
         if (ate) { setMicStatus('听到：' + lastHeard + (actionNote ? ' → ' + actionNote : '')); return; }
         // Animal switch: "cat" / "I am a dog"
         let switched = false;
         for (const a of alts) {
-          if (maybeHandleAnimalCommand(a)) { switched = true; actionNote = '换形象'; break; }
+          if (maybeHandleAnimalCommand(a)) { switched = true; actionNote = 'Animal'; break; }
         }
         if (switched) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         let played = false;
         for (const a of alts) {
-          if (maybeHandlePlayCommand(a)) { played = true; actionNote = '玩耍'; break; }
+          if (maybeHandlePlayCommand(a)) { played = true; actionNote = 'Play'; break; }
         }
         if (played) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         let matched = null;
