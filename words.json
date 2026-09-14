@@ -5430,7 +5430,309 @@
       "tags": [
         "command-vocab",
         "songs"
-      ]
+      ],
+      "emoji": "🌾"
+    },
+    {
+      "id": "beach",
+      "text": "Beach",
+      "ipa": "/biːtʃ/",
+      "zh": "海滩",
+      "phonics": "BEACH",
+      "ipaSegments": [
+        "b",
+        "iː",
+        "tʃ"
+      ],
+      "emoji": "🏖️",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/beach.mp3",
+      "phonicsAudio": "audio/beach_phonics.mp3"
+    },
+    {
+      "id": "bedroom",
+      "text": "Bedroom",
+      "ipa": "/ˈbedruːm/",
+      "zh": "卧室",
+      "phonics": "BED-room",
+      "ipaSegments": [
+        "b",
+        "e",
+        "d",
+        "r",
+        "uː",
+        "m"
+      ],
+      "emoji": "🛏️",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/bedroom.mp3",
+      "phonicsAudio": "audio/bedroom_phonics.mp3"
+    },
+    {
+      "id": "meadow",
+      "text": "Meadow",
+      "ipa": "/ˈmedoʊ/",
+      "zh": "草地",
+      "phonics": "MEA-dow",
+      "ipaSegments": [
+        "m",
+        "e",
+        "d",
+        "oʊ"
+      ],
+      "emoji": "🌳",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/meadow.mp3",
+      "phonicsAudio": "audio/meadow_phonics.mp3"
+    },
+    {
+      "id": "garden",
+      "text": "Garden",
+      "ipa": "/ˈɡɑːrdn/",
+      "zh": "花园",
+      "phonics": "GAR-den",
+      "ipaSegments": [
+        "ɡ",
+        "ɑː",
+        "r",
+        "d",
+        "n"
+      ],
+      "emoji": "🌻",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/garden.mp3",
+      "phonicsAudio": "audio/garden_phonics.mp3"
+    },
+    {
+      "id": "barn",
+      "text": "Barn",
+      "ipa": "/bɑːrn/",
+      "zh": "谷仓",
+      "phonics": "BARN",
+      "ipaSegments": [
+        "b",
+        "ɑː",
+        "r",
+        "n"
+      ],
+      "emoji": "🏚️",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/barn.mp3",
+      "phonicsAudio": "audio/barn_phonics.mp3"
+    },
+    {
+      "id": "sand",
+      "text": "Sand",
+      "ipa": "/sænd/",
+      "zh": "沙子",
+      "phonics": "SAND",
+      "ipaSegments": [
+        "s",
+        "æ",
+        "n",
+        "d"
+      ],
+      "emoji": "🏖️",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/sand.mp3",
+      "phonicsAudio": "audio/sand_phonics.mp3"
+    },
+    {
+      "id": "wave",
+      "text": "Wave",
+      "ipa": "/weɪv/",
+      "zh": "波浪",
+      "phonics": "WAVE",
+      "ipaSegments": [
+        "w",
+        "eɪ",
+        "v"
+      ],
+      "emoji": "🌊",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/wave.mp3",
+      "phonicsAudio": "audio/wave_phonics.mp3"
+    },
+    {
+      "id": "outside",
+      "text": "Outside",
+      "ipa": "/ˌaʊtˈsaɪd/",
+      "zh": "外面",
+      "phonics": "OUT-side",
+      "ipaSegments": [
+        "aʊ",
+        "t",
+        "s",
+        "aɪ",
+        "d"
+      ],
+      "emoji": "🌳",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/outside.mp3",
+      "phonicsAudio": "audio/outside_phonics.mp3"
+    },
+    {
+      "id": "ocean",
+      "text": "Ocean",
+      "ipa": "/ˈoʊʃn/",
+      "zh": "海洋",
+      "phonics": "O-cean",
+      "ipaSegments": [
+        "oʊ",
+        "ʃ",
+        "n"
+      ],
+      "emoji": "🌊",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/ocean.mp3",
+      "phonicsAudio": "audio/ocean_phonics.mp3"
+    },
+    {
+      "id": "pillow",
+      "text": "Pillow",
+      "ipa": "/ˈpɪloʊ/",
+      "zh": "枕头",
+      "phonics": "PIL-low",
+      "ipaSegments": [
+        "p",
+        "ɪ",
+        "l",
+        "oʊ"
+      ],
+      "emoji": "🛏️",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/pillow.mp3",
+      "phonicsAudio": "audio/pillow_phonics.mp3"
+    },
+    {
+      "id": "lamp",
+      "text": "Lamp",
+      "ipa": "/læmp/",
+      "zh": "台灯",
+      "phonics": "LAMP",
+      "ipaSegments": [
+        "l",
+        "æ",
+        "m",
+        "p"
+      ],
+      "emoji": "💡",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/lamp.mp3",
+      "phonicsAudio": "audio/lamp_phonics.mp3"
+    },
+    {
+      "id": "window",
+      "text": "Window",
+      "ipa": "/ˈwɪndoʊ/",
+      "zh": "窗户",
+      "phonics": "WIN-dow",
+      "ipaSegments": [
+        "w",
+        "ɪ",
+        "n",
+        "d",
+        "oʊ"
+      ],
+      "emoji": "🪟",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/window.mp3",
+      "phonicsAudio": "audio/window_phonics.mp3"
+    },
+    {
+      "id": "fence",
+      "text": "Fence",
+      "ipa": "/fens/",
+      "zh": "篱笆",
+      "phonics": "FENCE",
+      "ipaSegments": [
+        "f",
+        "e",
+        "n",
+        "s"
+      ],
+      "emoji": "🪵",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/fence.mp3",
+      "phonicsAudio": "audio/fence_phonics.mp3"
+    },
+    {
+      "id": "tree",
+      "text": "Tree",
+      "ipa": "/triː/",
+      "zh": "树",
+      "phonics": "TREE",
+      "ipaSegments": [
+        "t",
+        "r",
+        "iː"
+      ],
+      "emoji": "🌳",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/tree.mp3",
+      "phonicsAudio": "audio/tree_phonics.mp3"
+    },
+    {
+      "id": "grass",
+      "text": "Grass",
+      "ipa": "/ɡræs/",
+      "zh": "草",
+      "phonics": "GRASS",
+      "ipaSegments": [
+        "ɡ",
+        "r",
+        "æ",
+        "s"
+      ],
+      "emoji": "🌿",
+      "tags": [
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/grass.mp3",
+      "phonicsAudio": "audio/grass_phonics.mp3"
     }
   ]
 }

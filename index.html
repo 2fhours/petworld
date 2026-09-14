@@ -858,6 +858,162 @@
       body { cursor:auto; }
       .cursor { display:none; }
     }
+
+    /* ===== Scenes: farm / beach / bedroom / meadow ===== */
+    body.scene-farm .sky {
+      background: linear-gradient(180deg, #8ec5f0 0%, #ffe6a8 45%, #c8e08a 78%, #a8c96a 100%);
+    }
+    body.scene-farm .hill { background: linear-gradient(180deg, #9bc96a, #6fa04a); }
+    body.scene-farm .hill.back { background: linear-gradient(180deg, #b5d98a, #88b85e); }
+    body.scene-farm .ground {
+      background:
+        radial-gradient(circle at 30% 40%, rgba(180,120,60,0.25), transparent 30%),
+        linear-gradient(180deg, #8bb85a 0%, #6a9440 55%, #5a7e38 100%);
+    }
+    body.scene-beach .sky {
+      background: linear-gradient(180deg, #4db8e8 0%, #87d4f5 35%, #fff4c8 70%, #f5e0a8 100%);
+    }
+    body.scene-beach .hill,
+    body.scene-beach .hill.back {
+      background: linear-gradient(180deg, #5ec4e0, #3aa8c8);
+      opacity: 0.55;
+      bottom: 16%;
+      height: 28%;
+    }
+    body.scene-beach .ground {
+      background:
+        radial-gradient(circle at 40% 20%, rgba(255,255,255,0.35), transparent 28%),
+        linear-gradient(180deg, #f0e0b0 0%, #e8c878 50%, #d4b060 100%);
+    }
+    body.scene-beach .ground::before {
+      background-image: repeating-linear-gradient(90deg, transparent 0 22px, rgba(200,160,80,0.15) 22px 24px);
+    }
+    body.scene-beach .cloud { opacity: 0.85; }
+    body.scene-bedroom .sky {
+      background: linear-gradient(180deg, #2a2548 0%, #4a3f72 40%, #6b5a8e 70%, #8b7aa8 100%);
+    }
+    body.scene-bedroom .sun { opacity: 0.15; filter: brightness(1.4); }
+    body.scene-bedroom .cloud { opacity: 0.25; }
+    body.scene-bedroom .hill,
+    body.scene-bedroom .hill.back {
+      background: linear-gradient(180deg, #5a4a6e, #3d3250);
+      opacity: 0.9;
+    }
+    body.scene-bedroom .ground {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,220,160,0.12), transparent 40%),
+        linear-gradient(180deg, #6b5a4e 0%, #4a3c34 55%, #3a2e28 100%);
+    }
+    body.scene-bedroom .ground::before {
+      background-image: repeating-linear-gradient(90deg, transparent 0 28px, rgba(80,60,40,0.2) 28px 30px);
+    }
+
+    .scene-bar {
+      position: fixed; top: 78px; left: 50%; transform: translateX(-50%);
+      z-index: 8; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+      padding: 6px 8px; border-radius: 14px;
+      background: rgba(15,23,42,0.5); border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px); max-width: calc(100vw - 24px);
+    }
+    body.hide-picker .scene-bar { display: none; }
+    .scene-bar button {
+      appearance: none; border: 1px solid transparent; border-radius: 12px;
+      padding: 6px 10px; font: inherit; font-size: 11px;
+      color: #e2e8f0; background: rgba(255,255,255,0.06); cursor: pointer;
+    }
+    .scene-bar button.active {
+      border-color: rgba(103,232,249,0.7);
+      background: rgba(103,232,249,0.18);
+    }
+    .scene-bar button:hover { background: rgba(255,255,255,0.12); }
+
+    /* Word Atlas */
+    .atlas-btn {
+      appearance: none; border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px; padding: 8px 12px; margin-top: 8px;
+      font: inherit; font-size: 13px; color: #e2e8f0;
+      background: rgba(167,139,250,0.22); cursor: pointer; width: 100%;
+    }
+    .atlas-btn:hover { filter: brightness(1.08); }
+    .atlas-panel {
+      position: fixed; right: 16px; top: 96px; bottom: 24px; z-index: 9;
+      width: min(340px, calc(100vw - 28px));
+      padding: 14px; border-radius: 18px;
+      background: rgba(15,23,42,0.88); border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(14px); color: #e2e8f0;
+      display: none; flex-direction: column; overflow: hidden;
+    }
+    .atlas-panel.open { display: flex; }
+    .atlas-panel h2 { margin: 0 0 6px; font-size: 14px; color: #c4b5fd; }
+    .atlas-progress { font-size: 12px; color: rgba(226,232,240,0.75); margin-bottom: 8px; }
+    .atlas-filters { display: flex; gap: 6px; margin-bottom: 10px; }
+    .atlas-filters button {
+      appearance: none; border: 0; border-radius: 999px; padding: 6px 10px;
+      font: inherit; font-size: 12px; color: #e2e8f0;
+      background: rgba(255,255,255,0.08); cursor: pointer;
+    }
+    .atlas-filters button.active { background: rgba(167,139,250,0.35); }
+    .atlas-grid {
+      flex: 1; overflow: auto; display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+      gap: 8px; align-content: start;
+    }
+    .atlas-cell {
+      appearance: none; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 8px 4px; min-height: 72px;
+      background: rgba(255,255,255,0.04); color: #e2e8f0;
+      font: inherit; font-size: 11px; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    }
+    .atlas-cell.locked {
+      color: rgba(148,163,184,0.55); filter: grayscale(1); opacity: 0.65;
+    }
+    .atlas-cell.unlocked {
+      background: rgba(167,139,250,0.16); border-color: rgba(167,139,250,0.35);
+    }
+    .atlas-cell .ae { font-size: 22px; line-height: 1.1; }
+    .atlas-cell .at { font-weight: 650; text-align: center; word-break: break-word; }
+    .atlas-close {
+      appearance: none; border: 0; border-radius: 999px; padding: 8px 12px; margin-top: 10px;
+      font: inherit; font-size: 13px; color: #e2e8f0;
+      background: rgba(255,255,255,0.1); cursor: pointer;
+    }
+
+    /* Rewarded ad modal */
+    .ad-modal-backdrop {
+      position: fixed; inset: 0; z-index: 40;
+      background: rgba(8,12,24,0.55); display: none;
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .ad-modal-backdrop.open { display: flex; }
+    .ad-modal {
+      width: min(340px, 100%); border-radius: 18px; padding: 18px;
+      background: rgba(15,23,42,0.95); border: 1px solid rgba(255,255,255,0.16);
+      color: #e2e8f0; text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+    .ad-modal h3 { margin: 0 0 8px; font-size: 18px; color: #fda4af; }
+    .ad-modal p { margin: 0 0 14px; font-size: 14px; line-height: 1.45; color: rgba(226,232,240,0.85); }
+    .ad-modal .row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .ad-modal button {
+      appearance: none; border: 0; border-radius: 999px; padding: 10px 16px;
+      font: inherit; font-size: 14px; cursor: pointer;
+    }
+    .ad-modal button.watch {
+      background: linear-gradient(180deg, #fb7185, #e11d48); color: #fff; font-weight: 650;
+    }
+    .ad-modal button.later {
+      background: rgba(255,255,255,0.1); color: #e2e8f0;
+    }
+    .ad-demo-overlay {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(8,12,24,0.82); display: none;
+      align-items: center; justify-content: center; color: #fff; text-align: center;
+      font-size: 18px; font-weight: 650;
+    }
+    .ad-demo-overlay.open { display: flex; }
+    .ad-demo-overlay .count { font-size: 42px; margin-top: 10px; color: #fda4af; }
+
   </style>
 </head>
 <body>
@@ -875,7 +1031,7 @@
   </div>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
     <h3>Supported Dialogs</h3>
-    <div class="dlg-tip">Click a line to try it. Say the blue English with the mic. Songs: “sing twinkle”, “stop singing”. Outfits: “red hat”, “blue clothes”, “no hat”.</div>
+    <div class="dlg-tip">Click a line to try it. Say the blue English with the mic. Songs: “sing twinkle”, “stop singing”. Scenes: “farm”, “beach”, “bedroom”, “garden”. Outfits: “red hat”, “blue clothes”, “no hat”.</div>
     <div id="dlgList"></div>
   </div>
 
@@ -884,6 +1040,14 @@
   <button type="button" class="dock-toggle bottom" id="toggleActions" title="操作菜单">操作</button>
 
 <div class="picker" id="picker"></div>
+
+  <div class="scene-bar" id="sceneBar" aria-label="Scenes">
+    <button type="button" data-scene="meadow" class="active">🌳 Garden</button>
+    <button type="button" data-scene="farm">🌾 Farm</button>
+    <button type="button" data-scene="beach">🌊 Beach</button>
+    <button type="button" data-scene="bedroom">🛏️ Bedroom</button>
+  </div>
+
   <div class="hint">长按宠物跟随 · 松开后自己闲逛</div>
 
   <div class="scene" id="scene" aria-hidden="true">
@@ -922,6 +1086,7 @@
     <input class="search" id="enSearch" type="search" placeholder="搜索单词 / Search words" autocomplete="off" />
     <div class="search-meta" id="enSearchMeta"></div>
     <div class="list" id="enList"></div>
+    <button type="button" class="atlas-btn" id="btnAtlas">📖 图鉴 / Atlas</button>
     <div class="meta">可爱童声音色 AnaNeural · 非浏览器简易 TTS</div>
   </aside>
 
@@ -943,6 +1108,36 @@
     <button type="button" data-wear="hat" title="Cycle hat color">Hat</button>
     <button type="button" data-wear="clothes" title="Cycle clothes color">Clothes</button>
     <button type="button" data-wear="glasses" title="Cycle glasses color">Glasses</button>
+  </div>
+
+
+  <div class="atlas-panel" id="atlasPanel" aria-label="Word Atlas">
+    <h2>📖 单词图鉴 · Word Atlas</h2>
+    <div class="atlas-progress" id="atlasProgress">已点亮 0/0</div>
+    <div class="atlas-filters">
+      <button type="button" data-atlas-filter="all" class="active">All</button>
+      <button type="button" data-atlas-filter="today">New today</button>
+    </div>
+    <div class="atlas-grid" id="atlasGrid"></div>
+    <button type="button" class="atlas-close" id="atlasClose">关闭 Close</button>
+  </div>
+
+
+  <div class="ad-modal-backdrop" id="adModalBackdrop" aria-hidden="true">
+    <div class="ad-modal" role="dialog" aria-labelledby="adModalTitle">
+      <h3 id="adModalTitle">双倍爱心 / Double hearts</h3>
+      <p id="adModalText">Watch a short video to double this reward?</p>
+      <div class="row">
+        <button type="button" class="watch" id="adWatchBtn">看视频 Watch</button>
+        <button type="button" class="later" id="adLaterBtn">下次再说 Later</button>
+      </div>
+    </div>
+  </div>
+  <div class="ad-demo-overlay" id="adDemoOverlay" aria-hidden="true">
+    <div>
+      <div>Ad preview (demo)</div>
+      <div class="count" id="adDemoCount">3</div>
+    </div>
   </div>
 
   <script>
@@ -1207,6 +1402,340 @@
 
 
 
+
+    // ===== Word Atlas (单词图鉴) =====
+    const ATLAS_KEY = 'petworld-atlas-v1';
+    const ATLAS_MILESTONE_N = 5;
+    const ATLAS_EMOJI = {
+      farm: '🌾', beach: '🏖️', bedroom: '🛏️', meadow: '🌳', garden: '🌻',
+      barn: '🏚️', sand: '🏖️', wave: '🌊', outside: '🌳', ocean: '🌊',
+      pillow: '🛏️', lamp: '💡', window: '🪟', fence: '🪵', tree: '🌳', grass: '🌿',
+      apple: '🍎', cat: '🐱', dog: '🐶', bunny: '🐰', fox: '🦊', panda: '🐼',
+      bed: '🛏️', boat: '🚣', star: '⭐', sun: '☀️', hello: '👋'
+    };
+    let ATLAS = { unlocked: {}, milestoneAwarded: 0 };
+    let atlasFilter = 'all';
+    let sessionListenCount = 0;
+    let lastLessonRewardAmount = 0;
+
+    function loadAtlas() {
+      try {
+        const raw = localStorage.getItem(ATLAS_KEY);
+        if (raw) {
+          const o = JSON.parse(raw);
+          ATLAS.unlocked = (o && o.unlocked && typeof o.unlocked === 'object') ? o.unlocked : {};
+          ATLAS.milestoneAwarded = (o && o.milestoneAwarded) | 0;
+        }
+      } catch (e) {}
+      return ATLAS;
+    }
+    function saveAtlas() {
+      try { localStorage.setItem(ATLAS_KEY, JSON.stringify(ATLAS)); } catch (e) {}
+    }
+    loadAtlas();
+
+    function findWordByText(text) {
+      if (!WORDS || !WORDS.items || !text) return null;
+      const t = String(text).toLowerCase().trim().replace(/[?.!,]/g, '');
+      if (!t) return null;
+      let best = null, bestLen = 0;
+      for (const it of WORDS.items) {
+        const wt = String(it.text || '').toLowerCase().trim().replace(/[?.!,]/g, '');
+        if (!wt) continue;
+        if (wt === t || t === String(it.id).toLowerCase()) return it;
+        if ((t.includes(wt) || wt.includes(t)) && wt.length >= bestLen) {
+          best = it; bestLen = wt.length;
+        }
+      }
+      return best;
+    }
+
+    function atlasEmojiFor(it) {
+      if (!it) return '❓';
+      if (it.emoji) return it.emoji;
+      const id = String(it.id || '').replace(/^w_/, '');
+      const text = String(it.text || '').toLowerCase();
+      return ATLAS_EMOJI[id] || ATLAS_EMOJI[text] || ATLAS_EMOJI[text.split(' ')[0]] || '✨';
+    }
+
+    function unlockAtlasWord(ref, source) {
+      if (!WORDS || !WORDS.items) return false;
+      let it = null;
+      if (typeof ref === 'string') {
+        it = WORDS.items.find((x) => x.id === ref) || findWordByText(ref);
+      } else if (ref && ref.id) {
+        it = WORDS.items.find((x) => x.id === ref.id) || ref;
+      }
+      if (!it || !it.id) return false;
+      const wasNew = !ATLAS.unlocked[it.id];
+      if (wasNew) {
+        ATLAS.unlocked[it.id] = { at: Date.now(), source: source || 'learn' };
+        saveAtlas();
+        awardXp(1, 'atlas-unlock', { key: 'atlas:' + it.id, cooldownMs: 4000 });
+        const n = Object.keys(ATLAS.unlocked).length;
+        const milestones = Math.floor(n / ATLAS_MILESTONE_N);
+        if (milestones > (ATLAS.milestoneAwarded || 0)) {
+          ATLAS.milestoneAwarded = milestones;
+          saveAtlas();
+          const gained = awardXp(3, 'atlas-milestone', { key: 'atlas-ms:' + milestones, cooldownMs: 0 });
+          say('Atlas +5!', 2200);
+          hearts(4);
+          if (gained > 0) maybeOfferDoubleHearts(gained, 'atlas-milestone');
+        }
+        if (document.getElementById('atlasPanel')?.classList.contains('open')) renderAtlasPanel();
+      }
+      return wasNew;
+    }
+
+    function unlockAtlasTexts(texts, source) {
+      (texts || []).forEach((t) => unlockAtlasWord(t, source));
+    }
+
+    function renderAtlasPanel() {
+      const grid = document.getElementById('atlasGrid');
+      const prog = document.getElementById('atlasProgress');
+      if (!grid || !WORDS || !WORDS.items) return;
+      const items = WORDS.items;
+      const total = items.length;
+      const unlockedN = Object.keys(ATLAS.unlocked).length;
+      if (prog) prog.textContent = '已点亮 ' + unlockedN + '/' + total;
+      const start = new Date(); start.setHours(0,0,0,0);
+      const startTs = start.getTime();
+      const list = items.filter((it) => {
+        if (atlasFilter !== 'today') return true;
+        const u = ATLAS.unlocked[it.id];
+        return u && u.at >= startTs;
+      });
+      grid.innerHTML = list.map((it) => {
+        const u = ATLAS.unlocked[it.id];
+        if (u) {
+          return `<button type="button" class="atlas-cell unlocked" data-atlas-id="${it.id}">
+            <span class="ae">${atlasEmojiFor(it)}</span>
+            <span class="at">${it.text}</span>
+          </button>`;
+        }
+        return `<button type="button" class="atlas-cell locked" data-atlas-id="${it.id}" disabled>
+            <span class="ae">❔</span>
+            <span class="at">？</span>
+          </button>`;
+      }).join('');
+    }
+
+    function openAtlasPanel() {
+      const panel = document.getElementById('atlasPanel');
+      if (!panel) return;
+      if (typeof applyDock === 'function') {
+        if (!document.body.classList.contains('hide-learn')) applyDock('learn', true, false);
+      }
+      renderAtlasPanel();
+      panel.classList.add('open');
+    }
+    function closeAtlasPanel() {
+      const panel = document.getElementById('atlasPanel');
+      if (panel) panel.classList.remove('open');
+    }
+
+    // ===== Scenes =====
+    const SCENE_KEY = 'petworld-scene-v1';
+    const SCENES = {
+      meadow: { label: 'Garden', emoji: '🌳', decors: null },
+      farm: { label: 'Farm', emoji: '🌾', decors: ['🏚️', '🐄', '🚜', '🌽'] },
+      beach: { label: 'Beach', emoji: '🌊', decors: ['🌴', '🐚', '🏖️', '🌊'] },
+      bedroom: { label: 'Bedroom', emoji: '🛏️', decors: ['🛏️', '🪟', '💡', '🧸'] }
+    };
+    let currentScene = 'meadow';
+    let sceneManualAt = 0;
+
+    function loadScene() {
+      try {
+        const v = localStorage.getItem(SCENE_KEY);
+        if (v && SCENES[v]) currentScene = v;
+      } catch (e) {}
+      return currentScene;
+    }
+    function saveScene() {
+      try { localStorage.setItem(SCENE_KEY, currentScene); } catch (e) {}
+    }
+
+    function applySceneDecor() {
+      const ids = ['decor1','decor2','decor3','decor4'];
+      let decors = null;
+      if (currentScene === 'meadow') {
+        const themes = {
+          cat: ['🌳', '🧶', '🏠', '🌿'],
+          dog: ['🌳', '🎾', '🏡', '🌼'],
+          bunny: ['🌳', '🌸', '🥕', '🌿'],
+          fox: ['🌲', '🍂', '🍄', '🌿'],
+          panda: ['🎋', '🐼', '🍃', '🌸']
+        };
+        decors = themes[state.form] || themes.cat;
+      } else {
+        decors = (SCENES[currentScene] && SCENES[currentScene].decors) || ['🌳','🌸','🏡','🌿'];
+      }
+      ids.forEach((nid, i) => {
+        const el = document.getElementById(nid);
+        if (el) el.textContent = decors[i];
+      });
+    }
+
+    function setScene(id, opts = {}) {
+      if (!SCENES[id]) id = 'meadow';
+      currentScene = id;
+      document.body.classList.remove('scene-farm','scene-beach','scene-bedroom','scene-meadow');
+      if (id !== 'meadow') document.body.classList.add('scene-' + id);
+      else document.body.classList.add('scene-meadow');
+      applySceneDecor();
+      saveScene();
+      document.querySelectorAll('#sceneBar [data-scene]').forEach((b) => {
+        b.classList.toggle('active', b.dataset.scene === id);
+      });
+      if (opts.manual) sceneManualAt = Date.now();
+      if (!opts.silent) {
+        const lab = SCENES[id].label;
+        say((SCENES[id].emoji || '') + ' ' + lab + '!', 1800);
+      }
+      unlockAtlasWord(id === 'meadow' ? 'garden' : id, 'scene');
+      if (id === 'meadow') unlockAtlasWord('outside', 'scene');
+    }
+
+    function maybeHandleSceneCommand(text) {
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return false;
+      if (/\b(go to (the )?farm|farm)\b/.test(t) && !/\bfarmer\b/.test(t)) {
+        // avoid stealing "old macdonald had a farm" sing — require go/scene-ish or bare farm
+        if (/\b(go to|scene|visit)\b/.test(t) || /^(go to (the )?farm|farm|the farm)$/.test(t)) {
+          setScene('farm', { manual: true });
+          return true;
+        }
+      }
+      if (/\b(go to (the )?beach|beach)\b/.test(t) || /^(the beach)$/.test(t)) {
+        if (/\b(go to|scene|visit)\b/.test(t) || /^(go to (the )?beach|beach|the beach)$/.test(t)) {
+          setScene('beach', { manual: true });
+          return true;
+        }
+      }
+      if (/\b(go to (the )?bed ?room|bedroom|go to bed room)\b/.test(t) || /^(bedroom|bed room)$/.test(t)) {
+        setScene('bedroom', { manual: true });
+        return true;
+      }
+      if (/\b(go outside|go to (the )?(garden|meadow)|meadow|garden|outside)\b/.test(t)) {
+        if (/\b(go to|go outside|scene|visit)\b/.test(t) || /^(meadow|garden|outside|the (garden|meadow))$/.test(t)) {
+          setScene('meadow', { manual: true });
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function maybeAutoSceneForSong(song) {
+      if (!song) return;
+      // Skip auto if user manually set scene in last 2 minutes
+      if (sceneManualAt && Date.now() - sceneManualAt < 120000) return;
+      if (song.id === 'old_mac') setScene('farm', { silent: true });
+      else if (song.id === 'row_boat') setScene('beach', { silent: true });
+    }
+
+    // ===== Rewarded ad stub (double hearts) =====
+    const AD_RATE_MS = 3 * 60 * 1000;
+    let lastAdOfferAt = 0;
+    let pendingAdAmount = 0;
+    let pendingAdReason = '';
+    let adOfferResolver = null;
+
+    /**
+     * showRewardedAd() — plug real SDK here later.
+     * ------------------------------------------------
+     * DEMO (default): shows "Ad preview (demo)" for 3s, then resolves true.
+     *
+     * Real wiring (replace the DEMO body):
+     *  - Native app wrapper: Google AdMob Rewarded Ads
+     *      admob.rewarded.show().then(() => resolve(true)).catch(() => resolve(false))
+     *  - Web / GH Pages: keep DEMO, or use a web rewarded network SDK
+     *      (e.g. Google Ad Manager / AdSense rewarded if available) —
+     *      call resolve(true) only after the reward callback fires.
+     *  - Always resolve(false) if the user closes early or the SDK fails.
+     * See ADS.md for a short integration checklist.
+     */
+    function showRewardedAd() {
+      return new Promise((resolve) => {
+        // === DEMO MODE (replace this body with real AdMob / web SDK) ===
+        const overlay = document.getElementById('adDemoOverlay');
+        const countEl = document.getElementById('adDemoCount');
+        if (!overlay) { resolve(true); return; }
+        let n = 3;
+        if (countEl) countEl.textContent = String(n);
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        const tick = setInterval(() => {
+          n -= 1;
+          if (countEl) countEl.textContent = String(Math.max(0, n));
+          if (n <= 0) {
+            clearInterval(tick);
+            overlay.classList.remove('open');
+            overlay.setAttribute('aria-hidden', 'true');
+            resolve(true);
+          }
+        }, 1000);
+        // === END DEMO MODE ===
+      });
+    }
+
+    function canOfferAd() {
+      return Date.now() - lastAdOfferAt >= AD_RATE_MS;
+    }
+
+    function showAdOfferModal(amount) {
+      return new Promise((resolve) => {
+        const backdrop = document.getElementById('adModalBackdrop');
+        if (!backdrop) { resolve(false); return; }
+        pendingAdAmount = amount;
+        adOfferResolver = resolve;
+        backdrop.classList.add('open');
+        backdrop.setAttribute('aria-hidden', 'false');
+      });
+    }
+
+    function closeAdOfferModal(choice) {
+      const backdrop = document.getElementById('adModalBackdrop');
+      if (backdrop) {
+        backdrop.classList.remove('open');
+        backdrop.setAttribute('aria-hidden', 'true');
+      }
+      const r = adOfferResolver;
+      adOfferResolver = null;
+      if (r) r(!!choice);
+    }
+
+    async function maybeOfferDoubleHearts(amount, reason) {
+      if (!amount || amount <= 0) return;
+      if (!canOfferAd()) return;
+      lastAdOfferAt = Date.now();
+      lastLessonRewardAmount = amount;
+      pendingAdReason = reason || 'lesson';
+      const watch = await showAdOfferModal(amount);
+      if (!watch) return;
+      const ok = await showRewardedAd();
+      if (ok) {
+        awardXp(amount, 'ad-double', { key: 'ad-double:' + Date.now(), cooldownMs: 0 });
+        say('Double hearts! ❤️×2', 2200);
+        hearts(5);
+      }
+    }
+
+    function noteLessonMoment(amount, kind) {
+      if (kind === 'phonics' || kind === 'atlas-milestone') {
+        maybeOfferDoubleHearts(amount || lastLessonRewardAmount || 2, kind);
+        return;
+      }
+      if (kind === 'listen') {
+        sessionListenCount += 1;
+        if (sessionListenCount > 0 && sessionListenCount % 3 === 0) {
+          maybeOfferDoubleHearts(amount || 1, 'listen-3');
+        }
+      }
+    }
+
+
     // Local audio cache (Cache API)
     const AUDIO_CACHE = 'petworld-audio-v1';
     const audioUrlMemo = new Map();
@@ -1441,19 +1970,22 @@
     function applyEnv(id) {
       document.body.classList.remove('env-cat','env-dog','env-bunny','env-fox','env-panda');
       document.body.classList.add('env-' + id);
-      const themes = {
-        cat: ['🌳', '🧶', '🏠', '🌿'],
-        dog: ['🌳', '🎾', '🏡', '🌼'],
-        bunny: ['🌳', '🌸', '🥕', '🌿'],
-        fox: ['🌲', '🍂', '🍄', '🌿'],
-        panda: ['🎋', '🐼', '🍃', '🌸']
-      };
-      const t = themes[id] || themes.cat;
-      const ids = ['decor1','decor2','decor3','decor4'];
-      ids.forEach((nid, i) => {
-        const el = document.getElementById(nid);
-        if (el) el.textContent = t[i];
-      });
+      if (typeof applySceneDecor === 'function') applySceneDecor();
+      else {
+        const themes = {
+          cat: ['🌳', '🧶', '🏠', '🌿'],
+          dog: ['🌳', '🎾', '🏡', '🌼'],
+          bunny: ['🌳', '🌸', '🥕', '🌿'],
+          fox: ['🌲', '🍂', '🍄', '🌿'],
+          panda: ['🎋', '🐼', '🍃', '🌸']
+        };
+        const t = themes[id] || themes.cat;
+        const ids = ['decor1','decor2','decor3','decor4'];
+        ids.forEach((nid, i) => {
+          const el = document.getElementById(nid);
+          if (el) el.textContent = t[i];
+        });
+      }
     }
 
     function setForm(id, opts = {}) {
@@ -1657,6 +2189,11 @@
       saveOutfit();
       applyOutfit();
       if (typeof awardXp === 'function') awardXp(1, 'outfit', { key: 'outfit:' + slot + ':' + c, cooldownMs: 6000 });
+      if (typeof unlockAtlasTexts === 'function') {
+        unlockAtlasWord(c, 'outfit');
+        unlockAtlasWord(slot, 'outfit');
+        unlockAtlasWord(c + ' ' + slot, 'outfit');
+      }
     }
     function removePiece(slot) {
       if (slot === 'all') {
@@ -1853,6 +2390,13 @@
       }
       noteDailyFirstEnglish();
       awardXp(1, 'play', { key: 'play:' + ((play && play.id) || 'random'), cooldownMs: 20000 });
+      if (typeof unlockAtlasTexts === 'function') {
+        if (play) {
+          unlockAtlasWord(play.id, 'play');
+          unlockAtlasTexts(play.triggers || [], 'play');
+          if (play.reply) unlockAtlasWord(play.reply, 'play');
+        } else unlockAtlasWord('play', 'play');
+      }
     }
 
     function maybeHandlePlayCommand(text) {
@@ -1921,6 +2465,11 @@
       say(song.title || 'Sing!', 3200);
       noteDailyFirstEnglish();
       awardXp(2, 'sing', { key: 'sing:' + (song.id || 'random'), cooldownMs: 20000 });
+      if (typeof maybeAutoSceneForSong === 'function') maybeAutoSceneForSong(song);
+      if (typeof unlockAtlasTexts === 'function') {
+        unlockAtlasTexts(['sing', song.title, song.id].filter(Boolean), 'sing');
+        (song.triggers || []).slice(0, 2).forEach((g) => unlockAtlasWord(g, 'sing'));
+      }
       try {
         const url = await getPlayableUrl(song.audio);
         const audio = new Audio(url);
@@ -2002,6 +2551,11 @@
       say(animal.reply, 3600);
       noteDailyFirstEnglish();
       awardXp(3, 'animal', { key: 'animal:' + animal.id, cooldownMs: 15000 });
+      if (typeof unlockAtlasTexts === 'function') {
+        unlockAtlasWord(animal.id, 'animal');
+        unlockAtlasWord(animal.name, 'animal');
+        unlockAtlasTexts(animal.triggers || [], 'animal');
+      }
       return true;
     }
 
@@ -2083,6 +2637,11 @@
         setHappy(2400);
         playLine(food.accept || (FOODS && FOODS.genericAccept));
         awardXp(1, 'feed', { key: 'feed-ok:' + food.id, cooldownMs: 20000 });
+        if (typeof unlockAtlasTexts === 'function') {
+          unlockAtlasWord(food.id, 'eat');
+          unlockAtlasWord(food.name, 'eat');
+          unlockAtlasTexts(food.triggers || [], 'eat');
+        }
       } else {
         spawnProp(food.emoji, 'reject', x, y - 10, 2800);
         pet.classList.add('reject-shake');
@@ -2090,6 +2649,10 @@
         burst(['🙅', '💨', '✖️'], x, y);
         playLine(food.reject || (FOODS && FOODS.genericReject));
         awardXp(1, 'feed', { key: 'feed-no:' + food.id, cooldownMs: 20000 });
+        if (typeof unlockAtlasTexts === 'function') {
+          unlockAtlasWord(food.id, 'eat');
+          unlockAtlasWord(food.name, 'eat');
+        }
       }
     }
 
@@ -2152,6 +2715,20 @@
           </button>`;
           }).join(''));
       }
+
+
+      // B0. Scenes
+      parts.push(`<div class="dlg-tip" style="margin-top:10px">Scenes</div>`);
+      const SCENE_DLG = [
+        { id: 'farm', icon: '🌾', say: 'farm / go to the farm', reply: 'Go to the farm' },
+        { id: 'beach', icon: '🌊', say: 'beach / go to the beach', reply: 'Go to the beach' },
+        { id: 'bedroom', icon: '🛏️', say: 'bedroom / go to bed room', reply: 'Go to the bedroom' },
+        { id: 'meadow', icon: '🌳', say: 'meadow / garden / outside', reply: 'Go to the garden' }
+      ];
+      parts.push(SCENE_DLG.map((s) => `<button type="button" class="dlg-item" data-scene-dlg="${s.id}">
+            <span class="say">${s.icon} Say: ${s.say}</span>
+            <span class="reply">${s.reply}</span>
+          </button>`).join(''));
 
       // B. Play
       if (PLAYS && PLAYS.plays) {
@@ -2280,6 +2857,11 @@
         else say('OK, no ' + slot + '.', 1600);
         return;
       }
+      const sceneDlgBtn = e.target.closest('button[data-scene-dlg]');
+      if (sceneDlgBtn && typeof setScene === 'function') {
+        setScene(sceneDlgBtn.dataset.sceneDlg, { manual: true });
+        return;
+      }
       const playBtn = e.target.closest('button[data-play]');
       if (playBtn && PLAYS) {
         const pl = PLAYS.plays.find((x) => x.id === playBtn.dataset.play);
@@ -2318,13 +2900,15 @@
     function collapseAllMenus(e) {
       const keep = e && e.target && e.target.closest && e.target.closest([
         '#dlgPanel', '#dlgListBtn', '#preloadBtn', '#leftTools',
-        '.picker', '#togglePicker',
-        '.learn', '#toggleLearn',
+        '.picker', '#togglePicker', '#sceneBar',
+        '.learn', '#toggleLearn', '#atlasPanel', '#btnAtlas',
         '.panel', '#toggleActions',
+        '#adModalBackdrop', '#adDemoOverlay',
         '#micWrap', '#micBtn', '#micLang', '#pet'
       ].join(','));
       if (keep) return;
       if (dlgPanel) dlgPanel.classList.remove('open');
+      if (typeof closeAtlasPanel === 'function') closeAtlasPanel();
       // Session hide only — do not persist outside-click collapse
       if (!document.body.classList.contains('hide-picker')) applyDock('picker', true, false);
       if (!document.body.classList.contains('hide-learn')) applyDock('learn', true, false);
@@ -2364,6 +2948,10 @@
       setHappy(1800);
       noteDailyFirstEnglish();
       awardXp(3, 'voice', { key: 'voice:' + d.id, cooldownMs: 12000 });
+      if (typeof unlockAtlasTexts === 'function') {
+        unlockAtlasTexts(d.triggers || [], 'dialog');
+        if (d.reply) unlockAtlasWord(d.reply, 'dialog');
+      }
       if (d.id === 'good_night' || d.id === 'i_am_sleepy' || d.id === 'sleep') {
         state.holdUntil = 0;
         clearPetPlayPose();
@@ -2451,6 +3039,13 @@
           if (maybeHandleOutfitCommand(a)) { suited = true; actionNote = 'Outfit'; break; }
         }
         if (suited) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+        let sceneHit = false;
+        for (const a of alts) {
+          if (typeof maybeHandleSceneCommand === 'function' && maybeHandleSceneCommand(a)) {
+            sceneHit = true; actionNote = 'Scene'; break;
+          }
+        }
+        if (sceneHit) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         // Eat commands first: "eat apple"
         let ate = false;
         for (const a of alts) {
@@ -2822,8 +3417,14 @@
       playCachedAudio(src, { rate: slow ? 0.78 : 1 });
       say(phonics ? ('拼读：' + it.phonics) : it.text);
       setHappy(1400);
-      if (phonics) awardXp(2, 'phonics', { key: 'phonics:' + it.id, cooldownMs: 15000 });
-      else awardXp(1, 'listen', { key: 'listen:' + it.id, cooldownMs: 12000 });
+      let gained = 0;
+      if (phonics) gained = awardXp(2, 'phonics', { key: 'phonics:' + it.id, cooldownMs: 15000 });
+      else gained = awardXp(1, 'listen', { key: 'listen:' + it.id, cooldownMs: 12000 });
+      if (typeof unlockAtlasWord === 'function') unlockAtlasWord(it, phonics ? 'phonics' : 'listen');
+      if (typeof noteLessonMoment === 'function') {
+        if (phonics && gained > 0) noteLessonMoment(gained, 'phonics');
+        else if (!phonics) noteLessonMoment(gained || 1, 'listen');
+      }
     }
 
     function playRandomWord() {
@@ -2890,6 +3491,42 @@
       playWord();
     });
 
+
+    // Atlas / Scene / Ad UI wiring
+    const btnAtlas = document.getElementById('btnAtlas');
+    if (btnAtlas) btnAtlas.addEventListener('click', (e) => { e.stopPropagation(); openAtlasPanel(); });
+    const atlasClose = document.getElementById('atlasClose');
+    if (atlasClose) atlasClose.addEventListener('click', (e) => { e.stopPropagation(); closeAtlasPanel(); });
+    document.querySelectorAll('[data-atlas-filter]').forEach((b) => {
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        atlasFilter = b.dataset.atlasFilter || 'all';
+        document.querySelectorAll('[data-atlas-filter]').forEach((x) => x.classList.toggle('active', x === b));
+        renderAtlasPanel();
+      });
+    });
+    const atlasGrid = document.getElementById('atlasGrid');
+    if (atlasGrid) {
+      atlasGrid.addEventListener('click', (e) => {
+        const cell = e.target.closest('button.atlas-cell.unlocked');
+        if (!cell || !WORDS) return;
+        const idx = WORDS.items.findIndex((x) => x.id === cell.dataset.atlasId);
+        if (idx >= 0) { showWord(idx); playWord(); }
+      });
+    }
+    const sceneBar = document.getElementById('sceneBar');
+    if (sceneBar) {
+      sceneBar.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-scene]');
+        if (!btn) return;
+        setScene(btn.dataset.scene, { manual: true });
+      });
+    }
+    const adWatchBtn = document.getElementById('adWatchBtn');
+    const adLaterBtn = document.getElementById('adLaterBtn');
+    if (adWatchBtn) adWatchBtn.addEventListener('click', (e) => { e.stopPropagation(); closeAdOfferModal(true); });
+    if (adLaterBtn) adLaterBtn.addEventListener('click', (e) => { e.stopPropagation(); closeAdOfferModal(false); });
+
     loadWords();
 
     const saved = localStorage.getItem('proto-pet-form');
@@ -2897,6 +3534,7 @@
     buildFigure(state.form);
     applyEnv(state.form);
     applyOutfit();
+    if (typeof loadScene === 'function') { loadScene(); setScene(currentScene, { silent: true }); }
     applyPetGrowthScale();
     renderPicker();
     resize();
