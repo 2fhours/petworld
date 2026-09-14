@@ -100,38 +100,6 @@
       animation-duration: 16s; animation-direction: alternate-reverse;
       right: -10vmax; bottom: -10vmax;
     }
-    .stage {
-      position: relative; z-index: 2; text-align: center;
-      padding: 24px; pointer-events: none;
-    }
-    h1 {
-      margin: 0; font-size: clamp(48px, 12vw, 96px); font-weight: 800;
-      letter-spacing: 0.04em; line-height: 1.05;
-      background: linear-gradient(90deg, #67e8f9, #a78bfa, #f472b6, #67e8f9);
-      background-size: 300% 100%;
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      animation: shine 4s linear infinite, floaty 3.5s ease-in-out infinite;
-      filter: drop-shadow(0 0 18px rgba(167,139,250,0.45));
-    }
-    .ring {
-      position: absolute; inset: -28% -18%; border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 0 40px rgba(103,232,249,0.15), inset 0 0 40px rgba(167,139,250,0.08);
-      animation: spin 18s linear infinite; pointer-events: none;
-    }
-    .ring::before, .ring::after {
-      content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%;
-      background: #67e8f9; box-shadow: 0 0 18px #67e8f9;
-      top: 50%; left: -5px; transform: translateY(-50%);
-    }
-    .ring::after {
-      left: auto; right: -5px; background: #f472b6; box-shadow: 0 0 18px #f472b6;
-    }
-    .sub {
-      margin-top: 18px; font-size: 13px; letter-spacing: 0.28em;
-      text-transform: uppercase; color: rgba(226,232,240,0.55);
-      animation: pulse 2.4s ease-in-out infinite;
-    }
     .cursor {
       position: fixed; width: 14px; height: 14px; border-radius: 50%;
       background: rgba(255,255,255,0.9);
@@ -193,6 +161,7 @@
     }
     #pet .figure {
       position: absolute; inset: 0 8px 10px; transform-origin: 50% 100%;
+      transform: scaleX(var(--face, 1));
     }
 
     /* Shared limb animation */
@@ -526,9 +495,17 @@
     }
     @media (max-width: 820px) {
       .learn {
-        right: 12px; left: 12px; top: 96px; bottom: 72px; transform: none;
-        width: auto; max-height: none; overflow: hidden;
+        right: 12px; left: 12px; top: auto; bottom: 72px; transform: none;
+        width: auto; max-height: 45vh; overflow: hidden;
+        border-radius: 18px 18px 14px 14px;
       }
+      .mic-wrap { bottom: 14px; z-index: 12; }
+      .preload-btn { max-width: min(160px, calc(100vw - 200px)); }
+      .dlg-panel { max-height: min(50vh, 420px); }
+    }
+    @media (pointer: coarse) {
+      body { cursor: auto; }
+      .cursor { display: none; }
     }
 
 
@@ -552,6 +529,17 @@
       max-width: min(280px, 70vw); font-size: 12px; color: rgba(226,232,240,0.7);
       background: rgba(15,23,42,0.55); border: 1px solid rgba(255,255,255,0.08);
       border-radius: 12px; padding: 8px 10px; line-height: 1.45;
+      display: none;
+    }
+    .mic-status.show { display: block; }
+    .mic-row {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .mic-lang {
+      appearance: none; border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px; padding: 8px 10px; font: inherit; font-size: 11px;
+      color: #e2e8f0; background: rgba(15,23,42,0.72); backdrop-filter: blur(10px);
+      cursor: pointer; min-width: 42px;
     }
 
 
@@ -567,26 +555,16 @@
     .preload-btn.done { border-color: rgba(52,211,153,0.55); }
 
     .growth {
-      display: none !important;
+      position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+      z-index: 10; pointer-events: none;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(15,23,42,0.28); border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(6px);
+      font-size: 11px; font-weight: 700; color: #fde68a;
+      letter-spacing: 0.04em;
     }
-    .growth .row {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 6px; margin-bottom: 3px; font-size: 10px;
-    }
-    .growth .lv {
-      font-weight: 700; color: #fde68a; letter-spacing: 0.02em;
-    }
-    .growth .xptext { color: rgba(226,232,240,0.7); }
-    .growth .bar {
-      height: 4px; border-radius: 999px; background: rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-    .growth .bar > i {
-      display: block; height: 100%; width: 0%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #34d399, #60a5fa, #a78bfa);
-      transition: width 0.35s ease;
-    }
+    .growth .lv { color: #fde68a; }
+    .growth .row, .growth .xptext, .growth .bar { display: none; }
     .growth-pop {
       position: fixed; z-index: 13; pointer-events: none;
       font-size: 14px; font-weight: 700; color: #fde68a;
@@ -646,8 +624,6 @@
     body.hide-learn .learn { display: none; }
     body.hide-actions .panel { display: none; }
     body.hide-picker .dock-toggle.top { opacity: 0.85; }
-    .learn.collapsed-inner .list { display: none; }
-
     .panel {
       position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
       z-index: 6; display: flex; gap: 10px; padding: 10px; border-radius: 999px;
@@ -781,9 +757,6 @@
       animation: heartUp 1.8s ease-out forwards;
     }
 
-    @keyframes shine { to { background-position: 300% 50%; } }
-    @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-    @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes drift {
       from { transform: translate(-20%, -10%) scale(1); }
       to { transform: translate(15%, 20%) scale(1.15); }
@@ -822,7 +795,7 @@
 
   
   
-  <div class="growth" id="growthBar" hidden aria-hidden="true"></div>
+  <div class="growth" id="growthBar" aria-live="polite"><span class="lv" id="growthLv">Lv.1</span></div>
   <button type="button" class="dlg-btn" id="dlgListBtn">对话列表</button>
   <button type="button" class="preload-btn" id="preloadBtn">预下载音频</button>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
@@ -879,7 +852,11 @@
 
 
   <div class="mic-wrap" id="micWrap">
-    <button type="button" class="mic-btn" id="micBtn">🎤</button>
+    <div class="mic-row">
+      <button type="button" class="mic-btn" id="micBtn">🎤</button>
+      <button type="button" class="mic-lang" id="micLang" title="语音识别语言">EN</button>
+    </div>
+    <div class="mic-status" id="micStatus"></div>
   </div>
 
   <div class="panel">
@@ -982,48 +959,73 @@
 
     function writeGrowthCookie(g) {
       try {
-        // Prefer full state; fall back to compact core if cookie would be too large
-        let payload = JSON.stringify(g);
-        if (payload.length > 3500) {
-          payload = JSON.stringify({
-            level: g.level,
-            xp: g.xp,
-            totalXp: g.totalXp,
-            day: g.day,
-            gainedToday: g.gainedToday,
-            dailyEnglishDay: g.dailyEnglishDay || '',
-          });
-        }
+        // Cookie = compact backup only (never store lastAwardAt / heardWords)
+        const payload = JSON.stringify({
+          level: g.level,
+          xp: g.xp,
+          totalXp: g.totalXp,
+          day: g.day,
+          gainedToday: g.gainedToday,
+          dailyEnglishDay: g.dailyEnglishDay || '',
+        });
         const maxAge = GROWTH_COOKIE_DAYS * 86400;
         document.cookie = GROWTH_COOKIE + '=' + encodeURIComponent(payload)
           + '; path=/; max-age=' + maxAge + '; SameSite=Lax';
       } catch (e) {}
     }
 
-    function pickLargerGrowth(a, b) {
-      const sa = growthScore(a);
-      const sb = growthScore(b);
-      if (sa < 0 && sb < 0) return defaultGrowth();
-      if (sa >= sb) return a || defaultGrowth();
-      return b || defaultGrowth();
+    function mergeGrowthStores(localG, cookieG) {
+      // localStorage = full source of truth for cooldowns / heardWords.
+      // Progress fields: take max totalXp/level from the two.
+      const L = localG ? normalizeGrowth(localG) : null;
+      const C = cookieG ? normalizeGrowth(cookieG) : null;
+      if (!L && !C) return defaultGrowth();
+      if (!L) return normalizeGrowth(C);
+      if (!C) return normalizeGrowth(L);
+      const out = Object.assign(defaultGrowth(), L);
+      out.lastAwardAt = L.lastAwardAt || {};
+      out.heardWords = L.heardWords || {};
+      if (C.totalXp > L.totalXp || (C.totalXp === L.totalXp && C.level > L.level)) {
+        out.level = Math.max(L.level, C.level);
+        out.xp = C.xp;
+        out.totalXp = Math.max(L.totalXp, C.totalXp);
+        out.day = C.day;
+        out.gainedToday = C.gainedToday;
+        out.dailyEnglishDay = C.dailyEnglishDay || '';
+      } else {
+        out.level = Math.max(L.level, C.level);
+        out.totalXp = Math.max(L.totalXp, C.totalXp);
+      }
+      return normalizeGrowth(out);
     }
 
-    let GROWTH = pickLargerGrowth(readGrowthLocal(), readGrowthCookie());
-    if (GROWTH.day !== todayKey()) {
-      GROWTH.day = todayKey();
-      GROWTH.gainedToday = 0;
-      GROWTH.heardWords = {};
+    function applyTodayReset(g) {
+      if (g.day !== todayKey()) {
+        g.day = todayKey();
+        g.gainedToday = 0;
+        g.heardWords = {};
+      }
+      return g;
     }
-    // Sync both stores to the larger snapshot
+
+    let GROWTH = applyTodayReset(mergeGrowthStores(readGrowthLocal(), readGrowthCookie()));
     writeGrowthLocal(GROWTH);
     writeGrowthCookie(GROWTH);
 
     function saveGrowth() {
-      // Always re-merge against cookie in case another tab wrote a higher value
-      const merged = pickLargerGrowth(GROWTH, readGrowthCookie());
-      if (growthScore(merged) > growthScore(GROWTH)) {
-        GROWTH = merged;
+      // Re-merge progress vs cookie backup, but never wipe local cooldowns
+      const cookieG = readGrowthCookie();
+      if (cookieG && growthScore(cookieG) > growthScore(GROWTH)) {
+        GROWTH.level = Math.max(GROWTH.level, cookieG.level);
+        if (cookieG.totalXp > GROWTH.totalXp) {
+          GROWTH.totalXp = cookieG.totalXp;
+          GROWTH.xp = cookieG.xp;
+          GROWTH.day = cookieG.day;
+          GROWTH.gainedToday = cookieG.gainedToday;
+          GROWTH.dailyEnglishDay = cookieG.dailyEnglishDay || GROWTH.dailyEnglishDay;
+        }
       }
+      applyTodayReset(GROWTH);
       writeGrowthLocal(GROWTH);
       writeGrowthCookie(GROWTH);
       syncHiddenGrowthAttrs();
@@ -1038,8 +1040,9 @@
     }
 
     function petScaleForLevel(level) {
-      // Lv1 = 1.0, Lv20 ~= 1.28
-      return 1 + Math.min(Math.max(level, 1), GROWTH_MAX_LEVEL) * 0.014;
+      // Lv1 = 1.0, Lv20 ~= 1.266
+      const lv = Math.min(Math.max(level, 1), GROWTH_MAX_LEVEL);
+      return 1 + (lv - 1) * 0.014;
     }
 
     function applyPetGrowthScale() {
@@ -1049,13 +1052,21 @@
     }
 
     function renderGrowth() {
-      // XP bar UI hidden; only keep scale + data-* attrs
       syncHiddenGrowthAttrs();
       applyPetGrowthScale();
+      const lv = document.getElementById('growthLv');
+      if (lv) lv.textContent = 'Lv.' + GROWTH.level;
     }
 
-    function growthPopup(_text) {
-      // Hidden attribute mode: no floating XP text
+    function growthPopup(text, { levelUp = false } = {}) {
+      if (!levelUp || !text) return;
+      const el = document.createElement('div');
+      el.className = 'growth-pop';
+      el.textContent = text;
+      el.style.left = (state.x || innerWidth / 2) + 'px';
+      el.style.top = ((state.y || innerHeight / 2) - 100) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1300);
     }
 
     renderGrowth();
@@ -1105,7 +1116,7 @@
 
       saveGrowth();
       renderGrowth();
-      growthPopup(leveled ? ('升级 Lv.' + GROWTH.level + '！') : ('+' + gain + ' XP'));
+      if (leveled) growthPopup('升级 Lv.' + GROWTH.level + '！', { levelUp: true });
       if (leveled) {
         hearts(4);
         burst(['⭐', '✨', '🎉'], state.x || innerWidth/2, (state.y || innerHeight/2) - 80);
@@ -1125,11 +1136,13 @@
       const paths = new Set();
       const add = (u) => { if (u && typeof u === 'string') paths.add(u.replace(/^\.\//, '')); };
       try {
-        const [words, actions, dialogs, foods] = await Promise.all([
+        const [words, actions, dialogs, foods, plays, animals] = await Promise.all([
           fetch('words.json').then((r) => r.json()),
           fetch('actions.json').then((r) => r.json()),
           fetch('dialogs.json').then((r) => r.json()),
           fetch('foods.json').then((r) => r.json()),
+          fetch('plays.json').then((r) => r.json()).catch(() => null),
+          fetch('animals.json').then((r) => r.json()).catch(() => null),
         ]);
         (words.items || []).forEach((it) => { add(it.audio); add(it.phonicsAudio); });
         Object.values(actions.actions || {}).forEach((arr) => arr.forEach((it) => add(it.audio)));
@@ -1142,17 +1155,39 @@
         if (foods.genericReject) add(foods.genericReject.audio);
         if (foods.askFood) add(foods.askFood.audio);
         add('audio/good_morning.mp3');
-        if (ANIMALS && ANIMALS.animals) {
-          ANIMALS.animals.forEach((a) => add(a.audio));
+        const playsSrc = plays || PLAYS;
+        if (playsSrc && playsSrc.plays) {
+          playsSrc.plays.forEach((p) => add(p.audio));
+          if (playsSrc.generic) add(playsSrc.generic.audio);
         }
-        if (PLAYS && PLAYS.plays) {
-          PLAYS.plays.forEach((p) => add(p.audio));
-          if (PLAYS.generic) add(PLAYS.generic.audio);
+        const animalsSrc = animals || ANIMALS;
+        if (animalsSrc && animalsSrc.animals) {
+          animalsSrc.animals.forEach((a) => add(a.audio));
         }
       } catch (e) {
         console.warn('list audio failed', e);
       }
       return [...paths];
+    }
+
+    const AUDIO_MEMO_CAP = 80;
+
+    function rememberAudioUrl(path, url) {
+      if (audioUrlMemo.has(path)) {
+        const old = audioUrlMemo.get(path);
+        if (old && old !== url && String(old).startsWith('blob:')) {
+          try { URL.revokeObjectURL(old); } catch (e) {}
+        }
+      }
+      audioUrlMemo.set(path, url);
+      while (audioUrlMemo.size > AUDIO_MEMO_CAP) {
+        const first = audioUrlMemo.keys().next().value;
+        const old = audioUrlMemo.get(first);
+        audioUrlMemo.delete(first);
+        if (old && String(old).startsWith('blob:')) {
+          try { URL.revokeObjectURL(old); } catch (e) {}
+        }
+      }
     }
 
     async function getPlayableUrl(path) {
@@ -1167,7 +1202,7 @@
           if (res) {
             const blob = await res.blob();
             const url = URL.createObjectURL(blob);
-            audioUrlMemo.set(path, url);
+            rememberAudioUrl(path, url);
             return url;
           }
         }
@@ -1307,6 +1342,7 @@
 
     function setForm(id, opts = {}) {
       state.form = id;
+      if (typeof clearPetPlayPose === 'function') clearPetPlayPose();
       buildFigure(id);
       applyEnv(id);
       renderPicker();
@@ -1429,6 +1465,16 @@
     }
     loadPlays();
 
+    function matchTrigger(text, trigger) {
+      const t = (text || '').toLowerCase().trim();
+      const g = String(trigger || '').toLowerCase().trim();
+      if (!t || !g) return false;
+      if (/[\u4e00-\u9fff]/.test(g)) return t.includes(g);
+      // escape regex specials then word-boundary-ish for EN
+      const esc = g.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return new RegExp('(^|[^a-z0-9])' + esc + '([^a-z0-9]|$)').test(t);
+    }
+
     function findPlay(text) {
       if (!PLAYS || !PLAYS.plays) return null;
       const t = (text || '').toLowerCase().trim();
@@ -1436,8 +1482,8 @@
       let best = null, bestLen = 0;
       for (const p of PLAYS.plays) {
         for (const trig of p.triggers) {
-          const g = trig.toLowerCase();
-          if (t.includes(g) && g.length >= bestLen) {
+          const g = String(trig).toLowerCase();
+          if (matchTrigger(t, g) && g.length >= bestLen) {
             best = p; bestLen = g.length;
           }
         }
@@ -1497,10 +1543,8 @@
         spawnProp('🥏', 'frisbee-follow mini', x + 10, y - 10, 3800);
         burst(['💨'], x, y);
       } else if (id === 'bike') {
-        spawnProp('🚲', 'mini', x, state.y - 8, 3800);
-        const els = document.querySelectorAll('.fx-prop.mini');
-        const el = els[els.length - 1];
-        if (el) el.style.animation = 'bikeRide 3.2s linear forwards';
+        const bikeEl = spawnProp('🚲', 'mini', x, state.y - 8, 3800);
+        if (bikeEl) bikeEl.style.animation = 'bikeRide 3.2s linear forwards';
         burst(['💨'], x, y);
       } else {
         spawnProp('⚽', 'ball-follow mini', x + 22, y + 20, 3800);
@@ -1557,10 +1601,7 @@
       for (const a of ANIMALS.animals) {
         for (const trig of a.triggers) {
           const g = String(trig).toLowerCase();
-          // word-boundary-ish for english; substring for CJK
-          const isCjk = /[\u4e00-\u9fff]/.test(g);
-          const hit = isCjk ? t.includes(g) : (new RegExp(`(^|[^a-z])${g}([^a-z]|$)`)).test(t);
-          if (hit && g.length >= bestLen) {
+          if (matchTrigger(t, g) && g.length >= bestLen) {
             best = a; bestLen = g.length;
           }
         }
@@ -1613,13 +1654,13 @@
 
     function findFood(text) {
       if (!FOODS || !FOODS.foods) return null;
-      const t = (text || '').toLowerCase();
+      const t = (text || '').toLowerCase().trim();
       // prefer longer trigger matches
       let best = null, bestLen = 0;
       for (const f of FOODS.foods) {
         for (const trig of f.triggers) {
-          const g = trig.toLowerCase();
-          if (t.includes(g) && g.length >= bestLen) {
+          const g = String(trig).toLowerCase();
+          if (matchTrigger(t, g) && g.length >= bestLen) {
             best = f; bestLen = g.length;
           }
         }
@@ -1779,14 +1820,14 @@
         '.picker', '#togglePicker',
         '.learn', '#toggleLearn',
         '.panel', '#toggleActions',
-        '#micWrap', '#micBtn', '#pet'
+        '#micWrap', '#micBtn', '#micLang', '#pet'
       ].join(','));
       if (keep) return;
       if (dlgPanel) dlgPanel.classList.remove('open');
-      // collapse docks if currently open
-      if (!document.body.classList.contains('hide-picker')) applyDock('picker', true);
-      if (!document.body.classList.contains('hide-learn')) applyDock('learn', true);
-      if (!document.body.classList.contains('hide-actions')) applyDock('actions', true);
+      // Session hide only — do not persist outside-click collapse
+      if (!document.body.classList.contains('hide-picker')) applyDock('picker', true, false);
+      if (!document.body.classList.contains('hide-learn')) applyDock('learn', true, false);
+      if (!document.body.classList.contains('hide-actions')) applyDock('actions', true, false);
     }
     document.addEventListener('click', collapseAllMenus);
 
@@ -1801,8 +1842,8 @@
       for (const d of DIALOGS.dialogs) {
         if (d.id === 'fallback') continue;
         for (const trig of d.triggers) {
-          const g = trig.toLowerCase();
-          if (t.includes(g) && g.length >= bestLen) {
+          const g = String(trig).toLowerCase();
+          if (matchTrigger(t, g) && g.length >= bestLen) {
             best = d;
             bestLen = g.length;
           }
@@ -1824,6 +1865,7 @@
       awardXp(3, 'voice', { key: 'voice:' + d.id, cooldownMs: 12000 });
       if (d.id === 'good_night' || d.id === 'i_am_sleepy' || d.id === 'sleep') {
         state.holdUntil = 0;
+        clearPetPlayPose();
         actionVisual('sleep');
         state.mode = 'sleep';
         pet.classList.add('sleep');
@@ -1844,11 +1886,30 @@
 
     let lastHeard = '';
     let recognizing = false;
+    const MIC_LANG_KEY = 'proto-mic-lang';
+    function getMicLang() {
+      const v = localStorage.getItem(MIC_LANG_KEY);
+      return (v === 'zh-CN' || v === 'en-US') ? v : 'en-US';
+    }
+    function setMicLang(lang) {
+      localStorage.setItem(MIC_LANG_KEY, lang);
+      const btn = document.getElementById('micLang');
+      if (btn) btn.textContent = lang === 'zh-CN' ? '中' : 'EN';
+    }
+    function setMicStatus(msg) {
+      const el = document.getElementById('micStatus');
+      if (!el) return;
+      if (!msg) { el.classList.remove('show'); el.textContent = ''; return; }
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(setMicStatus._t);
+      setMicStatus._t = setTimeout(() => el.classList.remove('show'), 5000);
+    }
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = null;
     if (SpeechRec) {
       recognition = new SpeechRec();
-      recognition.lang = 'en-US';
+      recognition.lang = getMicLang();
       recognition.interimResults = false;
       recognition.maxAlternatives = 3;
       recognition.continuous = false;
@@ -1856,6 +1917,7 @@
         recognizing = true;
         document.getElementById('micBtn').classList.add('listening');
         document.getElementById('micBtn').textContent = '🎤...';
+        setMicStatus('正在听…');
       };
       recognition.onend = () => {
         recognizing = false;
@@ -1872,37 +1934,54 @@
           'audio-capture': 'No microphone found.',
           'network': 'Speech recognition needs network. Check connection.'
         }[e.error] || ('识别出错：' + e.error);
+        setMicStatus(msg);
         say(msg, 2400);
       };
       recognition.onresult = (ev) => {
         const alts = [];
         for (let i = 0; i < ev.results[0].length; i++) alts.push(ev.results[0][i].transcript);
         lastHeard = alts[0] || '';
+        let actionNote = '';
         // Eat commands first: "eat apple"
         let ate = false;
         for (const a of alts) {
-          if (maybeHandleEatCommand(a)) { ate = true; break; }
+          if (maybeHandleEatCommand(a)) { ate = true; actionNote = '喂食'; break; }
         }
-        if (ate) return;
+        if (ate) { setMicStatus('听到：' + lastHeard + (actionNote ? ' → ' + actionNote : '')); return; }
         // Animal switch: "cat" / "I am a dog"
         let switched = false;
         for (const a of alts) {
-          if (maybeHandleAnimalCommand(a)) { switched = true; break; }
+          if (maybeHandleAnimalCommand(a)) { switched = true; actionNote = '换形象'; break; }
         }
-        if (switched) return;
+        if (switched) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         let played = false;
         for (const a of alts) {
-          if (maybeHandlePlayCommand(a)) { played = true; break; }
+          if (maybeHandlePlayCommand(a)) { played = true; actionNote = '玩耍'; break; }
         }
-        if (played) return;
+        if (played) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         let matched = null;
         for (const a of alts) {
           matched = matchDialog(a);
           if (matched && matched.id !== 'fallback') break;
         }
         if (!matched) matched = matchDialog(lastHeard);
+        if (matched && matched.id !== 'fallback') actionNote = matched.id;
+        else if (matched) actionNote = 'fallback';
+        setMicStatus('听到：' + lastHeard + (actionNote ? ' → ' + actionNote : ''));
         speakDialog(matched);
       };
+    }
+
+    setMicLang(getMicLang());
+    const micLangBtn = document.getElementById('micLang');
+    if (micLangBtn) {
+      micLangBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const next = getMicLang() === 'en-US' ? 'zh-CN' : 'en-US';
+        setMicLang(next);
+        if (recognition) recognition.lang = next;
+        setMicStatus('识别语言：' + (next === 'zh-CN' ? '中文' : 'English'));
+      });
     }
 
     document.getElementById('micBtn').addEventListener('click', () => {
@@ -1915,8 +1994,7 @@
         return;
       }
       try {
-        // Prefer Chinese; English triggers still match via lowercase includes
-        recognition.lang = 'en-US';
+        recognition.lang = getMicLang();
         recognition.start();
       } catch (err) {
         say('Cannot start microphone', 2400);
@@ -1953,16 +2031,25 @@
         speakAction('pet');
         awardXp(1, 'pet', { key: 'act:pet', cooldownMs: 15000 });
       } else if (kind === 'feed') {
-        holdStill(3600);
-        setHappy(2000);
-        actionVisual('feed');
-        speakAction('feed');
-        awardXp(1, 'feed', { key: 'act:feed', cooldownMs: 15000 });
+        if (FOODS && FOODS.foods && FOODS.foods.length) {
+          const taste = (FOODS.petTaste && FOODS.petTaste[state.form]) || { like: [] };
+          const liked = (taste.like || []).map((id) => FOODS.foods.find((f) => f.id === id)).filter(Boolean);
+          const pool = liked.length ? liked : FOODS.foods;
+          const food = pool[Math.floor(Math.random() * pool.length)];
+          eatFood(food);
+        } else {
+          holdStill(3600);
+          setHappy(2000);
+          actionVisual('feed');
+          speakAction('feed');
+          awardXp(1, 'feed', { key: 'act:feed', cooldownMs: 15000 });
+        }
       } else if (kind === 'play') {
         startPlay(null);
       } else if (kind === 'sleep') {
         state.mode = 'sleep';
         state.holdUntil = 0;
+        clearPetPlayPose();
         pet.classList.add('sleep');
         pet.classList.remove('walk', 'happy');
         state.vx = 0; state.vy = 0;
@@ -2083,7 +2170,6 @@
       pet.style.transform = `translate(-50%, -100%) scale(var(--grow, 1))`;
       // face left/right on body only, keep bubble text unmirrored
       figure.style.setProperty('--face', String(state.facing));
-      figure.style.transform = `scaleX(${state.facing})`;
     }
 
     function loop(now) {
@@ -2232,11 +2318,19 @@
     document.getElementById('btnPlay').addEventListener('click', () => playWord());
     document.getElementById('btnPhonics').addEventListener('click', () => playWord({ phonics: true }));
     document.getElementById('btnSlow').addEventListener('click', () => playWord({ slow: true }));
-    document.getElementById('btnNext').addEventListener('click', () => { showWord(wordIndex + 1); playWord(); });
+    document.getElementById('btnNext').addEventListener('click', () => {
+      const idxs = visibleWordIndexes();
+      if (!idxs.length) return;
+      let pos = idxs.indexOf(wordIndex);
+      if (pos < 0) pos = 0;
+      else pos = (pos + 1) % idxs.length;
+      showWord(idxs[pos]);
+      playWord();
+    });
 
-    function applyDock(key, hidden) {
+    function applyDock(key, hidden, persist = true) {
       document.body.classList.toggle('hide-' + key, hidden);
-      localStorage.setItem('proto-hide-' + key, hidden ? '1' : '0');
+      if (persist) localStorage.setItem('proto-hide-' + key, hidden ? '1' : '0');
       const map = { picker: 'togglePicker', learn: 'toggleLearn', actions: 'toggleActions' };
       const labels = { picker: '形象', learn: '英语', actions: '操作' };
       const btn = document.getElementById(map[key]);
@@ -2245,16 +2339,16 @@
     ['picker','learn','actions'].forEach((key) => {
       // default collapsed unless user explicitly expanded (saved as '0')
       const saved = localStorage.getItem('proto-hide-' + key);
-      applyDock(key, saved !== '0');
+      applyDock(key, saved !== '0', false);
     });
     document.getElementById('togglePicker').addEventListener('click', () => {
-      applyDock('picker', !document.body.classList.contains('hide-picker'));
+      applyDock('picker', !document.body.classList.contains('hide-picker'), true);
     });
     document.getElementById('toggleLearn').addEventListener('click', () => {
-      applyDock('learn', !document.body.classList.contains('hide-learn'));
+      applyDock('learn', !document.body.classList.contains('hide-learn'), true);
     });
     document.getElementById('toggleActions').addEventListener('click', () => {
-      applyDock('actions', !document.body.classList.contains('hide-actions'));
+      applyDock('actions', !document.body.classList.contains('hide-actions'), true);
     });
     document.getElementById('enList').addEventListener('click', (e) => {
       const btn = e.target.closest('button[data-i]');
