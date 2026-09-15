@@ -1680,7 +1680,11 @@
       if (r) r(!!choice);
     }
 
+    // Double-hearts rewarded ad — off for now (set true to re-enable)
+    const AD_DOUBLE_ENABLED = false;
+
     async function maybeOfferDoubleHearts(amount, reason) {
+      if (!AD_DOUBLE_ENABLED) return;
       if (!amount || amount <= 0) return;
       if (!canOfferAd()) return;
       lastAdOfferAt = Date.now();
