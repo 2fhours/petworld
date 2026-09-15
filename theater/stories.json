@@ -1,0 +1,10 @@
+[
+  {
+    "id": "farm_morning",
+    "title": "Farm Morning",
+    "emoji": "🌾",
+    "file": "theater/farm_morning.json",
+    "stickerId": "farm_morning",
+    "scene": "farm"
+  }
+]

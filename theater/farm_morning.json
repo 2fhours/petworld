@@ -1,0 +1,83 @@
+{
+  "id": "farm_morning",
+  "title": "Farm Morning",
+  "emoji": "🌾",
+  "scene": "farm",
+  "stickerId": "farm_morning",
+  "words": [
+    "good morning",
+    "wake up",
+    "farm",
+    "rooster",
+    "hello",
+    "I am hungry",
+    "feed me",
+    "sticker",
+    "theater",
+    "story"
+  ],
+  "beats": [
+    {
+      "id": "fm_wake",
+      "type": "act",
+      "text": "It's morning on the farm! Yawn… time to wake up.",
+      "audio": "audio/theater/fm_wake.mp3",
+      "action": "wake",
+      "timeoutMs": 4500
+    },
+    {
+      "id": "fm_greet",
+      "type": "wait",
+      "text": "Say good morning to your pet!",
+      "expect": ["good morning", "morning", "hello"],
+      "hint": "Try saying: good morning",
+      "timeoutMs": 10000,
+      "fallbackText": "Good morning!",
+      "fallbackAudio": "audio/theater/fm_fb_morning.mp3"
+    },
+    {
+      "id": "fm_animals",
+      "type": "act",
+      "text": "Listen! The farm animals are waking up. Hear the rooster?",
+      "audio": "audio/theater/fm_animals.mp3",
+      "action": "wave",
+      "timeoutMs": 4500
+    },
+    {
+      "id": "fm_rooster",
+      "type": "wait",
+      "text": "Help wake the rooster!",
+      "expect": ["wake up", "good morning rooster", "hello"],
+      "hint": "Try saying: wake up",
+      "timeoutMs": 10000,
+      "fallbackText": "Wake up!",
+      "fallbackAudio": "audio/theater/fm_fb_wakeup.mp3"
+    },
+    {
+      "id": "fm_hungry",
+      "type": "wait",
+      "text": "Your pet is hungry. What do you say?",
+      "expect": ["I am hungry", "i am hungry", "feed me"],
+      "hint": "Try saying: I am hungry",
+      "action": "feed",
+      "timeoutMs": 10000,
+      "fallbackText": "I am hungry!",
+      "fallbackAudio": "audio/theater/fm_fb_hungry.mp3"
+    },
+    {
+      "id": "fm_sing_later",
+      "type": "act",
+      "text": "Let's sing later!",
+      "audio": "audio/theater/fm_sing_later.mp3",
+      "action": "dance",
+      "timeoutMs": 3500
+    },
+    {
+      "id": "fm_end",
+      "type": "end",
+      "text": "Yay! Farm Morning is done. You got a sticker!",
+      "audio": "audio/theater/fm_end.mp3",
+      "action": "dance"
+    }
+  ]
+}

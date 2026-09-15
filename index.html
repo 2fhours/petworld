@@ -997,6 +997,67 @@
     .ad-demo-overlay.open { display: flex; }
     .ad-demo-overlay .count { font-size: 42px; margin-top: 10px; color: #fda4af; }
 
+
+    /* Interactive Theater HUD */
+    .theater-hud {
+      position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%);
+      z-index: 14; width: min(420px, calc(100vw - 28px));
+      padding: 10px 14px 12px; border-radius: 18px;
+      background: rgba(15,23,42,0.72); border: 1px solid rgba(251,191,36,0.35);
+      backdrop-filter: blur(12px); color: #fef3c7;
+      display: none; flex-direction: column; gap: 6px; pointer-events: auto;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+    }
+    .theater-hud.open { display: flex; }
+    .theater-hud .th-top { display: flex; align-items: center; gap: 8px; }
+    .theater-hud .th-title { flex: 1; font-size: 13px; font-weight: 650; color: #fde68a; }
+    .theater-hud .th-progress { font-size: 11px; color: rgba(254,243,199,0.75); }
+    .theater-hud .th-close {
+      appearance: none; border: 0; border-radius: 999px; width: 28px; height: 28px;
+      background: rgba(255,255,255,0.1); color: #e2e8f0; cursor: pointer; font-size: 14px;
+    }
+    .theater-hud .th-prompt {
+      font-size: 18px; font-weight: 700; color: #fff; text-align: center;
+      padding: 6px 4px; line-height: 1.25;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+    .theater-hud .th-prompt.idle { font-size: 14px; font-weight: 550; color: #fde68a; }
+    .theater-hud .th-hint { font-size: 11px; color: rgba(254,243,199,0.7); text-align: center; }
+
+    /* Stickers panel (non-occluding, like atlas) */
+    .stickers-panel {
+      position: fixed; right: 16px; top: 96px; bottom: 24px; z-index: 9;
+      width: min(300px, calc(100vw - 28px));
+      padding: 14px; border-radius: 18px;
+      background: rgba(15,23,42,0.88); border: 1px solid rgba(251,191,36,0.28);
+      backdrop-filter: blur(14px); color: #e2e8f0;
+      display: none; flex-direction: column; overflow: hidden;
+    }
+    .stickers-panel.open { display: flex; }
+    .stickers-panel h2 { margin: 0 0 6px; font-size: 14px; color: #fde68a; }
+    .stickers-meta { font-size: 12px; color: rgba(226,232,240,0.75); margin-bottom: 10px; }
+    .stickers-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+      overflow: auto; flex: 1; padding-bottom: 8px;
+    }
+    .sticker-cell {
+      appearance: none; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 14px 8px; min-height: 96px;
+      background: rgba(255,255,255,0.06); color: #e2e8f0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+      cursor: default;
+    }
+    .sticker-cell.unlocked { border-color: rgba(251,191,36,0.45); background: rgba(251,191,36,0.12); }
+    .sticker-cell .se { font-size: 36px; line-height: 1; }
+    .sticker-cell .st { font-size: 12px; text-align: center; }
+    .sticker-cell.locked .se { filter: grayscale(1); opacity: 0.45; }
+    .stickers-close {
+      appearance: none; border: 0; border-radius: 999px; padding: 8px 12px; margin-top: 8px;
+      font: inherit; font-size: 13px; color: #e2e8f0;
+      background: rgba(255,255,255,0.1); cursor: pointer;
+    }
+    .fx-burst.sticker-burst { font-size: 42px; z-index: 16; }
+
   </style>
 </head>
 <body>
@@ -1014,7 +1075,7 @@
   </div>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
     <h3>Supported Dialogs</h3>
-    <div class="dlg-tip">Click a line to try it. Say the blue English with the mic. Songs: “sing twinkle”, “stop singing”. Scenes: “farm”, “beach”, “bedroom”, “garden”. Outfits: “red hat”, “blue clothes”, “no hat”.</div>
+    <div class="dlg-tip">Click a line to try it. Say the blue English with the mic. Songs: “sing twinkle”, “stop singing”. Theater: “start theater”, “stop theater”. Scenes: “farm”, “beach”, “bedroom”, “garden”. Outfits: “red hat”, “blue clothes”, “no hat”.</div>
     <div id="dlgList"></div>
   </div>
 
@@ -1064,6 +1125,7 @@
     <div class="search-meta" id="enSearchMeta"></div>
     <div class="list" id="enList"></div>
     <button type="button" class="atlas-btn" id="btnAtlas">📖 图鉴 / Atlas</button>
+    <button type="button" class="atlas-btn" id="btnStickers">⭐ Stickers</button>
     <div class="meta">可爱童声音色 AnaNeural · 非浏览器简易 TTS</div>
   </aside>
 
@@ -1082,6 +1144,8 @@
     <button type="button" data-act="play">Play</button>
     <button type="button" data-act="sing">Sing</button>
     <button type="button" data-act="sleep">Sleep</button>
+    <button type="button" data-act="theater" title="Farm Morning theater">Theater</button>
+    <button type="button" data-act="stickers" title="Stickers">Stickers</button>
     <button type="button" data-wear="hat" title="Cycle hat color">Hat</button>
     <button type="button" data-wear="clothes" title="Cycle clothes color">Clothes</button>
     <button type="button" data-wear="glasses" title="Cycle glasses color">Glasses</button>
@@ -1115,6 +1179,24 @@
       <div>Ad preview (demo)</div>
       <div class="count" id="adDemoCount">3</div>
     </div>
+  </div>
+
+
+  <div class="theater-hud" id="theaterHud" aria-live="polite" aria-hidden="true">
+    <div class="th-top">
+      <div class="th-title" id="theaterTitle">Theater</div>
+      <div class="th-progress" id="theaterProgress">1/1</div>
+      <button type="button" class="th-close" id="theaterClose" title="Stop theater">✕</button>
+    </div>
+    <div class="th-prompt idle" id="theaterPrompt">Listening…</div>
+    <div class="th-hint" id="theaterHint"></div>
+  </div>
+
+  <div class="stickers-panel" id="stickersPanel" aria-label="Stickers">
+    <h2>⭐ Stickers</h2>
+    <div class="stickers-meta" id="stickersMeta">0 / 1</div>
+    <div class="stickers-grid" id="stickersGrid"></div>
+    <button type="button" class="stickers-close" id="stickersClose">关闭 Close</button>
   </div>
 
   <script>
@@ -1388,7 +1470,8 @@
       barn: '🏚️', sand: '🏖️', wave: '🌊', outside: '🌳', ocean: '🌊',
       pillow: '🛏️', lamp: '💡', window: '🪟', fence: '🪵', tree: '🌳', grass: '🌿',
       apple: '🍎', cat: '🐱', dog: '🐶', bunny: '🐰', fox: '🦊', panda: '🐼',
-      bed: '🛏️', boat: '🚣', star: '⭐', sun: '☀️', hello: '👋'
+      bed: '🛏️', boat: '🚣', star: '⭐', sun: '☀️', hello: '👋',
+      wake_up: '⏰', rooster: '🐓', sticker: '⭐', theater: '🎭', story: '📖'
     };
     let ATLAS = { unlocked: {}, milestoneAwarded: 0 };
     let atlasFilter = 'all';
@@ -1501,6 +1584,7 @@
     function openAtlasPanel() {
       const panel = document.getElementById('atlasPanel');
       if (!panel) return;
+      if (typeof closeStickersPanel === 'function') closeStickersPanel();
       if (typeof applyDock === 'function') {
         if (!document.body.classList.contains('hide-learn')) applyDock('learn', true, false);
       }
@@ -1755,6 +1839,15 @@
         if (songsSrc && songsSrc.songs) {
           songsSrc.songs.forEach((s) => add(s.audio));
         }
+        try {
+          const stories = await fetch('theater/stories.json').then((r) => r.json()).catch(() => []);
+          for (const st of (stories || [])) {
+            const file = st.file || ('theater/' + st.id + '.json');
+            const story = await fetch(file).then((r) => r.json()).catch(() => null);
+            if (!story || !story.beats) continue;
+            story.beats.forEach((b) => { add(b.audio); add(b.fallbackAudio); });
+          }
+        } catch (te) {}
       } catch (e) {
         console.warn('list audio failed', e);
       }
@@ -2772,6 +2865,35 @@
         }).join(''));
       }
 
+
+      // Theater
+      parts.push(`<div class="dlg-tip" style="margin-top:10px">Theater</div>`);
+      const thStories = (STORIES_INDEX && STORIES_INDEX.length) ? STORIES_INDEX : [
+        { id: 'farm_morning', title: 'Farm Morning', emoji: '🌾' }
+      ];
+      thStories.forEach((s) => {
+        parts.push(`<button type="button" class="dlg-item" data-theater="${s.id}">
+            <span class="say">${s.emoji || '🎭'} Say: start theater / farm morning</span>
+            <span class="reply">${s.title || s.id} interactive story</span>
+          </button>`);
+      });
+      const thSays = [
+        { say: 'good morning', reply: 'Farm Morning greet' },
+        { say: 'wake up', reply: 'Wake the rooster' },
+        { say: 'I am hungry / feed me', reply: 'Feed during story' },
+        { say: 'stop theater / quit story', reply: 'Exit theater' }
+      ];
+      thSays.forEach((row) => {
+        parts.push(`<button type="button" class="dlg-item" data-theater-tip="1">
+            <span class="say">🎤 Say: ${row.say}</span>
+            <span class="reply">${row.reply}</span>
+          </button>`);
+      });
+      parts.push(`<button type="button" class="dlg-item" data-theater-stop="1">
+            <span class="say">✕ Say: stop theater</span>
+            <span class="reply">Stop the story</span>
+          </button>`);
+
       // E. Outfit
       const outfitSlots = ['hat', 'clothes', 'glasses'];
       const outfitColors = ['red', 'yellow', 'blue', 'green', 'pink', 'purple', 'orange', 'white', 'black'];
@@ -2843,6 +2965,21 @@
         else say('OK, no ' + slot + '.', 1600);
         return;
       }
+      const theaterBtn = e.target.closest('button[data-theater]');
+      if (theaterBtn) {
+        startTheater(theaterBtn.dataset.theater || 'farm_morning');
+        return;
+      }
+      const theaterStopBtn = e.target.closest('button[data-theater-stop]');
+      if (theaterStopBtn) {
+        stopTheater();
+        return;
+      }
+      const theaterTipBtn = e.target.closest('button[data-theater-tip]');
+      if (theaterTipBtn) {
+        say('Use the mic during Theater!', 1800);
+        return;
+      }
       const sceneDlgBtn = e.target.closest('button[data-scene-dlg]');
       if (sceneDlgBtn && typeof setScene === 'function') {
         setScene(sceneDlgBtn.dataset.sceneDlg, { manual: true });
@@ -2887,14 +3024,17 @@
       const keep = e && e.target && e.target.closest && e.target.closest([
         '#dlgPanel', '#dlgListBtn', '#preloadBtn', '#leftTools',
         '.picker', '#togglePicker',
-        '.learn', '#toggleLearn', '#atlasPanel', '#btnAtlas',
+        '.learn', '#toggleLearn', '#atlasPanel', '#btnAtlas', '#btnStickers',
+        '#stickersPanel', '#stickersClose',
         '.panel', '#toggleActions',
+        '#theaterHud', '#theaterClose',
         '#adModalBackdrop', '#adDemoOverlay',
         '#micWrap', '#micBtn', '#micLang', '#pet'
       ].join(','));
       if (keep) return;
       if (dlgPanel) dlgPanel.classList.remove('open');
       if (typeof closeAtlasPanel === 'function') closeAtlasPanel();
+      if (typeof closeStickersPanel === 'function') closeStickersPanel();
       // Session hide only — do not persist outside-click collapse
       if (!document.body.classList.contains('hide-picker')) applyDock('picker', true, false);
       if (!document.body.classList.contains('hide-learn')) applyDock('learn', true, false);
@@ -2981,6 +3121,423 @@
       setMicStatus._t = setTimeout(() => el.classList.remove('show'), 8000);
     }
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    // ===== Interactive Theater V1 + Stickers =====
+    const STICKERS_KEY = 'petworld-stickers-v1';
+    const STICKER_DEFS = [
+      { id: 'farm_morning', emoji: '🌾', title: 'Farm Morning', burst: ['🌾', '⭐', '✨', '🎉', '💛'] }
+    ];
+    let STICKERS = {};
+    let STORIES_INDEX = [];
+    let theaterState = {
+      active: false,
+      storyId: null,
+      story: null,
+      beatIndex: 0,
+      waiting: false,
+      fallbackUsed: false,
+      timer: null,
+      advancing: false
+    };
+
+    function loadStickers() {
+      try {
+        const raw = localStorage.getItem(STICKERS_KEY);
+        if (raw) {
+          const o = JSON.parse(raw);
+          STICKERS = (o && typeof o === 'object') ? o : {};
+        }
+      } catch (e) { STICKERS = {}; }
+      return STICKERS;
+    }
+    function saveStickers() {
+      try { localStorage.setItem(STICKERS_KEY, JSON.stringify(STICKERS)); } catch (e) {}
+    }
+    loadStickers();
+
+    function hasSticker(id) {
+      return !!(STICKERS && STICKERS[id]);
+    }
+
+    function grantSticker(id, opts = {}) {
+      const def = STICKER_DEFS.find((s) => s.id === id) || { id, emoji: '⭐', title: id, burst: ['⭐', '✨'] };
+      const wasNew = !hasSticker(id);
+      if (wasNew) {
+        STICKERS[id] = { at: Date.now() };
+        saveStickers();
+      }
+      if (wasNew || opts.forceBurst) {
+        const x = (typeof state !== 'undefined' && state.x) ? state.x : innerWidth / 2;
+        const y = (typeof state !== 'undefined' && state.y) ? state.y - 80 : innerHeight / 2;
+        const emojis = (def.burst || ['🌾', '⭐']).concat(['🌾', '⭐']);
+        emojis.forEach((e, i) => {
+          const el = document.createElement('div');
+          el.className = 'fx-burst sticker-burst';
+          el.textContent = e;
+          const ang = (Math.PI * 2 * i) / emojis.length;
+          el.style.left = x + 'px';
+          el.style.top = y + 'px';
+          el.style.setProperty('--dx', Math.cos(ang) * 90 + 'px');
+          el.style.setProperty('--dy', Math.sin(ang) * 70 - 30 + 'px');
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 2000);
+        });
+        if (typeof hearts === 'function') hearts(5);
+        say('You got a sticker!', 2800);
+      }
+      if (document.getElementById('stickersPanel')?.classList.contains('open')) renderStickersPanel();
+      return wasNew;
+    }
+
+    function renderStickersPanel() {
+      const grid = document.getElementById('stickersGrid');
+      const meta = document.getElementById('stickersMeta');
+      if (!grid) return;
+      const unlockedN = STICKER_DEFS.filter((s) => hasSticker(s.id)).length;
+      if (meta) meta.textContent = unlockedN + ' / ' + STICKER_DEFS.length;
+      grid.innerHTML = STICKER_DEFS.map((s) => {
+        const u = hasSticker(s.id);
+        if (u) {
+          return `<button type="button" class="sticker-cell unlocked" data-sticker-id="${s.id}">
+            <span class="se">${s.emoji}</span>
+            <span class="st">${s.title}</span>
+          </button>`;
+        }
+        return `<button type="button" class="sticker-cell locked" data-sticker-id="${s.id}" disabled>
+            <span class="se">${s.emoji}</span>
+            <span class="st">🔒 Locked</span>
+          </button>`;
+      }).join('');
+    }
+
+    function openStickersPanel() {
+      const panel = document.getElementById('stickersPanel');
+      if (!panel) return;
+      if (typeof closeAtlasPanel === 'function') closeAtlasPanel();
+      if (typeof applyDock === 'function') {
+        if (!document.body.classList.contains('hide-learn')) applyDock('learn', true, false);
+        if (!document.body.classList.contains('hide-actions')) applyDock('actions', true, false);
+        if (!document.body.classList.contains('hide-picker')) applyDock('picker', true, false);
+      }
+      if (dlgPanel) dlgPanel.classList.remove('open');
+      renderStickersPanel();
+      panel.classList.add('open');
+    }
+    function closeStickersPanel() {
+      const panel = document.getElementById('stickersPanel');
+      if (panel) panel.classList.remove('open');
+    }
+
+    async function loadStoriesIndex() {
+      try {
+        const res = await fetch('theater/stories.json');
+        STORIES_INDEX = await res.json();
+      } catch (e) {
+        STORIES_INDEX = [{ id: 'farm_morning', title: 'Farm Morning', emoji: '🌾', file: 'theater/farm_morning.json', stickerId: 'farm_morning', scene: 'farm' }];
+      }
+      return STORIES_INDEX;
+    }
+    loadStoriesIndex().then(() => {
+      if (document.getElementById('dlgPanel') && document.getElementById('dlgPanel').classList.contains('open')) {
+        if (typeof renderDialogList === 'function') renderDialogList();
+      }
+    });
+
+    function clearTheaterTimer() {
+      if (theaterState.timer) {
+        clearTimeout(theaterState.timer);
+        theaterState.timer = null;
+      }
+    }
+
+    function updateTheaterHud(opts = {}) {
+      const hud = document.getElementById('theaterHud');
+      if (!hud) return;
+      if (!theaterState.active) {
+        hud.classList.remove('open');
+        hud.setAttribute('aria-hidden', 'true');
+        return;
+      }
+      hud.classList.add('open');
+      hud.setAttribute('aria-hidden', 'false');
+      const story = theaterState.story || {};
+      const beats = story.beats || [];
+      const bi = theaterState.beatIndex;
+      const titleEl = document.getElementById('theaterTitle');
+      const progEl = document.getElementById('theaterProgress');
+      const promptEl = document.getElementById('theaterPrompt');
+      const hintEl = document.getElementById('theaterHint');
+      if (titleEl) titleEl.textContent = (story.emoji || '🎭') + ' ' + (story.title || 'Theater');
+      if (progEl) progEl.textContent = Math.min(bi + 1, beats.length) + '/' + beats.length;
+      if (promptEl) {
+        if (opts.say) {
+          promptEl.textContent = 'Say: ' + opts.say;
+          promptEl.classList.remove('idle');
+        } else if (opts.prompt) {
+          promptEl.textContent = opts.prompt;
+          promptEl.classList.add('idle');
+        } else {
+          promptEl.textContent = '…';
+          promptEl.classList.add('idle');
+        }
+      }
+      if (hintEl) hintEl.textContent = opts.hint || '';
+    }
+
+    function runTheaterAction(action) {
+      if (!action) return;
+      const a = String(action);
+      if (a.startsWith('scene:')) {
+        const sid = a.slice(6);
+        if (typeof setScene === 'function') setScene(sid, { silent: true, manual: true });
+        return;
+      }
+      if (a === 'wake') {
+        if (typeof stopSing === 'function') stopSing();
+        state.mode = 'sleep';
+        state.holdUntil = 0;
+        if (typeof clearPetPlayPose === 'function') clearPetPlayPose();
+        pet.classList.add('sleep');
+        pet.classList.remove('walk', 'happy');
+        state.vx = 0; state.vy = 0;
+        if (typeof actionVisual === 'function') actionVisual('sleep');
+        setTimeout(() => {
+          if (!theaterState.active) return;
+          pet.classList.remove('sleep');
+          state.mode = 'wander';
+          if (typeof pickWanderTarget === 'function') pickWanderTarget();
+          setHappy(2200);
+          burst(['☀️', '✨', '💛'], state.x, state.y - 70);
+          say('Good morning!', 1800);
+        }, 1600);
+        return;
+      }
+      if (a === 'wave') {
+        holdStill(2200);
+        setHappy(1800);
+        if (typeof actionVisual === 'function') actionVisual('pet');
+        burst(['👋', '✨'], state.x, state.y - 70);
+        return;
+      }
+      if (a === 'feed') {
+        holdStill(2800);
+        setHappy(2000);
+        if (typeof actionVisual === 'function') actionVisual('feed');
+        return;
+      }
+      if (a === 'dance') {
+        holdStill(3200);
+        setHappy(2400);
+        if (typeof setPetPlayPose === 'function') setPetPlayPose('dance', 3200);
+        burst(['🎵', '✨', '💖'], state.x, state.y - 70);
+        return;
+      }
+    }
+
+    async function playTheaterLine(text, audioPath) {
+      if (text) say(text, 4200);
+      if (audioPath) {
+        try { await playCachedAudio(audioPath); } catch (e) {}
+      }
+    }
+
+    function stopTheater(opts = {}) {
+      clearTheaterTimer();
+      const was = theaterState.active;
+      theaterState.active = false;
+      theaterState.waiting = false;
+      theaterState.story = null;
+      theaterState.storyId = null;
+      theaterState.beatIndex = 0;
+      theaterState.fallbackUsed = false;
+      theaterState.advancing = false;
+      updateTheaterHud();
+      if (was && !opts.silent) say('Theater stopped.', 1600);
+    }
+
+    async function startTheater(storyId) {
+      const id = storyId || 'farm_morning';
+      if (!STORIES_INDEX || !STORIES_INDEX.length) await loadStoriesIndex();
+      const meta = (STORIES_INDEX || []).find((s) => s.id === id) || STORIES_INDEX[0];
+      if (!meta) {
+        say('No theater story yet.', 1800);
+        return;
+      }
+      let story = null;
+      try {
+        const res = await fetch(meta.file || ('theater/' + id + '.json'));
+        story = await res.json();
+      } catch (e) {
+        console.warn('theater load failed', e);
+        say('Could not load story.', 1800);
+        return;
+      }
+      stopTheater({ silent: true });
+      if (typeof stopSing === 'function') stopSing();
+      // collapse menus
+      if (dlgPanel) dlgPanel.classList.remove('open');
+      if (typeof closeAtlasPanel === 'function') closeAtlasPanel();
+      closeStickersPanel();
+      if (typeof applyDock === 'function') {
+        ['picker', 'learn', 'actions'].forEach((k) => {
+          if (!document.body.classList.contains('hide-' + k)) applyDock(k, true, false);
+        });
+      }
+      const sceneId = story.scene || meta.scene || 'farm';
+      if (typeof setScene === 'function') setScene(sceneId, { silent: true, manual: true });
+
+      theaterState.active = true;
+      theaterState.storyId = story.id || id;
+      theaterState.story = story;
+      theaterState.beatIndex = 0;
+      theaterState.waiting = false;
+      theaterState.fallbackUsed = false;
+      theaterState.advancing = false;
+      updateTheaterHud({ prompt: (story.emoji || '🎭') + ' ' + (story.title || 'Story') });
+      noteDailyFirstEnglish();
+      advanceBeat();
+    }
+
+    function currentBeat() {
+      if (!theaterState.story || !theaterState.story.beats) return null;
+      return theaterState.story.beats[theaterState.beatIndex] || null;
+    }
+
+    async function finishTheater() {
+      const story = theaterState.story || {};
+      const stickerId = story.stickerId || theaterState.storyId || 'farm_morning';
+      const words = story.words || [];
+      awardXp(6, 'theater', { key: 'theater:' + (story.id || 'farm_morning'), cooldownMs: 0 });
+      if (typeof unlockAtlasTexts === 'function') unlockAtlasTexts(words, 'theater');
+      words.forEach((w) => { if (typeof unlockAtlasWord === 'function') unlockAtlasWord(w, 'theater'); });
+      grantSticker(stickerId, { forceBurst: true });
+      hearts(4);
+      burst(['🎉', '💖', '⭐', '🌾'], state.x, state.y - 80);
+      clearTheaterTimer();
+      theaterState.waiting = false;
+      setTimeout(() => stopTheater({ silent: true }), 3200);
+    }
+
+    async function advanceBeat() {
+      if (!theaterState.active || theaterState.advancing) return;
+      theaterState.advancing = true;
+      clearTheaterTimer();
+      theaterState.waiting = false;
+      theaterState.fallbackUsed = false;
+      try {
+        const beats = (theaterState.story && theaterState.story.beats) || [];
+        if (theaterState.beatIndex >= beats.length) {
+          await finishTheater();
+          return;
+        }
+        const beat = beats[theaterState.beatIndex];
+        if (!beat) {
+          await finishTheater();
+          return;
+        }
+        if (beat.type === 'end') {
+          if (beat.action) runTheaterAction(beat.action);
+          await playTheaterLine(beat.text, beat.audio);
+          await finishTheater();
+          return;
+        }
+        if (beat.type === 'act' || (!beat.expect || !beat.expect.length) && beat.type !== 'wait' && beat.type !== 'say') {
+          updateTheaterHud({ prompt: beat.text || '…', hint: '' });
+          if (beat.action) runTheaterAction(beat.action);
+          await playTheaterLine(beat.text, beat.audio);
+          const waitMs = beat.timeoutMs || 3800;
+          theaterState.advancing = false;
+          theaterState.timer = setTimeout(() => {
+            theaterState.beatIndex += 1;
+            advanceBeat();
+          }, waitMs);
+          return;
+        }
+        // wait / say with expect
+        theaterState.waiting = true;
+        const expectShow = (beat.expect && beat.expect[0]) ? beat.expect[0] : '…';
+        updateTheaterHud({ say: expectShow, hint: beat.hint || '' });
+        if (beat.text) say(beat.text, 2800);
+        const timeoutMs = beat.timeoutMs || 10000;
+        theaterState.timer = setTimeout(() => onTheaterTimeout(beat), timeoutMs);
+      } finally {
+        // keep advancing lock false when waiting or when timer scheduled for act
+        if (theaterState.waiting) theaterState.advancing = false;
+      }
+    }
+
+    async function onTheaterTimeout(beat) {
+      if (!theaterState.active || !theaterState.waiting) return;
+      if (!theaterState.fallbackUsed) {
+        theaterState.fallbackUsed = true;
+        const fb = beat.fallbackText || beat.hint || 'Try again!';
+        await playTheaterLine(fb, beat.fallbackAudio);
+        updateTheaterHud({
+          say: (beat.expect && beat.expect[0]) || '…',
+          hint: beat.hint || 'Try again'
+        });
+        theaterState.timer = setTimeout(() => onTheaterTimeout(beat), beat.timeoutMs || 10000);
+      } else {
+        // allow continuous retry — replay hint softly
+        updateTheaterHud({
+          say: (beat.expect && beat.expect[0]) || '…',
+          hint: (beat.hint || 'Keep trying!') + ' · say stop theater to quit'
+        });
+        theaterState.timer = setTimeout(() => onTheaterTimeout(beat), beat.timeoutMs || 10000);
+      }
+    }
+
+    function theaterExpectMatch(text, expectList) {
+      const t = (text || '').toLowerCase().trim();
+      if (!t || !expectList || !expectList.length) return false;
+      for (const ex of expectList) {
+        if (typeof matchTrigger === 'function' && matchTrigger(t, ex)) return true;
+        const g = String(ex || '').toLowerCase().trim();
+        if (g && t === g) return true;
+      }
+      return false;
+    }
+
+    function maybeHandleTheaterCommand(text) {
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return false;
+      if (!theaterState.active) {
+        // allow voice start
+        if (/\b(start theater|farm morning|play story|start story)\b/.test(t) || /^(theater|story)$/.test(t)) {
+          startTheater('farm_morning');
+          return true;
+        }
+        return false;
+      }
+      if (/\b(stop theater|quit story|stop story|quit theater)\b/.test(t) || /^stop$/.test(t)) {
+        stopTheater();
+        return true;
+      }
+      // While theater active, intercept mic first
+      if (theaterState.waiting) {
+        const beat = currentBeat();
+        if (beat && theaterExpectMatch(t, beat.expect)) {
+          clearTheaterTimer();
+          theaterState.waiting = false;
+          if (beat.action) runTheaterAction(beat.action);
+          setHappy(1600);
+          burst(['✨', '💛', '⭐'], state.x, state.y - 70);
+          theaterState.beatIndex += 1;
+          advanceBeat();
+        } else {
+          // consume utterance; soft nudge
+          if (beat && beat.hint) {
+            const hintEl = document.getElementById('theaterHint');
+            if (hintEl) hintEl.textContent = beat.hint;
+          }
+        }
+        return true;
+      }
+      // During act/end auto beats, still consume to avoid dialog steal, except allow stop (handled above)
+      return true;
+    }
+
+
     let recognition = null;
     if (SpeechRec) {
       recognition = new SpeechRec();
@@ -3019,6 +3576,14 @@
         for (let i = 0; i < ev.results[0].length; i++) alts.push(ev.results[0][i].transcript);
         lastHeard = alts[0] || '';
         let actionNote = '';
+        // Theater intercepts mic first when active (or theater start phrases)
+        let theaterHit = false;
+        for (const a of alts) {
+          if (typeof maybeHandleTheaterCommand === 'function' && maybeHandleTheaterCommand(a)) {
+            theaterHit = true; actionNote = 'Theater'; break;
+          }
+        }
+        if (theaterHit) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
         // Outfit wearables before dialog match
         let suited = false;
         for (const a of alts) {
@@ -3147,6 +3712,10 @@
         startPlay(null);
       } else if (kind === 'sing') {
         startSing(null);
+      } else if (kind === 'theater') {
+        startTheater('farm_morning');
+      } else if (kind === 'stickers') {
+        openStickersPanel();
       } else if (kind === 'sleep') {
         if (typeof stopSing === 'function') stopSing();
         state.mode = 'sleep';
@@ -3483,6 +4052,12 @@
     if (btnAtlas) btnAtlas.addEventListener('click', (e) => { e.stopPropagation(); openAtlasPanel(); });
     const atlasClose = document.getElementById('atlasClose');
     if (atlasClose) atlasClose.addEventListener('click', (e) => { e.stopPropagation(); closeAtlasPanel(); });
+    const btnStickers = document.getElementById('btnStickers');
+    if (btnStickers) btnStickers.addEventListener('click', (e) => { e.stopPropagation(); openStickersPanel(); });
+    const stickersClose = document.getElementById('stickersClose');
+    if (stickersClose) stickersClose.addEventListener('click', (e) => { e.stopPropagation(); closeStickersPanel(); });
+    const theaterClose = document.getElementById('theaterClose');
+    if (theaterClose) theaterClose.addEventListener('click', (e) => { e.stopPropagation(); stopTheater(); });
     document.querySelectorAll('[data-atlas-filter]').forEach((b) => {
       b.addEventListener('click', (e) => {
         e.stopPropagation();

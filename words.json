@@ -5733,6 +5733,108 @@
       ],
       "audio": "audio/grass.mp3",
       "phonicsAudio": "audio/grass_phonics.mp3"
+    },
+    {
+      "id": "wake_up",
+      "text": "Wake up",
+      "ipa": "/weɪk ʌp/",
+      "zh": "醒来",
+      "phonics": "WAKE up",
+      "audio": "audio/wake_up.mp3",
+      "phonicsAudio": "audio/wake_up_phonics.mp3",
+      "ipaSegments": [
+        "w",
+        "eɪ",
+        "k",
+        "ʌ",
+        "p"
+      ],
+      "tags": [
+        "theater",
+        "command-vocab"
+      ],
+      "emoji": "⏰"
+    },
+    {
+      "id": "rooster",
+      "text": "Rooster",
+      "ipa": "/ˈruːstər/",
+      "zh": "公鸡",
+      "phonics": "ROO-ster",
+      "audio": "audio/rooster.mp3",
+      "phonicsAudio": "audio/rooster_phonics.mp3",
+      "ipaSegments": [
+        "r",
+        "uː",
+        "s",
+        "t",
+        "ər"
+      ],
+      "tags": [
+        "theater",
+        "animal"
+      ],
+      "emoji": "🐓"
+    },
+    {
+      "id": "sticker",
+      "text": "Sticker",
+      "ipa": "/ˈstɪkər/",
+      "zh": "贴纸",
+      "phonics": "STICK-er",
+      "audio": "audio/sticker.mp3",
+      "phonicsAudio": "audio/sticker_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "t",
+        "ɪ",
+        "k",
+        "ər"
+      ],
+      "tags": [
+        "theater"
+      ],
+      "emoji": "⭐"
+    },
+    {
+      "id": "theater",
+      "text": "Theater",
+      "ipa": "/ˈθiːətər/",
+      "zh": "剧场",
+      "phonics": "THEE-uh-ter",
+      "audio": "audio/theater.mp3",
+      "phonicsAudio": "audio/theater_phonics.mp3",
+      "ipaSegments": [
+        "θ",
+        "iː",
+        "ə",
+        "t",
+        "ər"
+      ],
+      "tags": [
+        "theater"
+      ],
+      "emoji": "🎭"
+    },
+    {
+      "id": "story",
+      "text": "Story",
+      "ipa": "/ˈstɔːri/",
+      "zh": "故事",
+      "phonics": "STO-ry",
+      "audio": "audio/story.mp3",
+      "phonicsAudio": "audio/story_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "t",
+        "ɔː",
+        "r",
+        "i"
+      ],
+      "tags": [
+        "theater"
+      ],
+      "emoji": "📖"
     }
   ]
 }
