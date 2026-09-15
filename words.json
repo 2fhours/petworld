@@ -16,6 +16,9 @@
         "k",
         "j",
         "uː"
+      ],
+      "tags": [
+        "theater"
       ]
     },
     {
@@ -70,6 +73,9 @@
         "r",
         "j",
         "uː"
+      ],
+      "tags": [
+        "theater"
       ]
     },
     {
@@ -86,6 +92,9 @@
         "f",
         "aɪ",
         "n"
+      ],
+      "tags": [
+        "theater"
       ]
     },
     {
@@ -184,6 +193,9 @@
         "p",
         "l",
         "eɪ"
+      ],
+      "tags": [
+        "theater"
       ]
     },
     {
@@ -2937,6 +2949,9 @@
         "b",
         "l",
         "uː"
+      ],
+      "tags": [
+        "theater"
       ]
     },
     {
@@ -4679,6 +4694,9 @@
         "iː",
         "j",
         "uː"
+      ],
+      "tags": [
+        "theater"
       ]
     },
     {
@@ -5309,7 +5327,8 @@
       ],
       "tags": [
         "command-vocab",
-        "songs"
+        "songs",
+        "theater"
       ]
     },
     {
@@ -5447,7 +5466,8 @@
       "emoji": "🏖️",
       "tags": [
         "scene",
-        "command-vocab"
+        "command-vocab",
+        "theater"
       ],
       "audio": "audio/beach.mp3",
       "phonicsAudio": "audio/beach_phonics.mp3"
@@ -5835,6 +5855,116 @@
         "theater"
       ],
       "emoji": "📖"
+    },
+    {
+      "id": "sea",
+      "text": "Sea",
+      "ipa": "/siː/",
+      "zh": "大海",
+      "phonics": "SEA",
+      "ipaSegments": [
+        "s",
+        "iː"
+      ],
+      "emoji": "🌊",
+      "tags": [
+        "theater",
+        "scene",
+        "command-vocab"
+      ],
+      "audio": "audio/sea.mp3",
+      "phonicsAudio": "audio/sea_phonics.mp3"
+    },
+    {
+      "id": "water",
+      "text": "Water",
+      "ipa": "/ˈwɔːtər/",
+      "zh": "水",
+      "phonics": "WA-ter",
+      "ipaSegments": [
+        "w",
+        "ɔː",
+        "t",
+        "ə",
+        "r"
+      ],
+      "emoji": "💧",
+      "tags": [
+        "theater",
+        "command-vocab"
+      ],
+      "audio": "audio/water.mp3",
+      "phonicsAudio": "audio/water_phonics.mp3"
+    },
+    {
+      "id": "beach_friends",
+      "text": "Beach Friends",
+      "ipa": "/biːtʃ frendz/",
+      "zh": "海滩小伙伴",
+      "phonics": "BEACH FRIENDS",
+      "ipaSegments": [
+        "b",
+        "iː",
+        "tʃ",
+        "f",
+        "r",
+        "e",
+        "n",
+        "d",
+        "z"
+      ],
+      "emoji": "🏖️",
+      "tags": [
+        "theater"
+      ],
+      "audio": "audio/beach_friends.mp3",
+      "phonicsAudio": "audio/beach_friends_phonics.mp3"
+    },
+    {
+      "id": "i_see_a_boat",
+      "text": "I see a boat",
+      "ipa": "/aɪ siː ə boʊt/",
+      "zh": "我看见一艘船",
+      "phonics": "I SEE a BOAT",
+      "ipaSegments": [
+        "aɪ",
+        "s",
+        "iː",
+        "ə",
+        "b",
+        "oʊ",
+        "t"
+      ],
+      "emoji": "⛵",
+      "tags": [
+        "theater"
+      ],
+      "audio": "audio/i_see_a_boat.mp3",
+      "phonicsAudio": "audio/i_see_a_boat_phonics.mp3"
+    },
+    {
+      "id": "the_sea_is_blue",
+      "text": "The sea is blue",
+      "ipa": "/ðə siː ɪz bluː/",
+      "zh": "大海是蓝色的",
+      "phonics": "the SEA is BLUE",
+      "ipaSegments": [
+        "ð",
+        "ə",
+        "s",
+        "iː",
+        "ɪ",
+        "z",
+        "b",
+        "l",
+        "uː"
+      ],
+      "emoji": "🌊",
+      "tags": [
+        "theater"
+      ],
+      "audio": "audio/the_sea_is_blue.mp3",
+      "phonicsAudio": "audio/the_sea_is_blue_phonics.mp3"
     }
   ]
 }

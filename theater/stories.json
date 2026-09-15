@@ -6,5 +6,13 @@
     "file": "theater/farm_morning.json",
     "stickerId": "farm_morning",
     "scene": "farm"
+  },
+  {
+    "id": "beach_friends",
+    "title": "Beach Friends",
+    "emoji": "🏖️",
+    "file": "theater/beach_friends.json",
+    "stickerId": "beach_friends",
+    "scene": "beach"
   }
 ]

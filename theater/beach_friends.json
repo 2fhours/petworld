@@ -1,0 +1,188 @@
+{
+  "id": "beach_friends",
+  "title": "Beach Friends",
+  "emoji": "🏖️",
+  "scene": "beach",
+  "stickerId": "beach_friends",
+  "words": [
+    "beach",
+    "hello",
+    "hi",
+    "how are you",
+    "I'm fine",
+    "boat",
+    "sea",
+    "blue",
+    "water",
+    "let's play",
+    "thank you",
+    "see you",
+    "bye",
+    "theater",
+    "beach friends"
+  ],
+  "beats": [
+    {
+      "id": "bf_arrive",
+      "type": "act",
+      "text": "We are at the beach! Hear the waves?",
+      "zh": "我们来到海边啦",
+      "guide": "海边到啦 · Beach time!",
+      "audio": "audio/theater/bf_arrive.mp3",
+      "action": "wave",
+      "timeoutMs": 4200
+    },
+    {
+      "id": "bf_hello",
+      "type": "wait",
+      "text": "Say hello to your beach friend!",
+      "zh": "先跟小伙伴打招呼，请说 Hello",
+      "guide": "请说英文：Hello! / Say: Hello!",
+      "expect": ["hello", "hi", "hey"],
+      "hint": "Try saying: hello",
+      "timeoutMs": 10000,
+      "fallbackText": "Hello!",
+      "fallbackAudio": "audio/theater/bf_fb_hello.mp3"
+    },
+    {
+      "id": "bf_friend",
+      "type": "act",
+      "text": "Your friend waves back. Hi!",
+      "zh": "小伙伴也跟你招手啦",
+      "audio": "audio/theater/bf_friend.mp3",
+      "action": "wave",
+      "timeoutMs": 3800
+    },
+    {
+      "id": "bf_howare",
+      "type": "wait",
+      "text": "Ask how they are!",
+      "zh": "问问对方好不好",
+      "guide": "请说英文：How are you? / Say: How are you?",
+      "expect": ["how are you", "how are you doing"],
+      "hint": "Try saying: how are you",
+      "timeoutMs": 10000,
+      "fallbackText": "How are you?",
+      "fallbackAudio": "audio/theater/bf_fb_howare.mp3"
+    },
+    {
+      "id": "bf_fine",
+      "type": "wait",
+      "text": "Say you are fine!",
+      "zh": "回答 I'm fine",
+      "guide": "请说英文：I'm fine! / Say: I'm fine!",
+      "expect": ["i'm fine", "i am fine", "im fine", "fine"],
+      "hint": "Try saying: I'm fine",
+      "timeoutMs": 10000,
+      "fallbackText": "I'm fine!",
+      "fallbackAudio": "audio/theater/bf_fb_fine.mp3"
+    },
+    {
+      "id": "bf_boat",
+      "type": "act",
+      "text": "Look! I see a little boat on the water.",
+      "zh": "快看，水上有一艘小船",
+      "audio": "audio/theater/bf_boat.mp3",
+      "action": "wave",
+      "timeoutMs": 4000
+    },
+    {
+      "id": "bf_say_boat",
+      "type": "wait",
+      "text": "What do you see?",
+      "zh": "看见船了，说 boat 或 I see a boat",
+      "guide": "请说英文：boat / I see a boat",
+      "expect": ["boat", "i see a boat", "a boat", "the boat"],
+      "hint": "Try saying: boat",
+      "timeoutMs": 10000,
+      "fallbackText": "Boat!",
+      "fallbackAudio": "audio/theater/bf_fb_boat.mp3"
+    },
+    {
+      "id": "bf_play",
+      "type": "wait",
+      "text": "Invite your friend to play!",
+      "zh": "邀请一起玩",
+      "guide": "请说英文：Let's play! / Say: Let's go!",
+      "expect": ["let's play", "lets play", "let's go", "lets go", "come play"],
+      "hint": "Try saying: let's play",
+      "timeoutMs": 10000,
+      "fallbackText": "Let's play!",
+      "fallbackAudio": "audio/theater/bf_fb_play.mp3"
+    },
+    {
+      "id": "bf_row",
+      "type": "act",
+      "text": "Row, row, row your boat — just a little!",
+      "zh": "轻轻划一划小船（点点歌名就好）",
+      "audio": "audio/theater/bf_row.mp3",
+      "action": "row",
+      "timeoutMs": 4200
+    },
+    {
+      "id": "bf_blue",
+      "type": "wait",
+      "text": "What color is the sea?",
+      "zh": "说说大海的颜色，试说 blue",
+      "guide": "请说英文：blue / the sea is blue",
+      "expect": ["blue", "the sea is blue", "sea is blue", "water", "the water is blue"],
+      "hint": "Try saying: blue",
+      "timeoutMs": 10000,
+      "fallbackText": "Blue!",
+      "fallbackAudio": "audio/theater/bf_fb_blue.mp3"
+    },
+    {
+      "id": "bf_hungry",
+      "type": "wait",
+      "text": "Playing makes you hungry!",
+      "zh": "玩累了饿了",
+      "guide": "请说英文：I'm hungry / feed me / apple",
+      "expect": ["i'm hungry", "i am hungry", "feed me", "apple", "eat apple", "hungry"],
+      "hint": "Try saying: I'm hungry",
+      "timeoutMs": 10000,
+      "fallbackText": "I'm hungry!",
+      "fallbackAudio": "audio/theater/bf_fb_hungry.mp3"
+    },
+    {
+      "id": "bf_feed",
+      "type": "act",
+      "text": "Yum! Here's an apple for you.",
+      "zh": "给你一个苹果吃吧",
+      "audio": "audio/theater/bf_feed.mp3",
+      "action": "feed",
+      "timeoutMs": 3800
+    },
+    {
+      "id": "bf_thanks",
+      "type": "wait",
+      "text": "Say thank you!",
+      "zh": "说谢谢",
+      "guide": "请说英文：Thank you! / Say: Thank you!",
+      "expect": ["thank you", "thanks", "thank you very much"],
+      "hint": "Try saying: thank you",
+      "timeoutMs": 10000,
+      "fallbackText": "Thank you!",
+      "fallbackAudio": "audio/theater/bf_fb_thanks.mp3"
+    },
+    {
+      "id": "bf_bye",
+      "type": "wait",
+      "text": "Time to say goodbye!",
+      "zh": "道别",
+      "guide": "请说英文：See you! / Bye!",
+      "expect": ["see you", "bye", "goodbye", "bye bye", "see you later"],
+      "hint": "Try saying: see you",
+      "timeoutMs": 10000,
+      "fallbackText": "See you!",
+      "fallbackAudio": "audio/theater/bf_fb_bye.mp3"
+    },
+    {
+      "id": "bf_end",
+      "type": "end",
+      "text": "Yay! Beach Friends is done. You got a sticker!",
+      "zh": "海滩小伙伴完成啦，贴纸到手！",
+      "audio": "audio/theater/bf_end.mp3",
+      "action": "dance"
+    }
+  ]
+}

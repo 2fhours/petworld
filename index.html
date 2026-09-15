@@ -684,6 +684,28 @@
     .dlg-panel .dlg-tip {
       font-size: 11px; color: rgba(226,232,240,0.45); margin-bottom: 8px;
     }
+    .dlg-tags {
+      position: sticky; top: 0; z-index: 5;
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 4px 0 8px; margin: 0 0 4px;
+      background: rgba(15,23,42,0.94);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .dlg-tags .dlg-tag {
+      appearance: none; border: 1px solid rgba(167,139,250,0.35);
+      border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 11px;
+      color: #e2e8f0; background: rgba(255,255,255,0.06); cursor: pointer;
+      line-height: 1.2;
+    }
+    .dlg-tags .dlg-tag:hover,
+    .dlg-tags .dlg-tag.active {
+      background: rgba(167,139,250,0.28);
+      border-color: rgba(167,139,250,0.65);
+      color: #f5f3ff;
+    }
+    .dlg-sec {
+      scroll-margin-top: 44px;
+    }
     .dock-toggle {
       position: fixed; z-index: 10; appearance: none; border: 1px solid rgba(255,255,255,0.14);
       border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 12px;
@@ -1022,7 +1044,7 @@
       text-shadow: 0 2px 8px rgba(0,0,0,0.35);
     }
     .theater-hud .th-prompt.idle { font-size: 14px; font-weight: 550; color: #fde68a; }
-    .theater-hud .th-hint { font-size: 11px; color: rgba(254,243,199,0.7); text-align: center; }
+    .theater-hud .th-hint { font-size: 11px; color: rgba(254,243,199,0.7); text-align: center; white-space: pre-line; }
 
     /* Stickers panel (non-occluding, like atlas) */
     .stickers-panel {
@@ -1075,7 +1097,8 @@
   </div>
   <div class="dlg-panel" id="dlgPanel" aria-label="Supported dialogs">
     <h3>Supported Dialogs</h3>
-    <div class="dlg-tip">Click a line to try it. Say the blue English with the mic. Songs: “sing twinkle”, “stop singing”. Theater: “start theater”, “stop theater”. Scenes: “farm”, “beach”, “bedroom”, “garden”. Outfits: “red hat”, “blue clothes”, “no hat”.</div>
+    <div class="dlg-tip">Tap a line or use the mic. Theater: “start theater” / “beach friends”. Songs: “sing twinkle”. Scenes & outfits via voice.</div>
+    <div id="dlgTags" class="dlg-tags" aria-label="Section tags"></div>
     <div id="dlgList"></div>
   </div>
 
@@ -2760,8 +2783,10 @@
     // Dialog list panel (top-left)
     function renderDialogList() {
       const box = document.getElementById('dlgList');
+      const tagsEl = document.getElementById('dlgTags');
       if (!box) return;
       const parts = [];
+      const tagDefs = [];
       const DIALOG_ICON = {
         hello: '👋', good_morning: '🌅', good_afternoon: '☀️', good_evening: '🌆', good_night: '🌙',
         how_are_you: '💬', im_fine: '😊', whats_your_name: '📛', nice_to_meet_you: '🤝',
@@ -2777,9 +2802,14 @@
         purple: '🟣', orange: '🟠', white: '⚪', black: '⚫'
       };
 
+      function pushSec(id, label) {
+        tagDefs.push({ id, label });
+        parts.push(`<div class="dlg-tip dlg-sec" id="dlg-sec-${id}" style="margin-top:${parts.length ? '10px' : '4px'}">${label}</div>`);
+      }
+
       // A. Dialogs
       if (DIALOGS && DIALOGS.dialogs) {
-        parts.push(`<div class="dlg-tip" style="margin-top:4px">Dialogs</div>`);
+        pushSec('dialogs', 'Dialogs');
         parts.push(DIALOGS.dialogs
           .filter((d) => d.id !== 'fallback')
           .map((d) => {
@@ -2795,9 +2825,8 @@
           }).join(''));
       }
 
-
       // B0. Scenes
-      parts.push(`<div class="dlg-tip" style="margin-top:10px">Scenes</div>`);
+      pushSec('scenes', 'Scenes');
       const SCENE_DLG = [
         { id: 'farm', icon: '🌾', say: 'farm / go to the farm', reply: 'Go to the farm' },
         { id: 'beach', icon: '🌊', say: 'beach / go to the beach', reply: 'Go to the beach' },
@@ -2811,7 +2840,7 @@
 
       // B. Play
       if (PLAYS && PLAYS.plays) {
-        parts.push(`<div class="dlg-tip" style="margin-top:10px">Play</div>`);
+        pushSec('play', 'Play');
         parts.push(PLAYS.plays.map((p) => {
           const icon = p.emoji || '🎮';
           const trigs = (p.triggers || []).slice(0, 3).join(' / ');
@@ -2824,7 +2853,7 @@
 
       // B2. Songs
       if (SONGS && SONGS.songs) {
-        parts.push(`<div class="dlg-tip" style="margin-top:10px">Songs</div>`);
+        pushSec('songs', 'Songs');
         parts.push(SONGS.songs.map((s) => {
           const icon = s.emoji || '🎵';
           const trig = (s.triggers && s.triggers[0]) ? s.triggers[0] : s.id;
@@ -2841,7 +2870,7 @@
 
       // C. Animals
       if (ANIMALS && ANIMALS.animals) {
-        parts.push(`<div class="dlg-tip" style="margin-top:10px">Animals</div>`);
+        pushSec('animals', 'Animals');
         parts.push(ANIMALS.animals.map((a) => {
           const icon = a.emoji || ANIMAL_ICON[a.id] || '🐾';
           const name = a.name || a.id;
@@ -2855,7 +2884,7 @@
 
       // D. Eat
       if (FOODS && FOODS.foods) {
-        parts.push(`<div class="dlg-tip" style="margin-top:10px">Eat</div>`);
+        pushSec('eat', 'Eat');
         parts.push(FOODS.foods.map((f) => {
           const icon = f.emoji || '🍽️';
           return `<button type="button" class="dlg-item" data-eat="${f.id}">
@@ -2865,21 +2894,26 @@
         }).join(''));
       }
 
-
       // Theater
-      parts.push(`<div class="dlg-tip" style="margin-top:10px">Theater</div>`);
+      pushSec('theater', 'Theater');
       const thStories = (STORIES_INDEX && STORIES_INDEX.length) ? STORIES_INDEX : [
         { id: 'farm_morning', title: 'Farm Morning', emoji: '🌾' }
       ];
       thStories.forEach((s) => {
+        let sayLine = 'start theater / farm morning';
+        if (s.id === 'beach_friends') sayLine = 'beach friends / start beach / beach theater';
+        else if (s.id === 'farm_morning') sayLine = 'start theater / farm morning';
+        else sayLine = (s.title || s.id).toLowerCase();
         parts.push(`<button type="button" class="dlg-item" data-theater="${s.id}">
-            <span class="say">${s.emoji || '🎭'} Say: start theater / farm morning</span>
+            <span class="say">${s.emoji || '🎭'} Say: ${sayLine}</span>
             <span class="reply">${s.title || s.id} interactive story</span>
           </button>`);
       });
       const thSays = [
         { say: 'good morning', reply: 'Farm Morning greet' },
         { say: 'wake up', reply: 'Wake the rooster' },
+        { say: "hello / how are you / I'm fine", reply: "Beach Friends chat" },
+        { say: 'boat / blue / thank you / see you', reply: 'Beach Friends words' },
         { say: 'I am hungry / feed me', reply: 'Feed during story' },
         { say: 'stop theater / quit story', reply: 'Exit theater' }
       ];
@@ -2895,9 +2929,9 @@
           </button>`);
 
       // E. Outfit
+      pushSec('outfit', 'Outfit');
       const outfitSlots = ['hat', 'clothes', 'glasses'];
       const outfitColors = ['red', 'yellow', 'blue', 'green', 'pink', 'purple', 'orange', 'white', 'black'];
-      parts.push(`<div class="dlg-tip" style="margin-top:10px">Outfit</div>`);
       for (const slot of outfitSlots) {
         for (const color of outfitColors) {
           const icon = (COLOR_SWATCH[color] || '🎨') + (SLOT_ICON[slot] || '👔');
@@ -2925,6 +2959,11 @@
           </button>`);
 
       box.innerHTML = parts.join('');
+      if (tagsEl) {
+        tagsEl.innerHTML = tagDefs.map((t) =>
+          `<button type="button" class="dlg-tag" data-dlg-sec="${t.id}">${t.label}</button>`
+        ).join('');
+      }
     }
 
     const dlgListBtn = document.getElementById('dlgListBtn');
@@ -2947,6 +2986,17 @@
         dlgPanel.classList.remove('open');
       }
     });
+    const dlgTagsEl = document.getElementById('dlgTags');
+    if (dlgTagsEl && !dlgTagsEl._bound) {
+      dlgTagsEl._bound = true;
+      dlgTagsEl.addEventListener('click', (e) => {
+        const tag = e.target.closest('button[data-dlg-sec]');
+        if (!tag) return;
+        const sec = document.getElementById('dlg-sec-' + tag.dataset.dlgSec);
+        if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        dlgTagsEl.querySelectorAll('.dlg-tag').forEach((b) => b.classList.toggle('active', b === tag));
+      });
+    }
     document.getElementById('dlgList').addEventListener('click', (e) => {
       const outfitBtn = e.target.closest('button[data-outfit]');
       if (outfitBtn) {
@@ -3125,7 +3175,8 @@
     // ===== Interactive Theater V1 + Stickers =====
     const STICKERS_KEY = 'petworld-stickers-v1';
     const STICKER_DEFS = [
-      { id: 'farm_morning', emoji: '🌾', title: 'Farm Morning', burst: ['🌾', '⭐', '✨', '🎉', '💛'] }
+      { id: 'farm_morning', emoji: '🌾', title: 'Farm Morning', burst: ['🌾', '⭐', '✨', '🎉', '💛'] },
+      { id: 'beach_friends', emoji: '🏖️', title: 'Beach Friends', burst: ['🌊', '🏖️', '⛵', '⭐', '✨', '🎉'] }
     ];
     let STICKERS = {};
     let STORIES_INDEX = [];
@@ -3281,7 +3332,13 @@
           promptEl.classList.add('idle');
         }
       }
-      if (hintEl) hintEl.textContent = opts.hint || '';
+      if (hintEl) {
+        const lines = [];
+        if (opts.guide) lines.push(opts.guide);
+        else if (opts.zh) lines.push(opts.zh);
+        if (opts.hint) lines.push(opts.hint);
+        hintEl.textContent = lines.join('\n');
+      }
     }
 
     function runTheaterAction(action) {
@@ -3330,6 +3387,13 @@
         setHappy(2400);
         if (typeof setPetPlayPose === 'function') setPetPlayPose('dance', 3200);
         burst(['🎵', '✨', '💖'], state.x, state.y - 70);
+        return;
+      }
+      if (a === 'row') {
+        holdStill(3200);
+        setHappy(2400);
+        if (typeof setPetPlayPose === 'function') setPetPlayPose('dance', 2800);
+        burst(['⛵', '🌊', '✨'], state.x, state.y - 70);
         return;
       }
     }
@@ -3442,7 +3506,7 @@
           return;
         }
         if (beat.type === 'act' || (!beat.expect || !beat.expect.length) && beat.type !== 'wait' && beat.type !== 'say') {
-          updateTheaterHud({ prompt: beat.text || '…', hint: '' });
+          updateTheaterHud({ prompt: beat.text || '…', hint: beat.hint || '', guide: beat.guide || '', zh: beat.zh || '' });
           if (beat.action) runTheaterAction(beat.action);
           await playTheaterLine(beat.text, beat.audio);
           const waitMs = beat.timeoutMs || 3800;
@@ -3456,7 +3520,7 @@
         // wait / say with expect
         theaterState.waiting = true;
         const expectShow = (beat.expect && beat.expect[0]) ? beat.expect[0] : '…';
-        updateTheaterHud({ say: expectShow, hint: beat.hint || '' });
+        updateTheaterHud({ say: expectShow, hint: beat.hint || '', guide: beat.guide || '', zh: beat.zh || '' });
         if (beat.text) say(beat.text, 2800);
         const timeoutMs = beat.timeoutMs || 10000;
         theaterState.timer = setTimeout(() => onTheaterTimeout(beat), timeoutMs);
@@ -3474,14 +3538,18 @@
         await playTheaterLine(fb, beat.fallbackAudio);
         updateTheaterHud({
           say: (beat.expect && beat.expect[0]) || '…',
-          hint: beat.hint || 'Try again'
+          hint: beat.hint || 'Try again',
+          guide: beat.guide || '',
+          zh: beat.zh || ''
         });
         theaterState.timer = setTimeout(() => onTheaterTimeout(beat), beat.timeoutMs || 10000);
       } else {
         // allow continuous retry — replay hint softly
         updateTheaterHud({
           say: (beat.expect && beat.expect[0]) || '…',
-          hint: (beat.hint || 'Keep trying!') + ' · say stop theater to quit'
+          hint: (beat.hint || 'Keep trying!') + ' · say stop theater to quit',
+          guide: beat.guide || '',
+          zh: beat.zh || ''
         });
         theaterState.timer = setTimeout(() => onTheaterTimeout(beat), beat.timeoutMs || 10000);
       }
@@ -3503,6 +3571,10 @@
       if (!t) return false;
       if (!theaterState.active) {
         // allow voice start
+        if (/\b(beach friends|start beach|beach theater)\b/.test(t)) {
+          startTheater('beach_friends');
+          return true;
+        }
         if (/\b(start theater|farm morning|play story|start story)\b/.test(t) || /^(theater|story)$/.test(t)) {
           startTheater('farm_morning');
           return true;
@@ -3526,9 +3598,13 @@
           advanceBeat();
         } else {
           // consume utterance; soft nudge
-          if (beat && beat.hint) {
-            const hintEl = document.getElementById('theaterHint');
-            if (hintEl) hintEl.textContent = beat.hint;
+          if (beat) {
+            updateTheaterHud({
+              say: (beat.expect && beat.expect[0]) || '…',
+              hint: beat.hint || '',
+              guide: beat.guide || '',
+              zh: beat.zh || ''
+            });
           }
         }
         return true;
