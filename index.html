@@ -720,6 +720,11 @@
     .dock-toggle.top { top: 14px; right: 14px; }
     .dock-toggle.learn-btn { right: 14px; top: 54px; }
     .dock-toggle.bottom { left: auto; right: 14px; bottom: 14px; transform: none; }
+    .version-label {
+      position: fixed; right: 14px; bottom: 1px; z-index: 6;
+      color: rgba(255,255,255,0.65); font-size: 10px; line-height: 11px;
+      pointer-events: none; user-select: none;
+    }
     body.hide-picker .picker, body.hide-picker .hint { display: none; }
     body.hide-learn .learn { display: none; }
     body.hide-actions .panel { display: none; }
@@ -1200,6 +1205,7 @@
 <button type="button" class="dock-toggle top" id="togglePicker" title="形象菜单">形象</button>
   <button type="button" class="dock-toggle learn-btn" id="toggleLearn" title="英语菜单">英语</button>
   <button type="button" class="dock-toggle bottom" id="toggleActions" title="操作菜单">操作</button>
+  <div class="version-label" id="versionLabel" aria-label="Version"></div>
 
 <div class="picker" id="picker"></div>
 
@@ -1352,6 +1358,9 @@
   </div>
 
   <script>
+    const APP_VERSION = 'v20260928.a';
+    document.getElementById('versionLabel').textContent = APP_VERSION;
+
     const FORMS = [
       { id: 'cat', name: '小猫', emoji: '🐱' },
       { id: 'dog', name: '小狗', emoji: '🐶' },
