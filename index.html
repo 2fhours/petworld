@@ -3302,6 +3302,9 @@
     let recogResultSession = 0;   // session currently allowed to deliver results
     let recogWantStart = null;    // { lang, session } queued until onend
     let recogStarting = false;    // true between beginRecognition and onstart/onerror
+    let recogEnding = false;      // true after stop()/onerror until onend (engine not ready)
+    let recogLastInterim = '';    // last interim transcript (flush onend if no final)
+    let recogGotFinal = false;    // true if this session already routed a final result
     const MIC_LANG_KEY = 'proto-mic-lang';
     function getMicLang() {
       const v = localStorage.getItem(MIC_LANG_KEY);
@@ -4016,13 +4019,20 @@
       if (!recognition || !payload) return false;
       recogWantStart = null;
       recogStarting = true;
+      recogEnding = false;
+      recogLastInterim = '';
+      recogGotFinal = false;
       try {
         recognition.lang = payload.lang || getMicLang();
+        // interimResults only for quiz 跟读 live text; Speak/dialogs need finals-only
+        // like pre-refactor (interim+require-isFinal dropped dialog utterances).
+        const quizListen = (typeof quizState !== 'undefined' && quizState.active && quizState.waiting);
+        recognition.interimResults = !!quizListen;
         recogResultSession = payload.session;
         recognition.start();
         return true;
       } catch (err) {
-        // InvalidStateError: engine still closing — queue and stop again (once)
+        // InvalidStateError: engine still closing — queue until onend
         recogStarting = false;
         if (payload._retried) {
           if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
@@ -4035,6 +4045,7 @@
         }
         payload._retried = true;
         recogWantStart = payload;
+        recogEnding = true;
         try { recognition.stop(); } catch (e) {}
         return false;
       }
@@ -4043,9 +4054,13 @@
     function requestRecognitionStart(lang) {
       if (!recognition) return false;
       const payload = { lang: lang || getMicLang(), session: ++recogActiveSession };
-      if (recognizing || recogStarting) {
+      // After onerror, recognizing may be false while engine still ending — must wait for onend.
+      if (recognizing || recogStarting || recogEnding) {
         recogWantStart = payload;
-        try { recognition.stop(); } catch (e) {}
+        try {
+          if (recognizing || recogStarting) recognition.stop();
+        } catch (e) {}
+        if (recognizing || recogStarting) recogEnding = true;
         return true;
       }
       return beginRecognition(payload);
@@ -4053,11 +4068,78 @@
 
     function requestRecognitionStop() {
       recogWantStart = null;
+      // Snapshot before clearing recogStarting (previous bug: cleared first so stop() never ran).
+      const shouldStop = recognizing || recogStarting || recogEnding;
       recogStarting = false;
       if (!recognition) return;
-      if (recognizing || recogStarting) {
+      if (shouldStop) {
+        recogEnding = true;
         try { recognition.stop(); } catch (e) {}
       }
+    }
+
+    function routeRecognitionTranscript(alts, transcript) {
+      const list = (alts && alts.length) ? alts : [transcript || ''];
+      lastHeard = String(list[0] || transcript || '').trim();
+      let actionNote = '';
+      // Quiz intercepts mic first when active (or quiz start phrases)
+      if (typeof maybeHandleQuizCommand === 'function' && maybeHandleQuizCommand(lastHeard, list)) {
+        setMicStatus('听到：' + lastHeard + ' → Quiz');
+        return;
+      }
+      // Theater intercepts mic when active (or theater start phrases)
+      let theaterHit = false;
+      for (const a of list) {
+        if (typeof maybeHandleTheaterCommand === 'function' && maybeHandleTheaterCommand(a)) {
+          theaterHit = true; actionNote = 'Theater'; break;
+        }
+      }
+      if (theaterHit) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+      // Outfit wearables before dialog match
+      let suited = false;
+      for (const a of list) {
+        if (maybeHandleOutfitCommand(a)) { suited = true; actionNote = 'Outfit'; break; }
+      }
+      if (suited) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+      let sceneHit = false;
+      for (const a of list) {
+        if (typeof maybeHandleSceneCommand === 'function' && maybeHandleSceneCommand(a)) {
+          sceneHit = true; actionNote = 'Scene'; break;
+        }
+      }
+      if (sceneHit) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+      // Eat commands first: "eat apple"
+      let ate = false;
+      for (const a of list) {
+        if (maybeHandleEatCommand(a)) { ate = true; actionNote = 'Feed'; break; }
+      }
+      if (ate) { setMicStatus('听到：' + lastHeard + (actionNote ? ' → ' + actionNote : '')); return; }
+      // Animal switch: "cat" / "I am a dog"
+      let switched = false;
+      for (const a of list) {
+        if (maybeHandleAnimalCommand(a)) { switched = true; actionNote = 'Animal'; break; }
+      }
+      if (switched) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+      let played = false;
+      for (const a of list) {
+        if (maybeHandlePlayCommand(a)) { played = true; actionNote = 'Play'; break; }
+      }
+      if (played) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+      let sang = false;
+      for (const a of list) {
+        if (maybeHandleSingCommand(a)) { sang = true; actionNote = 'Sing'; break; }
+      }
+      if (sang) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+      let matched = null;
+      for (const a of list) {
+        matched = matchDialog(a);
+        if (matched && matched.id !== 'fallback') break;
+      }
+      if (!matched) matched = matchDialog(lastHeard);
+      if (matched && matched.id !== 'fallback') actionNote = matched.id;
+      else if (matched) actionNote = 'fallback';
+      setMicStatus('听到：' + lastHeard + (actionNote ? ' → ' + actionNote : ''));
+      speakDialog(matched);
     }
 
     function startQuizRepeat() {
@@ -4067,8 +4149,8 @@
       const fb = document.getElementById('quizFeedback');
       if (fb) { fb.textContent = '🎤 启动麦克风…'; fb.className = 'qz-feedback'; }
       setMicStatus('正在启动跟读麦克风…');
-      // English words need en-US; zh-CN often yields empty/wrong transcripts for EN vocab
-      if (typeof setMicLang === 'function') setMicLang('en-US');
+      // Force en-US for this listen only — do NOT setMicLang() (that stuck EN in localStorage
+      // and broke Speak dialogs/commands after any 跟读).
       pausePlaybackForMic();
       if (!recognition) {
         quizState.waiting = false;
@@ -4155,13 +4237,14 @@
     if (SpeechRec) {
       recognition = new SpeechRec();
       recognition.lang = getMicLang();
-      // interim helps 跟读 show live text; only route on isFinal
-      recognition.interimResults = true;
+      // Default finals-only (Speak/dialogs). beginRecognition enables interim for quiz 跟读.
+      recognition.interimResults = false;
       recognition.maxAlternatives = 5;
       recognition.continuous = false;
       recognition.onstart = () => {
         recognizing = true;
         recogStarting = false;
+        recogEnding = false;
         document.getElementById('micBtn').classList.add('listening');
         document.getElementById('micBtn').textContent = '🎤...';
         if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
@@ -4175,6 +4258,7 @@
       recognition.onend = () => {
         recognizing = false;
         recogStarting = false;
+        recogEnding = false;
         document.getElementById('micBtn').classList.remove('listening');
         document.getElementById('micBtn').textContent = '🎤';
         // Chrome requires waiting for onend before start() after stop()
@@ -4189,6 +4273,19 @@
           }, 30);
           return;
         }
+        // Safety net: interim-only session never got isFinal (can happen with interimResults)
+        if (!recogGotFinal && recogLastInterim && recogResultSession === recogActiveSession) {
+          const heard = recogLastInterim;
+          recogLastInterim = '';
+          if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting && !quizState.judged) {
+            maybeHandleQuizCommand(heard, [heard]);
+            return;
+          }
+          if (!(typeof quizState !== 'undefined' && quizState.active && quizState.waiting)) {
+            routeRecognitionTranscript([heard], heard);
+            return;
+          }
+        }
         // Session ended with no final transcript while 跟读 still waiting
         if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting && !quizState.judged) {
           quizState.waiting = false;
@@ -4200,6 +4297,8 @@
       recognition.onerror = (e) => {
         recognizing = false;
         recogStarting = false;
+        // Engine still not ready until onend — prevent Speak start() race that stuck recogWantStart
+        recogEnding = true;
         document.getElementById('micBtn').classList.remove('listening');
         document.getElementById('micBtn').textContent = '🎤';
         // aborted = intentional stop (mic toggle or restart before 跟读) — not a user error
@@ -4254,74 +4353,19 @@
 
         // Live interim feedback during 跟读 (do not judge yet)
         if (!hasFinal) {
+          if (interim) recogLastInterim = interim;
           if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting && interim) {
             const fb = document.getElementById('quizFeedback');
             if (fb) { fb.textContent = '🎤 ' + interim; fb.className = 'qz-feedback'; }
             setMicStatus('听到：' + interim);
           }
+          // Speak path uses interimResults=false so this is quiz-only; do not route yet
           return;
         }
 
-        lastHeard = (alts[0] || '').trim();
-        let actionNote = '';
-        // Quiz intercepts mic first when active (or quiz start phrases)
-        if (typeof maybeHandleQuizCommand === 'function' && maybeHandleQuizCommand(lastHeard, alts)) {
-          setMicStatus('听到：' + lastHeard + ' → Quiz');
-          return;
-        }
-        // Theater intercepts mic when active (or theater start phrases)
-        let theaterHit = false;
-        for (const a of alts) {
-          if (typeof maybeHandleTheaterCommand === 'function' && maybeHandleTheaterCommand(a)) {
-            theaterHit = true; actionNote = 'Theater'; break;
-          }
-        }
-        if (theaterHit) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
-        // Outfit wearables before dialog match
-        let suited = false;
-        for (const a of alts) {
-          if (maybeHandleOutfitCommand(a)) { suited = true; actionNote = 'Outfit'; break; }
-        }
-        if (suited) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
-        let sceneHit = false;
-        for (const a of alts) {
-          if (typeof maybeHandleSceneCommand === 'function' && maybeHandleSceneCommand(a)) {
-            sceneHit = true; actionNote = 'Scene'; break;
-          }
-        }
-        if (sceneHit) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
-        // Eat commands first: "eat apple"
-        let ate = false;
-        for (const a of alts) {
-          if (maybeHandleEatCommand(a)) { ate = true; actionNote = 'Feed'; break; }
-        }
-        if (ate) { setMicStatus('听到：' + lastHeard + (actionNote ? ' → ' + actionNote : '')); return; }
-        // Animal switch: "cat" / "I am a dog"
-        let switched = false;
-        for (const a of alts) {
-          if (maybeHandleAnimalCommand(a)) { switched = true; actionNote = 'Animal'; break; }
-        }
-        if (switched) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
-        let played = false;
-        for (const a of alts) {
-          if (maybeHandlePlayCommand(a)) { played = true; actionNote = 'Play'; break; }
-        }
-        if (played) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
-        let sang = false;
-        for (const a of alts) {
-          if (maybeHandleSingCommand(a)) { sang = true; actionNote = 'Sing'; break; }
-        }
-        if (sang) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
-        let matched = null;
-        for (const a of alts) {
-          matched = matchDialog(a);
-          if (matched && matched.id !== 'fallback') break;
-        }
-        if (!matched) matched = matchDialog(lastHeard);
-        if (matched && matched.id !== 'fallback') actionNote = matched.id;
-        else if (matched) actionNote = 'fallback';
-        setMicStatus('听到：' + lastHeard + (actionNote ? ' → ' + actionNote : ''));
-        speakDialog(matched);
+        recogGotFinal = true;
+        recogLastInterim = '';
+        routeRecognitionTranscript(alts, alts[0] || '');
       };
     }
 
@@ -4344,7 +4388,20 @@
         say('请用 Chrome/Edge 并允许麦克风', 2800);
         return;
       }
-      if (recognizing || recogStarting || recogWantStart) {
+      // Stuck queue/ending: flags set but engine idle (onend never came) → clear and start
+      if ((recogWantStart || recogEnding) && !recognizing && !recogStarting) {
+        // If ending flag lingered without a live session, do not fake-stop forever
+        if (recogEnding && !recogWantStart) {
+          recogEnding = false;
+        } else if (recogWantStart && !recogEnding) {
+          recogWantStart = null;
+        } else {
+          // both set while idle: drop stale queue, clear ending, fall through to start
+          recogWantStart = null;
+          recogEnding = false;
+        }
+      }
+      if (recognizing || recogStarting || recogWantStart || recogEnding) {
         // User cancel — clear pending restart and any 跟读 wait
         if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
           quizState.waiting = false;
