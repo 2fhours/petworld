@@ -3999,7 +3999,8 @@
       quizState.waiting = true;
       quizState.judged = false;
       const fb = document.getElementById('quizFeedback');
-      if (fb) { fb.textContent = '🎤 Listening…'; fb.className = 'qz-feedback'; }
+      if (fb) { fb.textContent = '🎤 正在听，请跟读…'; fb.className = 'qz-feedback'; }
+      setMicStatus('正在听，请跟读单词…');
       // ensure EN for word practice
       if (typeof setMicLang === 'function') setMicLang('en-US');
       if (recognition) {
@@ -4012,11 +4013,14 @@
             recognition.lang = 'en-US';
             recognition.start();
           } catch (err) {
-            if (fb) { fb.textContent = '无法启动麦克风'; fb.className = 'qz-feedback bad'; }
+            quizState.waiting = false;
+            if (fb) { fb.textContent = '🎤 无法启动麦克风，请重试'; fb.className = 'qz-feedback bad'; }
+            setMicStatus('无法启动麦克风，请允许麦克风后重试');
           }
         }, recognizing ? 280 : 40);
       } else {
-        if (fb) { fb.textContent = '请用 Chrome/Edge'; fb.className = 'qz-feedback bad'; }
+        quizState.waiting = false;
+        if (fb) { fb.textContent = '🎤 请用 Chrome/Edge'; fb.className = 'qz-feedback bad'; }
         say('请用 Chrome/Edge 并允许麦克风', 2200);
       }
     }
@@ -4080,7 +4084,13 @@
         recognizing = true;
         document.getElementById('micBtn').classList.add('listening');
         document.getElementById('micBtn').textContent = '🎤...';
-        setMicStatus('正在听…');
+        if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
+          setMicStatus('正在听，请跟读单词…');
+          const fb = document.getElementById('quizFeedback');
+          if (fb) { fb.textContent = '🎤 正在听，请跟读…'; fb.className = 'qz-feedback'; }
+        } else {
+          setMicStatus('正在听…');
+        }
       };
       recognition.onend = () => {
         recognizing = false;
@@ -4091,16 +4101,35 @@
         recognizing = false;
         document.getElementById('micBtn').classList.remove('listening');
         document.getElementById('micBtn').textContent = '🎤';
+        // aborted = intentional stop (mic toggle or restart before 跟读) — not a user error
+        if (e.error === 'aborted') return;
         const msg = {
-          'not-allowed': '麦克风被拒绝 / Mic blocked — 请在浏览器站点设置中允许麦克风 Allow mic in site settings',
-          'service-not-allowed': '麦克风被拒绝 / Mic blocked — 请在浏览器站点设置中允许麦克风 Allow mic in site settings',
-          'no-speech': '没听到说话 / No speech — 请再说一次 Try again',
-          'audio-capture': '未找到麦克风 / No microphone found',
-          'network': '语音识别需要网络 / Speech recognition needs network'
-        }[e.error] || ('识别出错 / Error：' + e.error);
+          'not-allowed': '麦克风被拒绝，请在浏览器允许麦克风后重试',
+          'service-not-allowed': '麦克风被拒绝，请在浏览器允许麦克风后重试',
+          'no-speech': '没听到说话，请再试一次',
+          'audio-capture': '未找到麦克风',
+          'network': '语音识别需要网络，请检查网络后重试',
+          'bad-grammar': '语音识别配置出错',
+          'language-not-supported': '当前语言不支持语音识别'
+        }[e.error] || '识别失败，请再试一次';
         setMicStatus(msg);
-        say(e.error === 'not-allowed' || e.error === 'service-not-allowed'
-          ? '请允许麦克风' : msg, 2800);
+        if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
+          quizState.waiting = false;
+          const fb = document.getElementById('quizFeedback');
+          if (fb) {
+            let qmsg = '🎤 ' + msg;
+            if (e.error === 'no-speech') qmsg = '🎤 没听到，请再点跟读';
+            else if (e.error === 'not-allowed' || e.error === 'service-not-allowed') qmsg = '🎤 请允许麦克风后重试';
+            fb.textContent = qmsg;
+            fb.className = 'qz-feedback bad';
+          }
+        }
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+          say('请允许麦克风', 2800);
+        } else if (e.error === 'network' || e.error === 'audio-capture') {
+          say(msg, 2400);
+        }
+        // no-speech / unknown: status + quiz feedback only (avoid pet-bubble "出错" spam)
       };
       recognition.onresult = (ev) => {
         const alts = [];
