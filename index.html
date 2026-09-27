@@ -1046,6 +1046,96 @@
     .theater-hud .th-prompt.idle { font-size: 14px; font-weight: 550; color: #fde68a; }
     .theater-hud .th-hint { font-size: 11px; color: rgba(254,243,199,0.7); text-align: center; white-space: pre-line; }
 
+    /* Word Quiz 抽读 fullscreen */
+    .quiz-overlay {
+      position: fixed; inset: 0; z-index: 40;
+      display: none; flex-direction: column;
+      background: rgba(2,6,23,0.94);
+      color: #e2e8f0; backdrop-filter: blur(10px);
+    }
+    .quiz-overlay.open { display: flex; }
+    .quiz-overlay .qz-top {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px 8px; flex-shrink: 0;
+    }
+    .quiz-overlay .qz-title { flex: 1; font-size: 16px; font-weight: 700; color: #a5b4fc; }
+    .quiz-overlay .qz-progress { font-size: 13px; color: rgba(226,232,240,0.7); }
+    .quiz-overlay .qz-close {
+      appearance: none; border: 0; border-radius: 999px; width: 36px; height: 36px;
+      background: rgba(255,255,255,0.1); color: #e2e8f0; cursor: pointer; font-size: 18px;
+    }
+    .quiz-overlay .qz-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; padding: 0 16px 16px; }
+    .quiz-pick .qz-search {
+      width: 100%; box-sizing: border-box; margin-bottom: 8px;
+      padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06); color: #e2e8f0; font: inherit; font-size: 14px;
+    }
+    .quiz-pick .qz-meta { font-size: 12px; color: rgba(226,232,240,0.65); margin-bottom: 8px; }
+    .quiz-pick .qz-list {
+      flex: 1; overflow: auto; display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px; align-content: start; padding-bottom: 8px;
+    }
+    .quiz-pick .qz-item {
+      appearance: none; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 10px 10px; text-align: left;
+      background: rgba(255,255,255,0.05); color: #e2e8f0; cursor: pointer;
+      font: inherit; font-size: 13px; display: flex; align-items: center; gap: 8px;
+    }
+    .quiz-pick .qz-item.selected {
+      background: rgba(99,102,241,0.35); border-color: rgba(165,180,252,0.55);
+    }
+    .quiz-pick .qz-item .ck { width: 16px; text-align: center; opacity: 0.7; }
+    .quiz-pick .qz-item .zh { font-size: 11px; color: rgba(226,232,240,0.55); }
+    .quiz-pick .qz-foot {
+      flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .quiz-pick .qz-foot .count { flex: 1; font-size: 13px; color: #c7d2fe; min-width: 80px; }
+    .quiz-pick .qz-foot button {
+      appearance: none; border: 0; border-radius: 999px; padding: 8px 12px;
+      font: inherit; font-size: 13px; color: #e2e8f0;
+      background: rgba(255,255,255,0.1); cursor: pointer;
+    }
+    .quiz-pick .qz-foot button.primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6); font-weight: 650;
+    }
+    .quiz-pick .qz-foot button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .quiz-practice {
+      flex: 1; display: none; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; text-align: center; padding: 24px 16px 40px;
+    }
+    .quiz-practice.open { display: flex; }
+    .quiz-practice .qz-word {
+      appearance: none; border: 0; background: transparent; color: #fff;
+      font: inherit; font-size: clamp(42px, 12vw, 88px); font-weight: 800;
+      letter-spacing: 0.02em; cursor: pointer; line-height: 1.15;
+      text-shadow: 0 4px 24px rgba(99,102,241,0.45);
+      max-width: 94vw; word-break: break-word;
+    }
+    .quiz-practice .qz-sub { font-size: 16px; color: rgba(226,232,240,0.7); }
+    .quiz-practice .qz-ipa { font-size: 18px; color: #a5b4fc; }
+    .quiz-practice .qz-feedback {
+      min-height: 28px; font-size: 20px; font-weight: 650;
+      transition: opacity 0.2s;
+    }
+    .quiz-practice .qz-feedback.ok { color: #4ade80; }
+    .quiz-practice .qz-feedback.bad { color: #fb7185; }
+    .quiz-practice .qz-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+    .quiz-practice .qz-actions button {
+      appearance: none; border: 0; border-radius: 999px; padding: 14px 22px;
+      font: inherit; font-size: 16px; font-weight: 650; color: #fff; cursor: pointer;
+      background: rgba(255,255,255,0.12);
+    }
+    .quiz-practice .qz-actions button.repeat {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+    }
+    .quiz-practice .qz-actions button.next {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    }
+    .quiz-practice .qz-hint { font-size: 12px; color: rgba(226,232,240,0.5); margin-top: 4px; }
+
+
     /* Stickers panel (non-occluding, like atlas) */
     .stickers-panel {
       position: fixed; right: 16px; top: 96px; bottom: 24px; z-index: 9;
@@ -1147,6 +1237,7 @@
     <input class="search" id="enSearch" type="search" placeholder="搜索单词 / Search words" autocomplete="off" />
     <div class="search-meta" id="enSearchMeta"></div>
     <div class="list" id="enList"></div>
+    <button type="button" class="atlas-btn" id="btnQuiz">🎯 抽读 / Quiz</button>
     <button type="button" class="atlas-btn" id="btnAtlas">📖 图鉴 / Atlas</button>
     <button type="button" class="atlas-btn" id="btnStickers">⭐ Stickers</button>
     <div class="meta">可爱童声音色 AnaNeural · 非浏览器简易 TTS</div>
@@ -1168,6 +1259,7 @@
     <button type="button" data-act="sing">Sing</button>
     <button type="button" data-act="sleep">Sleep</button>
     <button type="button" data-act="theater" title="Farm Morning theater">Theater</button>
+    <button type="button" data-act="quiz" title="Word Quiz 抽读">Quiz</button>
     <button type="button" data-act="stickers" title="Stickers">Stickers</button>
     <button type="button" data-wear="hat" title="Cycle hat color">Hat</button>
     <button type="button" data-wear="clothes" title="Cycle clothes color">Clothes</button>
@@ -1220,6 +1312,38 @@
     <div class="stickers-meta" id="stickersMeta">0 / 1</div>
     <div class="stickers-grid" id="stickersGrid"></div>
     <button type="button" class="stickers-close" id="stickersClose">关闭 Close</button>
+  </div>
+
+  <div class="quiz-overlay" id="quizOverlay" aria-hidden="true" aria-label="Word Quiz">
+    <div class="qz-top">
+      <div class="qz-title" id="quizTitle">🎯 抽读 · Word Quiz</div>
+      <div class="qz-progress" id="quizProgress"></div>
+      <button type="button" class="qz-close" id="quizClose" title="Exit quiz">✕</button>
+    </div>
+    <div class="qz-body quiz-pick" id="quizPick">
+      <input class="qz-search" id="quizSearch" type="search" placeholder="搜索单词 / Search" autocomplete="off" />
+      <div class="qz-meta" id="quizPickMeta">选择要练习的单词</div>
+      <div class="qz-list" id="quizList"></div>
+      <div class="qz-foot">
+        <div class="count" id="quizCount">已选 0</div>
+        <button type="button" data-quiz-rand="3">随机 3</button>
+        <button type="button" data-quiz-rand="5">随机 5</button>
+        <button type="button" data-quiz-rand="8">随机 8</button>
+        <button type="button" data-quiz-rand="10">随机 10</button>
+        <button type="button" class="primary" id="quizStart" disabled>开始 Start</button>
+      </div>
+    </div>
+    <div class="quiz-practice" id="quizPractice">
+      <button type="button" class="qz-word" id="quizWord" title="Tap to hear">Hello</button>
+      <div class="qz-ipa" id="quizIpa"></div>
+      <div class="qz-sub" id="quizZh"></div>
+      <div class="qz-feedback" id="quizFeedback"></div>
+      <div class="qz-actions">
+        <button type="button" class="repeat" id="quizRepeat">🎤 跟读</button>
+        <button type="button" class="next" id="quizNext">下一个 Next</button>
+      </div>
+      <div class="qz-hint">点单词听发音 · 跟读后用麦克风说出来 · Esc / ✕ 退出</div>
+    </div>
   </div>
 
   <script>
@@ -2928,6 +3052,17 @@
             <span class="reply">Stop the story</span>
           </button>`);
 
+      // Quiz 抽读
+      pushSec('quiz', 'Quiz');
+      parts.push(`<button type="button" class="dlg-item" data-quiz-open="1">
+            <span class="say">🎯 Say: word quiz / start quiz</span>
+            <span class="reply">Open 抽读 fullscreen practice</span>
+          </button>`);
+      parts.push(`<button type="button" class="dlg-item" data-quiz-open="1">
+            <span class="say">🎤 Pick words → 跟读 → ✅/❌</span>
+            <span class="reply">Tap word for audio, then speak it back</span>
+          </button>`);
+
       // E. Outfit
       pushSec('outfit', 'Outfit');
       const outfitSlots = ['hat', 'clothes', 'glasses'];
@@ -3015,6 +3150,11 @@
         else say('OK, no ' + slot + '.', 1600);
         return;
       }
+      const quizOpenBtn = e.target.closest('button[data-quiz-open]');
+      if (quizOpenBtn) {
+        openQuiz();
+        return;
+      }
       const theaterBtn = e.target.closest('button[data-theater]');
       if (theaterBtn) {
         startTheater(theaterBtn.dataset.theater || 'farm_morning');
@@ -3078,6 +3218,7 @@
         '#stickersPanel', '#stickersClose',
         '.panel', '#toggleActions',
         '#theaterHud', '#theaterClose',
+        '#quizOverlay', '#quizClose', '#btnQuiz',
         '#adModalBackdrop', '#adDemoOverlay',
         '#micWrap', '#micBtn', '#micLang', '#pet'
       ].join(','));
@@ -3450,6 +3591,7 @@
       const sceneId = story.scene || meta.scene || 'farm';
       if (typeof setScene === 'function') setScene(sceneId, { silent: true, manual: true });
 
+      if (typeof exitQuiz === 'function' && quizState && quizState.active) exitQuiz();
       theaterState.active = true;
       theaterState.storyId = story.id || id;
       theaterState.story = story;
@@ -3614,6 +3756,314 @@
     }
 
 
+
+    /* ===== Word Quiz 抽读 ===== */
+    const quizState = {
+      active: false,
+      phase: 'pick', // pick | practice
+      selectedIds: new Set(),
+      pool: [],
+      current: null,
+      waiting: false,
+      judged: false,
+      done: 0,
+      total: 0,
+      filter: '',
+      lastN: 5
+    };
+
+    function normalizeQuizText(s) {
+      return String(s || '').toLowerCase().trim()
+        .replace(/[^\w\s\u4e00-\u9fff']/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function quizWordMatches(transcript, word) {
+      if (!word) return false;
+      const t = normalizeQuizText(transcript);
+      if (!t) return false;
+      const targets = [];
+      if (word.text) targets.push(word.text);
+      if (word.id) targets.push(String(word.id).replace(/^w_/, '').replace(/_/g, ' '));
+      for (const target of targets) {
+        const g = normalizeQuizText(target);
+        if (!g) continue;
+        if (t === g) return true;
+        if (typeof matchTrigger === 'function' && matchTrigger(t, g)) return true;
+        // close: transcript contains full target as phrase
+        if (g.length >= 2 && (t.includes(g) || g.includes(t))) {
+          // avoid tiny false positives
+          if (Math.min(t.length, g.length) >= 2 && Math.abs(t.length - g.length) <= Math.max(3, Math.floor(g.length * 0.4))) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function openQuiz() {
+      if (typeof stopTheater === 'function' && theaterState && theaterState.active) {
+        stopTheater({ silent: true });
+      }
+      quizState.active = true;
+      quizState.phase = 'pick';
+      quizState.waiting = false;
+      quizState.judged = false;
+      quizState.current = null;
+      quizState.done = 0;
+      quizState.total = 0;
+      quizState.filter = '';
+      if (!quizState.selectedIds) quizState.selectedIds = new Set();
+      const ov = document.getElementById('quizOverlay');
+      const pick = document.getElementById('quizPick');
+      const prac = document.getElementById('quizPractice');
+      const search = document.getElementById('quizSearch');
+      if (ov) {
+        ov.classList.add('open');
+        ov.setAttribute('aria-hidden', 'false');
+      }
+      if (pick) pick.style.display = 'flex';
+      if (prac) prac.classList.remove('open');
+      if (search) search.value = '';
+      const title = document.getElementById('quizTitle');
+      if (title) title.textContent = '🎯 抽读 · Word Quiz';
+      const prog = document.getElementById('quizProgress');
+      if (prog) prog.textContent = '';
+      renderQuizPickList();
+      updateQuizPickCount();
+      say('Word quiz', 1400);
+    }
+
+    function exitQuiz() {
+      const was = quizState.active;
+      quizState.active = false;
+      quizState.phase = 'pick';
+      quizState.waiting = false;
+      quizState.judged = false;
+      quizState.current = null;
+      quizState.pool = [];
+      const ov = document.getElementById('quizOverlay');
+      if (ov) {
+        ov.classList.remove('open');
+        ov.setAttribute('aria-hidden', 'true');
+      }
+      const prac = document.getElementById('quizPractice');
+      if (prac) prac.classList.remove('open');
+      const pick = document.getElementById('quizPick');
+      if (pick) pick.style.display = 'flex';
+      if (was) say('Quiz over', 1200);
+    }
+
+    function renderQuizPickList() {
+      const list = document.getElementById('quizList');
+      const meta = document.getElementById('quizPickMeta');
+      if (!list || !WORDS || !WORDS.items) return;
+      const q = (quizState.filter || '').trim().toLowerCase();
+      const items = WORDS.items;
+      const idxs = items.map((it, i) => i).filter((i) => {
+        if (!q) return true;
+        const it = items[i];
+        const bag = [it.text, it.zh, it.ipa, it.id].join(' ').toLowerCase();
+        return bag.includes(q);
+      });
+      if (meta) meta.textContent = q ? `找到 ${idxs.length} 个` : `共 ${items.length} 个单词 · 勾选或随机抽取`;
+      list.innerHTML = idxs.map((i) => {
+        const it = items[i];
+        const sel = quizState.selectedIds.has(it.id);
+        return `<button type="button" class="qz-item${sel ? ' selected' : ''}" data-quiz-id="${it.id}">
+          <span class="ck">${sel ? '☑' : '☐'}</span>
+          <span><strong>${it.text}</strong><div class="zh">${it.zh || ''}</div></span>
+        </button>`;
+      }).join('');
+    }
+
+    function updateQuizPickCount() {
+      const el = document.getElementById('quizCount');
+      const n = quizState.selectedIds.size;
+      if (el) el.textContent = '已选 ' + n;
+      const start = document.getElementById('quizStart');
+      if (start) start.disabled = n < 1;
+    }
+
+    function toggleQuizSelect(id) {
+      if (!id) return;
+      if (quizState.selectedIds.has(id)) quizState.selectedIds.delete(id);
+      else quizState.selectedIds.add(id);
+      renderQuizPickList();
+      updateQuizPickCount();
+    }
+
+    function quizRandomPick(n) {
+      if (!WORDS || !WORDS.items || !WORDS.items.length) return;
+      const nWant = Math.max(1, Math.min(Number(n) || 5, WORDS.items.length));
+      quizState.lastN = nWant;
+      const pool = WORDS.items.slice();
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+      }
+      quizState.selectedIds = new Set(pool.slice(0, nWant).map((it) => it.id));
+      renderQuizPickList();
+      updateQuizPickCount();
+      say('Picked ' + nWant, 1200);
+    }
+
+    function startQuizPractice() {
+      if (!WORDS || !WORDS.items) return;
+      const selected = WORDS.items.filter((it) => quizState.selectedIds.has(it.id));
+      if (!selected.length) {
+        say('Pick words first', 1600);
+        return;
+      }
+      // shuffle pool
+      const pool = selected.slice();
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+      }
+      quizState.pool = pool;
+      quizState.total = pool.length;
+      quizState.done = 0;
+      quizState.phase = 'practice';
+      quizState.waiting = false;
+      quizState.judged = false;
+      const pick = document.getElementById('quizPick');
+      const prac = document.getElementById('quizPractice');
+      if (pick) pick.style.display = 'none';
+      if (prac) prac.classList.add('open');
+      const title = document.getElementById('quizTitle');
+      if (title) title.textContent = '🎯 跟读练习';
+      showNextQuizWord(true);
+    }
+
+    function updateQuizProgress() {
+      const prog = document.getElementById('quizProgress');
+      if (!prog) return;
+      const k = Math.min(quizState.done, quizState.total);
+      prog.textContent = k + '/' + quizState.total;
+    }
+
+    function showNextQuizWord(isFirst) {
+      quizState.waiting = false;
+      quizState.judged = false;
+      const fb = document.getElementById('quizFeedback');
+      if (fb) { fb.textContent = ''; fb.className = 'qz-feedback'; }
+      if (!quizState.pool.length) {
+        // finished all — reshuffle selected for continuous practice
+        const selected = (WORDS.items || []).filter((it) => quizState.selectedIds.has(it.id));
+        if (!selected.length) { exitQuiz(); return; }
+        const pool = selected.slice();
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+        }
+        quizState.pool = pool;
+        quizState.done = 0;
+        quizState.total = pool.length;
+      }
+      // avoid immediate repeat of same word when possible
+      let next = quizState.pool.shift();
+      if (quizState.current && next && next.id === quizState.current.id && quizState.pool.length) {
+        quizState.pool.push(next);
+        next = quizState.pool.shift();
+      }
+      quizState.current = next;
+      quizState.done += 1;
+      updateQuizProgress();
+      const wEl = document.getElementById('quizWord');
+      const ipaEl = document.getElementById('quizIpa');
+      const zhEl = document.getElementById('quizZh');
+      if (wEl) wEl.textContent = next ? next.text : '…';
+      if (ipaEl) ipaEl.textContent = next ? (next.ipa || '') : '';
+      if (zhEl) zhEl.textContent = next ? (next.zh || '') : '';
+      if (!isFirst && next) {
+        // soft auto-play optional — skip to keep mic free; user taps
+      }
+    }
+
+    function playQuizCurrentAudio() {
+      const it = quizState.current;
+      if (!it || !it.audio) return;
+      if (typeof playCachedAudio === 'function') playCachedAudio(it.audio);
+      else if (typeof playWord === 'function') { /* fallback unused */ }
+    }
+
+    function startQuizRepeat() {
+      if (!quizState.active || quizState.phase !== 'practice' || !quizState.current) return;
+      quizState.waiting = true;
+      quizState.judged = false;
+      const fb = document.getElementById('quizFeedback');
+      if (fb) { fb.textContent = '🎤 Listening…'; fb.className = 'qz-feedback'; }
+      // ensure EN for word practice
+      if (typeof setMicLang === 'function') setMicLang('en-US');
+      if (recognition) {
+        try {
+          if (recognizing) recognition.stop();
+        } catch (e) {}
+        setTimeout(() => {
+          if (!quizState.active || !quizState.waiting) return;
+          try {
+            recognition.lang = 'en-US';
+            recognition.start();
+          } catch (err) {
+            if (fb) { fb.textContent = '无法启动麦克风'; fb.className = 'qz-feedback bad'; }
+          }
+        }, recognizing ? 280 : 40);
+      } else {
+        if (fb) { fb.textContent = '请用 Chrome/Edge'; fb.className = 'qz-feedback bad'; }
+        say('请用 Chrome/Edge 并允许麦克风', 2200);
+      }
+    }
+
+    function judgeQuizSpeech(transcript) {
+      const it = quizState.current;
+      const fb = document.getElementById('quizFeedback');
+      if (!it) return;
+      quizState.waiting = false;
+      quizState.judged = true;
+      const ok = quizWordMatches(transcript, it);
+      if (ok) {
+        if (fb) { fb.textContent = '✅ Great!'; fb.className = 'qz-feedback ok'; }
+        if (typeof setHappy === 'function') setHappy(1400);
+        if (typeof burst === 'function') burst(['✨', '⭐', '💛'], state.x, state.y - 70);
+        if (typeof awardXp === 'function') awardXp(1, 'quiz', { key: 'quiz:' + it.id + ':' + Date.now(), cooldownMs: 0 });
+        if (typeof unlockAtlasWord === 'function') unlockAtlasWord(it, 'quiz');
+        say('Good!', 1000);
+        setTimeout(() => {
+          if (quizState.active && quizState.phase === 'practice') showNextQuizWord(false);
+        }, 900);
+      } else {
+        if (fb) { fb.textContent = '❌ Try again · ' + (it.text || ''); fb.className = 'qz-feedback bad'; }
+        say('Try again', 1200);
+      }
+    }
+
+    function maybeHandleQuizCommand(text) {
+      const t = (text || '').toLowerCase().trim();
+      if (!t) return false;
+      if (!quizState.active) {
+        if (/\b(word quiz|start quiz|quiz time)\b/.test(t) || /抽读|单词抽读|开始抽读/.test(t) || /^(quiz)$/.test(t)) {
+          openQuiz();
+          return true;
+        }
+        return false;
+      }
+      // exit phrases
+      if (/\b(stop quiz|quit quiz|exit quiz|close quiz)\b/.test(t) || /退出抽读|结束抽读/.test(t)) {
+        exitQuiz();
+        return true;
+      }
+      if (quizState.phase === 'practice' && quizState.waiting) {
+        judgeQuizSpeech(text);
+        return true;
+      }
+      // while quiz overlay open (pick or practice not waiting), consume to avoid dialog steal
+      // still allow theater start? No — quiz owns mic like theater
+      return true;
+    }
+
+
     let recognition = null;
     if (SpeechRec) {
       recognition = new SpeechRec();
@@ -3652,7 +4102,15 @@
         for (let i = 0; i < ev.results[0].length; i++) alts.push(ev.results[0][i].transcript);
         lastHeard = alts[0] || '';
         let actionNote = '';
-        // Theater intercepts mic first when active (or theater start phrases)
+        // Quiz intercepts mic first when active (or quiz start phrases)
+        let quizHit = false;
+        for (const a of alts) {
+          if (typeof maybeHandleQuizCommand === 'function' && maybeHandleQuizCommand(a)) {
+            quizHit = true; actionNote = 'Quiz'; break;
+          }
+        }
+        if (quizHit) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+        // Theater intercepts mic when active (or theater start phrases)
         let theaterHit = false;
         for (const a of alts) {
           if (typeof maybeHandleTheaterCommand === 'function' && maybeHandleTheaterCommand(a)) {
@@ -3790,6 +4248,8 @@
         startSing(null);
       } else if (kind === 'theater') {
         startTheater('farm_morning');
+      } else if (kind === 'quiz') {
+        openQuiz();
       } else if (kind === 'stickers') {
         openStickersPanel();
       } else if (kind === 'sleep') {
@@ -4134,6 +4594,47 @@
     if (stickersClose) stickersClose.addEventListener('click', (e) => { e.stopPropagation(); closeStickersPanel(); });
     const theaterClose = document.getElementById('theaterClose');
     if (theaterClose) theaterClose.addEventListener('click', (e) => { e.stopPropagation(); stopTheater(); });
+
+    // Word Quiz UI wiring
+    const btnQuiz = document.getElementById('btnQuiz');
+    if (btnQuiz) btnQuiz.addEventListener('click', (e) => { e.stopPropagation(); openQuiz(); });
+    const quizClose = document.getElementById('quizClose');
+    if (quizClose) quizClose.addEventListener('click', (e) => { e.stopPropagation(); exitQuiz(); });
+    const quizSearch = document.getElementById('quizSearch');
+    if (quizSearch) {
+      quizSearch.addEventListener('input', () => {
+        quizState.filter = quizSearch.value || '';
+        renderQuizPickList();
+      });
+    }
+    const quizList = document.getElementById('quizList');
+    if (quizList) {
+      quizList.addEventListener('click', (e) => {
+        const item = e.target.closest('button[data-quiz-id]');
+        if (!item) return;
+        toggleQuizSelect(item.dataset.quizId);
+      });
+    }
+    document.querySelectorAll('[data-quiz-rand]').forEach((b) => {
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        quizRandomPick(Number(b.dataset.quizRand) || 5);
+      });
+    });
+    const quizStart = document.getElementById('quizStart');
+    if (quizStart) quizStart.addEventListener('click', (e) => { e.stopPropagation(); startQuizPractice(); });
+    const quizWordBtn = document.getElementById('quizWord');
+    if (quizWordBtn) quizWordBtn.addEventListener('click', (e) => { e.stopPropagation(); playQuizCurrentAudio(); });
+    const quizRepeat = document.getElementById('quizRepeat');
+    if (quizRepeat) quizRepeat.addEventListener('click', (e) => { e.stopPropagation(); startQuizRepeat(); });
+    const quizNext = document.getElementById('quizNext');
+    if (quizNext) quizNext.addEventListener('click', (e) => { e.stopPropagation(); if (quizState.active) showNextQuizWord(false); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && quizState.active) {
+        e.preventDefault();
+        exitQuiz();
+      }
+    });
     document.querySelectorAll('[data-atlas-filter]').forEach((b) => {
       b.addEventListener('click', (e) => {
         e.stopPropagation();
