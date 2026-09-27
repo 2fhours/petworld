@@ -20,6 +20,11 @@ Open `http://127.0.0.1:8765`.
 
 Generated audio files are included under `audio/`.
 
+## Version bumps
+
+Before every code commit, run `node scripts/bump-version.js` from the repository root.
+This increments the numeric `APP_VERSION` shown in the bottom-right corner.
+
 ## GitHub Pages
 
 https://2fhours.github.io/petworld/
