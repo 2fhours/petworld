@@ -3297,6 +3297,11 @@
 
     let lastHeard = '';
     let recognizing = false;
+    // SpeechRecognition stop()/start() must wait for onend; fixed timeouts race and drop 跟读.
+    let recogActiveSession = 0;   // bumped on every intentional start request
+    let recogResultSession = 0;   // session currently allowed to deliver results
+    let recogWantStart = null;    // { lang, session } queued until onend
+    let recogStarting = false;    // true between beginRecognition and onstart/onerror
     const MIC_LANG_KEY = 'proto-mic-lang';
     function getMicLang() {
       const v = localStorage.getItem(MIC_LANG_KEY);
@@ -3848,6 +3853,10 @@
       quizState.judged = false;
       quizState.current = null;
       quizState.pool = [];
+      if (typeof requestRecognitionStop === 'function' && was) {
+        // stop 跟读 listen without leaving a pending restart
+        try { requestRecognitionStop(); } catch (e) {}
+      }
       const ov = document.getElementById('quizOverlay');
       if (ov) {
         ov.classList.remove('open');
@@ -3994,44 +4003,95 @@
       else if (typeof playWord === 'function') { /* fallback unused */ }
     }
 
+    function pausePlaybackForMic() {
+      try {
+        if (typeof currentAudio !== 'undefined' && currentAudio) {
+          currentAudio.pause();
+          currentAudio = null;
+        }
+      } catch (e) {}
+    }
+
+    function beginRecognition(payload) {
+      if (!recognition || !payload) return false;
+      recogWantStart = null;
+      recogStarting = true;
+      try {
+        recognition.lang = payload.lang || getMicLang();
+        recogResultSession = payload.session;
+        recognition.start();
+        return true;
+      } catch (err) {
+        // InvalidStateError: engine still closing — queue and stop again (once)
+        recogStarting = false;
+        if (payload._retried) {
+          if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
+            quizState.waiting = false;
+            const fb = document.getElementById('quizFeedback');
+            if (fb) { fb.textContent = '🎤 无法启动麦克风，请重试'; fb.className = 'qz-feedback bad'; }
+          }
+          setMicStatus('无法启动麦克风，请允许麦克风后重试');
+          return false;
+        }
+        payload._retried = true;
+        recogWantStart = payload;
+        try { recognition.stop(); } catch (e) {}
+        return false;
+      }
+    }
+
+    function requestRecognitionStart(lang) {
+      if (!recognition) return false;
+      const payload = { lang: lang || getMicLang(), session: ++recogActiveSession };
+      if (recognizing || recogStarting) {
+        recogWantStart = payload;
+        try { recognition.stop(); } catch (e) {}
+        return true;
+      }
+      return beginRecognition(payload);
+    }
+
+    function requestRecognitionStop() {
+      recogWantStart = null;
+      recogStarting = false;
+      if (!recognition) return;
+      if (recognizing || recogStarting) {
+        try { recognition.stop(); } catch (e) {}
+      }
+    }
+
     function startQuizRepeat() {
       if (!quizState.active || quizState.phase !== 'practice' || !quizState.current) return;
       quizState.waiting = true;
       quizState.judged = false;
       const fb = document.getElementById('quizFeedback');
-      if (fb) { fb.textContent = '🎤 正在听，请跟读…'; fb.className = 'qz-feedback'; }
-      setMicStatus('正在听，请跟读单词…');
-      // ensure EN for word practice
+      if (fb) { fb.textContent = '🎤 启动麦克风…'; fb.className = 'qz-feedback'; }
+      setMicStatus('正在启动跟读麦克风…');
+      // English words need en-US; zh-CN often yields empty/wrong transcripts for EN vocab
       if (typeof setMicLang === 'function') setMicLang('en-US');
-      if (recognition) {
-        try {
-          if (recognizing) recognition.stop();
-        } catch (e) {}
-        setTimeout(() => {
-          if (!quizState.active || !quizState.waiting) return;
-          try {
-            recognition.lang = 'en-US';
-            recognition.start();
-          } catch (err) {
-            quizState.waiting = false;
-            if (fb) { fb.textContent = '🎤 无法启动麦克风，请重试'; fb.className = 'qz-feedback bad'; }
-            setMicStatus('无法启动麦克风，请允许麦克风后重试');
-          }
-        }, recognizing ? 280 : 40);
-      } else {
+      pausePlaybackForMic();
+      if (!recognition) {
         quizState.waiting = false;
         if (fb) { fb.textContent = '🎤 请用 Chrome/Edge'; fb.className = 'qz-feedback bad'; }
         say('请用 Chrome/Edge 并允许麦克风', 2200);
+        return;
+      }
+      const started = requestRecognitionStart('en-US');
+      if (!started && !recogWantStart) {
+        quizState.waiting = false;
+        if (fb) { fb.textContent = '🎤 无法启动麦克风，请重试'; fb.className = 'qz-feedback bad'; }
+        setMicStatus('无法启动麦克风，请允许麦克风后重试');
       }
     }
 
-    function judgeQuizSpeech(transcript) {
+    function judgeQuizSpeech(transcript, precomputedOk) {
       const it = quizState.current;
       const fb = document.getElementById('quizFeedback');
       if (!it) return;
       quizState.waiting = false;
       quizState.judged = true;
-      const ok = quizWordMatches(transcript, it);
+      const heard = String(transcript || '').trim();
+      const ok = (typeof precomputedOk === 'boolean') ? precomputedOk : quizWordMatches(heard, it);
       if (ok) {
         if (fb) { fb.textContent = '✅ Great!'; fb.className = 'qz-feedback ok'; }
         if (typeof setHappy === 'function') setHappy(1400);
@@ -4043,14 +4103,15 @@
           if (quizState.active && quizState.phase === 'practice') showNextQuizWord(false);
         }, 900);
       } else {
-        if (fb) { fb.textContent = '❌ Try again · ' + (it.text || ''); fb.className = 'qz-feedback bad'; }
+        const tip = heard ? ('❌ Heard: ' + heard + ' · ' + (it.text || '')) : ('❌ Try again · ' + (it.text || ''));
+        if (fb) { fb.textContent = tip; fb.className = 'qz-feedback bad'; }
         say('Try again', 1200);
       }
     }
 
-    function maybeHandleQuizCommand(text) {
+    function maybeHandleQuizCommand(text, alts) {
       const t = (text || '').toLowerCase().trim();
-      if (!t) return false;
+      if (!t && !(alts && alts.some((a) => String(a || '').trim()))) return false;
       if (!quizState.active) {
         if (/\b(word quiz|start quiz|quiz time)\b/.test(t) || /抽读|单词抽读|开始抽读/.test(t) || /^(quiz)$/.test(t)) {
           openQuiz();
@@ -4064,7 +4125,24 @@
         return true;
       }
       if (quizState.phase === 'practice' && quizState.waiting) {
-        judgeQuizSpeech(text);
+        const list = [];
+        const seen = new Set();
+        const push = (s) => {
+          const v = String(s || '').trim();
+          if (!v) return;
+          const k = v.toLowerCase();
+          if (seen.has(k)) return;
+          seen.add(k);
+          list.push(v);
+        };
+        push(text);
+        if (alts) alts.forEach(push);
+        let best = list[0] || text || '';
+        let matched = false;
+        for (const a of list) {
+          if (quizWordMatches(a, quizState.current)) { best = a; matched = true; break; }
+        }
+        judgeQuizSpeech(best, matched);
         return true;
       }
       // while quiz overlay open (pick or practice not waiting), consume to avoid dialog steal
@@ -4077,11 +4155,13 @@
     if (SpeechRec) {
       recognition = new SpeechRec();
       recognition.lang = getMicLang();
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 3;
+      // interim helps 跟读 show live text; only route on isFinal
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 5;
       recognition.continuous = false;
       recognition.onstart = () => {
         recognizing = true;
+        recogStarting = false;
         document.getElementById('micBtn').classList.add('listening');
         document.getElementById('micBtn').textContent = '🎤...';
         if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
@@ -4094,15 +4174,38 @@
       };
       recognition.onend = () => {
         recognizing = false;
+        recogStarting = false;
         document.getElementById('micBtn').classList.remove('listening');
         document.getElementById('micBtn').textContent = '🎤';
+        // Chrome requires waiting for onend before start() after stop()
+        if (recogWantStart) {
+          const payload = recogWantStart;
+          recogWantStart = null;
+          setTimeout(() => {
+            if (!payload) return;
+            // drop if a newer request superseded this payload
+            if (payload.session !== recogActiveSession) return;
+            beginRecognition(payload);
+          }, 30);
+          return;
+        }
+        // Session ended with no final transcript while 跟读 still waiting
+        if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting && !quizState.judged) {
+          quizState.waiting = false;
+          const fb = document.getElementById('quizFeedback');
+          if (fb) { fb.textContent = '🎤 没听到，请再点跟读'; fb.className = 'qz-feedback bad'; }
+          setMicStatus('没听到说话，请再点跟读');
+        }
       };
       recognition.onerror = (e) => {
         recognizing = false;
+        recogStarting = false;
         document.getElementById('micBtn').classList.remove('listening');
         document.getElementById('micBtn').textContent = '🎤';
         // aborted = intentional stop (mic toggle or restart before 跟读) — not a user error
         if (e.error === 'aborted') return;
+        // If we are about to restart, ignore transient errors from the stopped session
+        if (recogWantStart) return;
         const msg = {
           'not-allowed': '麦克风被拒绝，请在浏览器允许麦克风后重试',
           'service-not-allowed': '麦克风被拒绝，请在浏览器允许麦克风后重试',
@@ -4132,18 +4235,40 @@
         // no-speech / unknown: status + quiz feedback only (avoid pet-bubble "出错" spam)
       };
       recognition.onresult = (ev) => {
+        // Ignore stale finals from a session we already superseded (stop→restart race)
+        if (recogResultSession !== recogActiveSession) return;
+        if (recogWantStart) return;
+
         const alts = [];
-        for (let i = 0; i < ev.results[0].length; i++) alts.push(ev.results[0][i].transcript);
-        lastHeard = alts[0] || '';
-        let actionNote = '';
-        // Quiz intercepts mic first when active (or quiz start phrases)
-        let quizHit = false;
-        for (const a of alts) {
-          if (typeof maybeHandleQuizCommand === 'function' && maybeHandleQuizCommand(a)) {
-            quizHit = true; actionNote = 'Quiz'; break;
+        let interim = '';
+        let hasFinal = false;
+        for (let i = ev.resultIndex; i < ev.results.length; i++) {
+          const res = ev.results[i];
+          if (res.isFinal) {
+            hasFinal = true;
+            for (let j = 0; j < res.length; j++) alts.push(res[j].transcript);
+          } else if (res[0] && res[0].transcript) {
+            interim += res[0].transcript;
           }
         }
-        if (quizHit) { setMicStatus('听到：' + lastHeard + ' → ' + actionNote); return; }
+
+        // Live interim feedback during 跟读 (do not judge yet)
+        if (!hasFinal) {
+          if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting && interim) {
+            const fb = document.getElementById('quizFeedback');
+            if (fb) { fb.textContent = '🎤 ' + interim; fb.className = 'qz-feedback'; }
+            setMicStatus('听到：' + interim);
+          }
+          return;
+        }
+
+        lastHeard = (alts[0] || '').trim();
+        let actionNote = '';
+        // Quiz intercepts mic first when active (or quiz start phrases)
+        if (typeof maybeHandleQuizCommand === 'function' && maybeHandleQuizCommand(lastHeard, alts)) {
+          setMicStatus('听到：' + lastHeard + ' → Quiz');
+          return;
+        }
         // Theater intercepts mic when active (or theater start phrases)
         let theaterHit = false;
         for (const a of alts) {
@@ -4219,14 +4344,20 @@
         say('请用 Chrome/Edge 并允许麦克风', 2800);
         return;
       }
-      if (recognizing) {
-        recognition.stop();
+      if (recognizing || recogStarting || recogWantStart) {
+        // User cancel — clear pending restart and any 跟读 wait
+        if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
+          quizState.waiting = false;
+          const fb = document.getElementById('quizFeedback');
+          if (fb) { fb.textContent = '已停止聆听'; fb.className = 'qz-feedback'; }
+        }
+        requestRecognitionStop();
+        setMicStatus('已停止聆听');
         return;
       }
-      try {
-        recognition.lang = getMicLang();
-        recognition.start();
-      } catch (err) {
+      pausePlaybackForMic();
+      const ok = requestRecognitionStart(getMicLang());
+      if (!ok && !recogWantStart) {
         const tip = '无法启动麦克风 / Cannot start mic — 请在浏览器站点设置中允许麦克风 Allow mic in site settings';
         setMicStatus(tip);
         say('请允许麦克风', 2800);
