@@ -544,8 +544,11 @@
     }
     .learn .list {
       display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
-      flex: 1 1 auto; min-height: 0; max-height: none;
+      flex: 1 1 0; min-height: 0; max-height: none;
       overflow-y: auto; overflow-x: hidden; padding-right: 2px;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
     }
     .learn .list button {
       border-radius: 12px; text-align: left; padding: 8px 10px; font-size: 12px;
@@ -563,10 +566,27 @@
     .learn > .atlas-btn, .learn > .meta { flex: 0 0 auto; }
     @media (max-width: 820px) {
       .learn {
-        right: 12px; left: 12px; top: auto; bottom: 72px; transform: none;
-        width: auto; max-height: min(45vh, 420px); overflow: hidden;
+        right: 12px; left: 12px;
+        top: max(52px, calc(env(safe-area-inset-top, 0px) + 48px));
+        bottom: 72px; transform: none;
+        width: auto; height: auto; max-height: none; min-height: 0;
+        overflow: hidden;
         border-radius: 18px 18px 14px 14px;
+        padding: 12px;
       }
+      .learn .word { font-size: 22px; margin: 2px 0; }
+      .learn .zh { margin-bottom: 8px; }
+      .learn .row { margin-bottom: 8px; gap: 6px; }
+      .learn .search { margin-bottom: 8px; padding: 8px 10px; }
+      .learn .search-meta { margin: -2px 0 6px; }
+      .learn .list {
+        flex: 1 1 0; min-height: 120px;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+      }
+      .learn .atlas-btn { margin-top: 6px; padding: 7px 10px; font-size: 12px; }
+      .learn .meta { margin-top: 6px; }
       .mic-wrap { bottom: 14px; z-index: 20; }
       .preload-btn { max-width: min(160px, calc(100vw - 28px)); }
       .dlg-panel { max-height: min(50vh, 420px); }
@@ -1083,7 +1103,7 @@
       background: rgba(255,255,255,0.1); color: #e2e8f0; cursor: pointer; font-size: 18px;
     }
     .quiz-overlay .qz-body {
-      flex: 1 1 auto; min-height: 0; overflow: hidden;
+      flex: 1 1 0; min-height: 0; overflow: hidden;
       display: flex; flex-direction: column;
       padding: 0 16px 16px;
       padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -1101,10 +1121,11 @@
       font-size: 12px; color: rgba(226,232,240,0.65); margin-bottom: 8px;
     }
     .quiz-pick .qz-list {
-      flex: 1 1 auto; min-height: 0; max-height: none;
+      flex: 1 1 0; min-height: 0; max-height: none;
       overflow-y: auto; overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
+      touch-action: pan-y;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 8px; align-content: start; padding-bottom: 8px;
@@ -1171,7 +1192,11 @@
     @media (max-width: 820px) {
       .quiz-overlay {
         /* Near full-screen viewport on phones; avoid clipped 100vh under browser chrome */
+        inset: 0;
+        width: 100%;
         max-height: 100dvh; height: 100dvh;
+        min-height: 0;
+        overflow: hidden;
       }
       .quiz-overlay .qz-top {
         gap: 8px;
@@ -1179,23 +1204,37 @@
         padding-top: max(8px, env(safe-area-inset-top, 0px));
         padding-left: max(12px, env(safe-area-inset-left, 0px));
         padding-right: max(12px, env(safe-area-inset-right, 0px));
+        flex: 0 0 auto;
       }
       .quiz-overlay .qz-title { font-size: 15px; }
       .quiz-overlay .qz-close { width: 32px; height: 32px; font-size: 16px; }
-      .quiz-overlay .qz-body {
+      .quiz-overlay .qz-body,
+      #quizPick.quiz-pick {
+        flex: 1 1 0;
+        min-height: 0;
+        max-height: none;
+        overflow: hidden;
         padding: 0 10px 10px;
         padding-left: max(10px, env(safe-area-inset-left, 0px));
         padding-right: max(10px, env(safe-area-inset-right, 0px));
         padding-bottom: max(10px, env(safe-area-inset-bottom, 0px));
       }
-      .quiz-pick .qz-search { padding: 9px 10px; margin-bottom: 6px; font-size: 13px; }
-      .quiz-pick .qz-meta { margin-bottom: 6px; }
+      .quiz-pick .qz-search { padding: 9px 10px; margin-bottom: 6px; font-size: 13px; flex: 0 0 auto; }
+      .quiz-pick .qz-meta { margin-bottom: 6px; flex: 0 0 auto; }
       .quiz-pick .qz-list {
+        flex: 1 1 0;
+        min-height: 140px;
+        max-height: none;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         gap: 6px;
       }
       .quiz-pick .qz-item { padding: 9px 8px; font-size: 12px; }
-      .quiz-pick .qz-foot { gap: 6px; padding-top: 8px; }
+      .quiz-pick .qz-foot { gap: 6px; padding-top: 8px; flex: 0 0 auto; }
       .quiz-pick .qz-foot button { padding: 7px 10px; font-size: 12px; }
     }
 
@@ -1412,7 +1451,7 @@
 
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 3;
+    const APP_VERSION = 4;
     document.getElementById('versionLabel').textContent = APP_VERSION;
 
     const FORMS = [
