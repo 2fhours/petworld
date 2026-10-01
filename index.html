@@ -1120,6 +1120,29 @@
       flex: 0 0 auto;
       font-size: 12px; color: rgba(226,232,240,0.65); margin-bottom: 8px;
     }
+    .quiz-pick .qz-csv {
+      flex: 0 0 auto;
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 8px;
+    }
+    .quiz-pick .qz-csv textarea {
+      width: 100%; box-sizing: border-box; min-height: 52px; max-height: 96px;
+      resize: vertical; padding: 8px 10px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06); color: #e2e8f0;
+      font: inherit; font-size: 13px; line-height: 1.35;
+    }
+    .quiz-pick .qz-csv-actions {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .quiz-pick .qz-csv-actions button {
+      appearance: none; border: 0; border-radius: 999px; padding: 6px 12px;
+      font: inherit; font-size: 12px; color: #e2e8f0;
+      background: rgba(255,255,255,0.1); cursor: pointer;
+    }
+    .quiz-pick .qz-csv-actions .qz-csv-status {
+      flex: 1; font-size: 12px; color: rgba(199,210,254,0.9); min-width: 100px;
+    }
     .quiz-pick .qz-list {
       flex: 1 1 0; min-height: 0; max-height: none;
       overflow-y: auto; overflow-x: hidden;
@@ -1221,6 +1244,9 @@
       }
       .quiz-pick .qz-search { padding: 9px 10px; margin-bottom: 6px; font-size: 13px; flex: 0 0 auto; }
       .quiz-pick .qz-meta { margin-bottom: 6px; flex: 0 0 auto; }
+      .quiz-pick .qz-csv { margin-bottom: 6px; }
+      .quiz-pick .qz-csv textarea { min-height: 44px; max-height: 72px; font-size: 12px; padding: 7px 9px; }
+      .quiz-pick .qz-csv-actions button { padding: 5px 10px; font-size: 11px; }
       .quiz-pick .qz-list {
         flex: 1 1 0;
         min-height: 140px;
@@ -1426,6 +1452,14 @@
     <div class="qz-body quiz-pick" id="quizPick">
       <input class="qz-search" id="quizSearch" type="search" placeholder="搜索单词 / Search" autocomplete="off" />
       <div class="qz-meta" id="quizPickMeta">选择要练习的单词</div>
+      <div class="qz-csv">
+        <textarea id="quizCsvInput" rows="2" placeholder="粘贴单词列表：逗号 / ， / 空格 / 换行分隔，如 Hello, Friend, Dog" spellcheck="false"></textarea>
+        <div class="qz-csv-actions">
+          <button type="button" id="quizCsvApply">导入 Apply</button>
+          <button type="button" id="quizCsvExport">导出 Export</button>
+          <span class="qz-csv-status" id="quizCsvStatus"></span>
+        </div>
+      </div>
       <div class="qz-list" id="quizList"></div>
       <div class="qz-foot">
         <div class="count" id="quizCount">已选 0</div>
@@ -1451,7 +1485,7 @@
 
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 5;
+    const APP_VERSION = 6;
     document.getElementById('versionLabel').textContent = APP_VERSION;
 
     const FORMS = [
@@ -4028,6 +4062,68 @@
       say('Picked ' + nWant, 1200);
     }
 
+    function parseQuizCsvTokens(raw) {
+      return String(raw || '')
+        .split(/[,，\s\n\r]+/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+
+    function applyQuizCsvImport() {
+      const input = document.getElementById('quizCsvInput');
+      const status = document.getElementById('quizCsvStatus');
+      if (!WORDS || !WORDS.items) return;
+      const tokens = parseQuizCsvTokens(input && input.value);
+      if (!tokens.length) {
+        if (status) status.textContent = '请粘贴单词列表';
+        return;
+      }
+      const byText = new Map();
+      for (const it of WORDS.items) {
+        if (!it || !it.text) continue;
+        const key = String(it.text).toLowerCase();
+        if (!byText.has(key)) byText.set(key, it);
+      }
+      const matchedIds = [];
+      const unknown = [];
+      const seenTok = new Set();
+      for (const tok of tokens) {
+        const key = tok.toLowerCase();
+        if (seenTok.has(key)) continue;
+        seenTok.add(key);
+        const it = byText.get(key);
+        if (it) matchedIds.push(it.id);
+        else unknown.push(tok);
+      }
+      quizState.selectedIds = new Set(matchedIds);
+      renderQuizPickList();
+      updateQuizPickCount();
+      let msg = '匹配 ' + matchedIds.length;
+      if (unknown.length) msg += ' · 未知 ' + unknown.length + (unknown.length <= 5 ? '（' + unknown.join(', ') + '）' : '');
+      if (status) status.textContent = msg;
+      say(matchedIds.length ? ('Matched ' + matchedIds.length) : 'No match', 1400);
+    }
+
+    function exportQuizCsv() {
+      const status = document.getElementById('quizCsvStatus');
+      const input = document.getElementById('quizCsvInput');
+      if (!WORDS || !WORDS.items) return;
+      const selected = WORDS.items.filter((it) => quizState.selectedIds.has(it.id));
+      const csv = selected.map((it) => it.text).join(', ');
+      if (input) input.value = csv;
+      if (csv && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(csv).then(() => {
+          if (status) status.textContent = '已复制 ' + selected.length + ' 个';
+        }).catch(() => {
+          if (status) status.textContent = '已填入 ' + selected.length + ' 个（可手动复制）';
+        });
+      } else if (status) {
+        status.textContent = selected.length ? ('已填入 ' + selected.length + ' 个') : '未选单词';
+      }
+      if (selected.length) say('Exported ' + selected.length, 1200);
+      else say('Pick words first', 1400);
+    }
+
     function startQuizPractice() {
       if (!WORDS || !WORDS.items) return;
       const selected = WORDS.items.filter((it) => quizState.selectedIds.has(it.id));
@@ -4945,6 +5041,10 @@
         quizRandomPick(Number(b.dataset.quizRand) || 5);
       });
     });
+    const quizCsvApply = document.getElementById('quizCsvApply');
+    if (quizCsvApply) quizCsvApply.addEventListener('click', (e) => { e.stopPropagation(); applyQuizCsvImport(); });
+    const quizCsvExport = document.getElementById('quizCsvExport');
+    if (quizCsvExport) quizCsvExport.addEventListener('click', (e) => { e.stopPropagation(); exportQuizCsv(); });
     const quizStart = document.getElementById('quizStart');
     if (quizStart) quizStart.addEventListener('click', (e) => { e.stopPropagation(); startQuizPractice(); });
     const quizWordBtn = document.getElementById('quizWord');

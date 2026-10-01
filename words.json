@@ -1147,6 +1147,22 @@
       ]
     },
     {
+      "id": "friend",
+      "text": "Friend",
+      "ipa": "/frend/",
+      "zh": "朋友",
+      "phonics": "FRIEND",
+      "audio": "audio/friend.mp3",
+      "phonicsAudio": "audio/friend_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "r",
+        "e",
+        "n",
+        "d"
+      ]
+    },
+    {
       "id": "w_fun",
       "text": "Fun",
       "ipa": "/fʌn/",
