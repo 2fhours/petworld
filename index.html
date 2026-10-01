@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
   <title>Pet World</title>
   <style>
     * { box-sizing: border-box; }
@@ -1485,8 +1486,14 @@
 
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 6;
+    const APP_VERSION = 7;
     document.getElementById('versionLabel').textContent = APP_VERSION;
+    /** Cache-bust pack JSON so Pages/browser max-age cannot serve stale words/actions/etc. */
+    function packUrl(path) {
+      const p = String(path || '');
+      const sep = p.includes('?') ? '&' : '?';
+      return p + sep + 'v=' + APP_VERSION;
+    }
 
     const FORMS = [
       { id: 'cat', name: '小猫', emoji: '🐱' },
@@ -2095,13 +2102,13 @@
       const add = (u) => { if (u && typeof u === 'string') paths.add(u.replace(/^\.\//, '')); };
       try {
         const [words, actions, dialogs, foods, plays, animals, songs] = await Promise.all([
-          fetch('words.json').then((r) => r.json()),
-          fetch('actions.json').then((r) => r.json()),
-          fetch('dialogs.json').then((r) => r.json()),
-          fetch('foods.json').then((r) => r.json()),
-          fetch('plays.json').then((r) => r.json()).catch(() => null),
-          fetch('animals.json').then((r) => r.json()).catch(() => null),
-          fetch('songs.json').then((r) => r.json()).catch(() => null),
+          fetch(packUrl('words.json')).then((r) => r.json()),
+          fetch(packUrl('actions.json')).then((r) => r.json()),
+          fetch(packUrl('dialogs.json')).then((r) => r.json()),
+          fetch(packUrl('foods.json')).then((r) => r.json()),
+          fetch(packUrl('plays.json')).then((r) => r.json()).catch(() => null),
+          fetch(packUrl('animals.json')).then((r) => r.json()).catch(() => null),
+          fetch(packUrl('songs.json')).then((r) => r.json()).catch(() => null),
         ]);
         (words.items || []).forEach((it) => { add(it.audio); add(it.phonicsAudio); });
         Object.values(actions.actions || {}).forEach((arr) => arr.forEach((it) => add(it.audio)));
@@ -2128,10 +2135,10 @@
           songsSrc.songs.forEach((s) => add(s.audio));
         }
         try {
-          const stories = await fetch('theater/stories.json').then((r) => r.json()).catch(() => []);
+          const stories = await fetch(packUrl('theater/stories.json')).then((r) => r.json()).catch(() => []);
           for (const st of (stories || [])) {
             const file = st.file || ('theater/' + st.id + '.json');
-            const story = await fetch(file).then((r) => r.json()).catch(() => null);
+            const story = await fetch(packUrl(file)).then((r) => r.json()).catch(() => null);
             if (!story || !story.beats) continue;
             story.beats.forEach((b) => { add(b.audio); add(b.fallbackAudio); });
           }
@@ -2469,7 +2476,7 @@
 
     let PLAYS = null;
     async function loadPlays() {
-      const res = await fetch('plays.json');
+      const res = await fetch(packUrl('plays.json'));
       PLAYS = await res.json();
     }
     loadPlays().then(() => { if (document.getElementById("dlgPanel") && document.getElementById("dlgPanel").classList.contains("open")) renderDialogList(); });
@@ -2780,7 +2787,7 @@
     let SONGS = null;
     let songAudio = null;
     async function loadSongs() {
-      const res = await fetch('songs.json');
+      const res = await fetch(packUrl('songs.json'));
       SONGS = await res.json();
     }
     loadSongs().then(() => { if (document.getElementById("dlgPanel") && document.getElementById("dlgPanel").classList.contains("open")) renderDialogList(); });
@@ -2887,7 +2894,7 @@
 
     let ANIMALS = null;
     async function loadAnimals() {
-      const res = await fetch('animals.json');
+      const res = await fetch(packUrl('animals.json'));
       ANIMALS = await res.json();
     }
     loadAnimals().then(() => { if (document.getElementById("dlgPanel") && document.getElementById("dlgPanel").classList.contains("open")) renderDialogList(); });
@@ -2950,7 +2957,7 @@
 
     let FOODS = null;
     async function loadFoods() {
-      const res = await fetch('foods.json');
+      const res = await fetch(packUrl('foods.json'));
       FOODS = await res.json();
     }
     loadFoods().then(() => { if (document.getElementById("dlgPanel").classList.contains("open")) renderDialogList(); });
@@ -3040,7 +3047,7 @@
 
     let DIALOGS = null;
     async function loadDialogs() {
-      const res = await fetch('dialogs.json');
+      const res = await fetch(packUrl('dialogs.json'));
       DIALOGS = await res.json();
     }
     loadDialogs().then(() => renderDialogList());
@@ -3571,7 +3578,7 @@
 
     async function loadStoriesIndex() {
       try {
-        const res = await fetch('theater/stories.json');
+        const res = await fetch(packUrl('theater/stories.json'));
         STORIES_INDEX = await res.json();
       } catch (e) {
         STORIES_INDEX = [{ id: 'farm_morning', title: 'Farm Morning', emoji: '🌾', file: 'theater/farm_morning.json', stickerId: 'farm_morning', scene: 'farm' }];
@@ -3719,7 +3726,7 @@
       }
       let story = null;
       try {
-        const res = await fetch(meta.file || ('theater/' + id + '.json'));
+        const res = await fetch(packUrl(meta.file || ('theater/' + id + '.json')));
         story = await res.json();
       } catch (e) {
         console.warn('theater load failed', e);
@@ -4623,7 +4630,7 @@
     let ACTION_LINES = null;
 
     async function loadActions() {
-      const res = await fetch('actions.json');
+      const res = await fetch(packUrl('actions.json'));
       ACTION_LINES = await res.json();
     }
     loadActions();
@@ -4893,7 +4900,7 @@
     }
 
     async function loadWords() {
-      const res = await fetch('words.json');
+      const res = await fetch(packUrl('words.json'));
       WORDS = await res.json();
       const idxs = visibleWordIndexes();
       showWord(idxs[0] || 0);
