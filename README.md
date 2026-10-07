@@ -28,3 +28,8 @@ This increments the numeric `APP_VERSION` shown in the bottom-right corner.
 ## GitHub Pages
 
 https://2fhours.github.io/petworld/
+
+## Cast / 投屏 (second screen)
+
+Phone button **投屏** tries the Presentation API to open same-origin `cast.html` on a Cast-compatible receiver (best-effort). Many Xiaomi + Mi TV setups without Google Cast will not get a live Presentation session — use the fallback: open `cast.html?display=1` in the TV browser (QR / copy link). System wireless mirroring is **not** this feature. Without Cast, phone↔TV sync needs a backend; same-device tabs can preview via BroadcastChannel.
+

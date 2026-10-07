@@ -741,6 +741,57 @@
     .dock-toggle.top { top: 14px; right: 14px; }
     .dock-toggle.learn-btn { right: 14px; top: 54px; }
     .dock-toggle.bottom { left: auto; right: 14px; bottom: 14px; transform: none; }
+    .cast-btn.on {
+      border-color: rgba(52,211,153,0.55) !important;
+      background: rgba(52,211,153,0.18) !important;
+      color: #bbf7d0 !important;
+    }
+    .cast-sheet-backdrop {
+      position: fixed; inset: 0; z-index: 80;
+      background: rgba(2,6,23,0.72); backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center;
+      padding: 18px;
+    }
+    .cast-sheet-backdrop.open { display: flex; }
+    .cast-sheet {
+      width: min(420px, 100%); border-radius: 18px; padding: 16px 16px 14px;
+      background: rgba(15,23,42,0.96); border: 1px solid rgba(255,255,255,0.12);
+      color: #e2e8f0; box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+    }
+    .cast-sheet h3 { margin: 0 0 8px; font-size: 16px; color: #a5b4fc; }
+    .cast-sheet p { margin: 0 0 10px; font-size: 13px; line-height: 1.55; color: rgba(226,232,240,0.88); }
+    .cast-sheet .cast-url {
+      font-size: 11px; word-break: break-all; padding: 8px 10px; border-radius: 10px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 10px; color: #c7d2fe;
+    }
+    .cast-sheet .cast-qr {
+      display: block; width: 160px; height: 160px; margin: 0 auto 12px;
+      border-radius: 12px; background: #fff; object-fit: contain;
+    }
+    .cast-sheet .row {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end;
+    }
+    .cast-sheet .row button {
+      appearance: none; border: 0; border-radius: 999px; padding: 9px 14px;
+      font: inherit; font-size: 13px; cursor: pointer;
+      color: #e2e8f0; background: rgba(255,255,255,0.08);
+    }
+    .cast-sheet .row button.primary {
+      background: linear-gradient(135deg, #6366f1, #a78bfa); color: #fff;
+    }
+    .cast-status {
+      position: fixed; left: 14px; bottom: 14px; z-index: 12;
+      max-width: min(70vw, 280px); padding: 7px 11px; border-radius: 999px;
+      font-size: 11px; color: #bbf7d0; background: rgba(6,78,59,0.72);
+      border: 1px solid rgba(52,211,153,0.4); backdrop-filter: blur(8px);
+      display: none; pointer-events: none;
+    }
+    .cast-status.show { display: block; }
+    .cast-status.warn {
+      color: #fde68a; background: rgba(69,26,3,0.75); border-color: rgba(251,191,36,0.45);
+    }
+
     .version-label {
       position: fixed; right: 14px; bottom: 1px; z-index: 6;
       color: rgba(255,255,255,0.65); font-size: 10px; line-height: 11px;
@@ -1367,6 +1418,7 @@
     <input class="search" id="enSearch" type="search" placeholder="搜索单词 / Search words" autocomplete="off" />
     <div class="search-meta" id="enSearchMeta"></div>
     <div class="list" id="enList"></div>
+    <button type="button" class="atlas-btn cast-btn" id="btnCastLearn" title="投屏到电视第二屏">📺 投屏 / Cast</button>
     <button type="button" class="atlas-btn" id="btnQuiz">🎯 抽读 / Quiz</button>
     <button type="button" class="atlas-btn" id="btnAtlas">📖 图鉴 / Atlas</button>
     <button type="button" class="atlas-btn" id="btnStickers">⭐ Stickers</button>
@@ -1389,6 +1441,7 @@
     <button type="button" data-act="sing">Sing</button>
     <button type="button" data-act="sleep">Sleep</button>
     <button type="button" data-act="theater" title="Farm Morning theater">Theater</button>
+    <button type="button" data-act="cast" class="cast-btn" id="btnCastOps" title="投屏到电视第二屏">投屏</button>
     <button type="button" data-act="quiz" title="Word Quiz 抽读">Quiz</button>
     <button type="button" data-act="stickers" title="Stickers">Stickers</button>
     <button type="button" data-wear="hat" title="Cycle hat color">Hat</button>
@@ -1444,6 +1497,22 @@
     <button type="button" class="stickers-close" id="stickersClose">关闭 Close</button>
   </div>
 
+
+  <div class="cast-sheet-backdrop" id="castSheet" aria-hidden="true">
+    <div class="cast-sheet" role="dialog" aria-labelledby="castSheetTitle">
+      <h3 id="castSheetTitle">📺 投屏 / Cast</h3>
+      <p id="castSheetBody">正在尝试连接投屏接收端…</p>
+      <img class="cast-qr" id="castQr" alt="Display URL QR" hidden />
+      <div class="cast-url" id="castUrl" hidden></div>
+      <div class="row">
+        <button type="button" id="castCopyBtn">复制链接</button>
+        <button type="button" id="castOpenBtn">打开显示页</button>
+        <button type="button" class="primary" id="castSheetClose">知道了</button>
+      </div>
+    </div>
+  </div>
+  <div class="cast-status" id="castStatus" aria-live="polite"></div>
+
   <div class="quiz-overlay" id="quizOverlay" aria-hidden="true" aria-label="Word Quiz">
     <div class="qz-top">
       <div class="qz-title" id="quizTitle">🎯 抽读 · Word Quiz</div>
@@ -1485,8 +1554,22 @@
   </div>
 
   <script>
+    // Fullscreen TV/display viewer lives in cast.html (same-origin Presentation target).
+    (function () {
+      try {
+        const q = new URLSearchParams(location.search);
+        if (q.get('display') === '1' || q.get('mode') === 'cast') {
+          const u = new URL('cast.html', location.href);
+          u.search = location.search;
+          u.hash = location.hash;
+          location.replace(u.href);
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 7;
+    const APP_VERSION = 10;
     document.getElementById('versionLabel').textContent = APP_VERSION;
     /** Cache-bust pack JSON so Pages/browser max-age cannot serve stale words/actions/etc. */
     function packUrl(path) {
@@ -2364,6 +2447,7 @@
       if (typeof applyOutfit === 'function') applyOutfit();
       if (!opts.silent) say(FORMS.find((f) => f.id === id).name + '登场！');
       localStorage.setItem('proto-pet-form', id);
+      if (typeof pushCastState === 'function') pushCastState();
     }
 
     function say(text, ms = 1400) {
@@ -2371,6 +2455,7 @@
       bubble.classList.add('show');
       clearTimeout(say._t);
       say._t = setTimeout(() => bubble.classList.remove('show'), ms);
+      if (typeof pushCastState === 'function') pushCastState();
     }
 
 
@@ -4199,6 +4284,7 @@
       if (wEl) wEl.textContent = next ? next.text : '…';
       if (ipaEl) ipaEl.textContent = next ? (next.ipa || '') : '';
       if (zhEl) zhEl.textContent = next ? (next.zh || '') : '';
+      if (typeof pushCastState === 'function') pushCastState();
       if (!isFirst && next) {
         // soft auto-play optional — skip to keep mic free; user taps
       }
@@ -4649,6 +4735,10 @@
     }
 
     function act(kind) {
+      if (kind === 'cast') {
+        if (typeof startCastFlow === 'function') startCastFlow();
+        return;
+      }
       if (kind === 'pet') {
         holdStill(3200);
         setHappy(1800);
@@ -4918,6 +5008,7 @@
       document.getElementById('enPhonics').textContent = '音标逐个读 · ' + it.ipa;
       document.getElementById('enZh').textContent = it.zh;
       renderWordList(wordIndex);
+      if (typeof pushCastState === 'function') pushCastState();
     }
 
     function stopAudio() {
@@ -5087,6 +5178,280 @@
     const adLaterBtn = document.getElementById('adLaterBtn');
     if (adWatchBtn) adWatchBtn.addEventListener('click', (e) => { e.stopPropagation(); closeAdOfferModal(true); });
     if (adLaterBtn) adLaterBtn.addEventListener('click', (e) => { e.stopPropagation(); closeAdOfferModal(false); });
+
+
+    // ===== Cast / Presentation second screen (best-effort, pure static) =====
+    const CAST_CHANNEL = 'petworld-cast-v1';
+    let castConnection = null;
+    let castRequest = null;
+    let castPollTimer = 0;
+    let castBc = null;
+    let castLastPayload = '';
+
+    function castDisplayUrl() {
+      try {
+        const u = new URL('cast.html', location.href);
+        u.searchParams.set('display', '1');
+        u.searchParams.set('v', String(APP_VERSION));
+        return u.href;
+      } catch (e) {
+        return 'cast.html?display=1';
+      }
+    }
+
+    function setCastStatus(text, warn) {
+      const el = document.getElementById('castStatus');
+      if (!el) return;
+      if (!text) {
+        el.classList.remove('show', 'warn');
+        el.textContent = '';
+        return;
+      }
+      el.textContent = text;
+      el.classList.add('show');
+      el.classList.toggle('warn', !!warn);
+    }
+
+    function setCastButtonsOn(on) {
+      document.querySelectorAll('.cast-btn').forEach((b) => b.classList.toggle('on', !!on));
+    }
+
+    function openCastSheet(opts) {
+      const sheet = document.getElementById('castSheet');
+      const body = document.getElementById('castSheetBody');
+      const urlEl = document.getElementById('castUrl');
+      const qr = document.getElementById('castQr');
+      if (!sheet) return;
+      const url = castDisplayUrl();
+      if (body) body.innerHTML = (opts && opts.html) || '';
+      if (urlEl) {
+        urlEl.hidden = !(opts && opts.showLink);
+        urlEl.textContent = url;
+      }
+      if (qr) {
+        if (opts && opts.showLink) {
+          qr.hidden = false;
+          qr.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=8&data=' + encodeURIComponent(url);
+        } else {
+          qr.hidden = true;
+          qr.removeAttribute('src');
+        }
+      }
+      sheet.classList.add('open');
+      sheet.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeCastSheet() {
+      const sheet = document.getElementById('castSheet');
+      if (!sheet) return;
+      sheet.classList.remove('open');
+      sheet.setAttribute('aria-hidden', 'true');
+    }
+
+    function buildCastState() {
+      const form = FORMS.find((f) => f.id === state.form) || FORMS[0];
+      const bubbleShow = bubble && bubble.classList.contains('show');
+      let word = '';
+      let zh = '';
+      let ipa = '';
+      try {
+        if (typeof WORDS !== 'undefined' && WORDS && WORDS.items && typeof wordIndex === 'number' && WORDS.items[wordIndex]) {
+          const it = WORDS.items[wordIndex];
+          word = it.text || '';
+          zh = it.zh || '';
+          ipa = it.ipa || '';
+        } else {
+          word = (document.getElementById('enWord') || {}).textContent || '';
+          zh = (document.getElementById('enZh') || {}).textContent || '';
+          ipa = (document.getElementById('enIpa') || {}).textContent || '';
+        }
+      } catch (e) {}
+      const fb = document.getElementById('quizFeedback');
+      const quizActive = !!(typeof quizState !== 'undefined' && quizState && quizState.active);
+      const quizPractice = quizActive && quizState.phase === 'practice' && quizState.current;
+      return {
+        type: 'state',
+        v: APP_VERSION,
+        ts: Date.now(),
+        form: form.id,
+        emoji: form.emoji,
+        name: form.name,
+        bubble: bubble ? (bubble.textContent || '') : '',
+        bubbleShow: !!bubbleShow,
+        word: word,
+        zh: zh,
+        ipa: ipa,
+        quiz: {
+          active: quizActive,
+          practice: !!quizPractice,
+          word: quizPractice ? (quizState.current.text || '') : '',
+          zh: quizPractice ? (quizState.current.zh || '') : '',
+          ipa: quizPractice ? (quizState.current.ipa || '') : '',
+          feedback: fb ? (fb.textContent || '') : '',
+          feedbackClass: fb ? (fb.className || '') : '',
+          progress: quizActive ? ((document.getElementById('quizProgress') || {}).textContent || '') : ''
+        }
+      };
+    }
+
+    function ensureCastBroadcast() {
+      if (castBc || typeof BroadcastChannel === 'undefined') return castBc;
+      try {
+        castBc = new BroadcastChannel(CAST_CHANNEL);
+      } catch (e) {
+        castBc = null;
+      }
+      return castBc;
+    }
+
+    function sendCastPayload(obj) {
+      const raw = JSON.stringify(obj);
+      if (raw === castLastPayload && obj.type === 'state') return;
+      castLastPayload = raw;
+      try {
+        if (castConnection && castConnection.state === 'connected' && typeof castConnection.send === 'function') {
+          castConnection.send(raw);
+        }
+      } catch (e) {}
+      try {
+        const bc = ensureCastBroadcast();
+        if (bc) bc.postMessage(obj);
+      } catch (e) {}
+    }
+
+    function pushCastState() {
+      if (!castConnection && !castBc) {
+        if (typeof BroadcastChannel === 'undefined') return;
+      }
+      try {
+        sendCastPayload(buildCastState());
+      } catch (e) {}
+    }
+
+    function startCastPolling() {
+      if (castPollTimer) return;
+      castPollTimer = setInterval(() => {
+        if (castConnection || ensureCastBroadcast()) pushCastState();
+      }, 500);
+    }
+
+    function stopCastPolling() {
+      if (!castPollTimer) return;
+      clearInterval(castPollTimer);
+      castPollTimer = 0;
+    }
+
+    function wireCastConnection(connection) {
+      castConnection = connection;
+      setCastButtonsOn(true);
+      setCastStatus('已连接投屏 · TV 显示场景/单词');
+      startCastPolling();
+      pushCastState();
+      const onGone = () => {
+        if (castConnection === connection) {
+          castConnection = null;
+          setCastButtonsOn(false);
+          setCastStatus('投屏已断开', true);
+          setTimeout(() => setCastStatus(''), 3200);
+        }
+      };
+      try {
+        connection.addEventListener('close', onGone);
+        connection.addEventListener('terminate', onGone);
+      } catch (e) {}
+    }
+
+    function presentationSupported() {
+      return typeof PresentationRequest !== 'undefined';
+    }
+
+    function showCastFallback(reasonHtml) {
+      const tip = '需电视支持投屏接收（如 Chromecast / 带 Google Cast 的电视），系统「无线投屏/镜像」不是这个功能。';
+      const extra = reasonHtml || '';
+      openCastSheet({
+        showLink: true,
+        html: (extra ? extra + '<br/><br/>' : '') + tip +
+          '<br/><br/>备用：在电视浏览器打开下方链接（可扫码），全屏显示页。无 Cast 时手机↔电视无法自动同步；同设备可用另一标签页预览。'
+      });
+      ensureCastBroadcast();
+      startCastPolling();
+      pushCastState();
+    }
+
+    async function startCastFlow() {
+      closeCastSheet();
+      ensureCastBroadcast();
+
+      if (castConnection && castConnection.state === 'connected') {
+        try { castConnection.terminate(); } catch (e) {
+          try { castConnection.close(); } catch (e2) {}
+        }
+        castConnection = null;
+        setCastButtonsOn(false);
+        setCastStatus('已停止投屏', true);
+        setTimeout(() => setCastStatus(''), 2400);
+        return;
+      }
+
+      if (!presentationSupported()) {
+        showCastFallback('当前浏览器不支持 Presentation API。');
+        return;
+      }
+
+      try {
+        // Same-origin cast.html — 1-UA secondary displays on some desktops.
+        // Android Chrome Chromecast usually needs registered cast:APP_ID (not pure static).
+        castRequest = new PresentationRequest([new URL('cast.html', location.href).href]);
+        try { navigator.presentation.defaultRequest = castRequest; } catch (e) {}
+        castRequest.addEventListener('connectionavailable', (ev) => {
+          if (ev && ev.connection) wireCastConnection(ev.connection);
+        });
+        setCastStatus('选择投屏设备…');
+        const connection = await castRequest.start();
+        if (connection) wireCastConnection(connection);
+        closeCastSheet();
+      } catch (err) {
+        const name = (err && err.name) || 'Error';
+        const msg = (err && err.message) || String(err || '');
+        showCastFallback('未能建立投屏会话（' + name + (msg ? ': ' + msg : '') + '）。');
+        setCastStatus('投屏不可用 · 可用显示页链接', true);
+      }
+    }
+
+    (function wireCastUi() {
+      const closeBtn = document.getElementById('castSheetClose');
+      if (closeBtn) closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeCastSheet(); });
+      const sheet = document.getElementById('castSheet');
+      if (sheet) sheet.addEventListener('click', (e) => { if (e.target === sheet) closeCastSheet(); });
+      const copyBtn = document.getElementById('castCopyBtn');
+      if (copyBtn) copyBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const url = castDisplayUrl();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(() => setCastStatus('已复制显示页链接')).catch(() => setCastStatus('请手动复制链接', true));
+        } else {
+          setCastStatus('请手动复制链接', true);
+        }
+      });
+      const openBtn = document.getElementById('castOpenBtn');
+      if (openBtn) openBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ensureCastBroadcast();
+        startCastPolling();
+        window.open(castDisplayUrl(), '_blank', 'noopener');
+        pushCastState();
+      });
+      const learnBtn = document.getElementById('btnCastLearn');
+      if (learnBtn) learnBtn.addEventListener('click', (e) => { e.stopPropagation(); startCastFlow(); });
+      const fb = document.getElementById('quizFeedback');
+      if (fb && typeof MutationObserver !== 'undefined') {
+        try {
+          new MutationObserver(() => { if (typeof pushCastState === 'function') pushCastState(); })
+            .observe(fb, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+        } catch (e) {}
+      }
+    })();
+
 
     loadWords();
 
