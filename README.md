@@ -29,7 +29,7 @@ This increments the numeric `APP_VERSION` shown in the bottom-right corner.
 
 https://2fhours.github.io/petworld/
 
-## Cast / 投屏 (second screen)
+## Alphabet / 字母播放
 
-Phone button **投屏** tries the Presentation API to open same-origin `cast.html` on a Cast-compatible receiver (best-effort). Many Xiaomi + Mi TV setups without Google Cast will not get a live Presentation session — use the fallback: open `cast.html?display=1` in the TV browser (QR / copy link). System wireless mirroring is **not** this feature. Without Cast, phone↔TV sync needs a backend; same-device tabs can preview via BroadcastChannel.
+English panel **字母 / ABC** (or ops **字母**) opens a fullscreen letter practice: one letter at a time as `A a` with IPA tip and en-US speechSynthesis pronunciation. **下一个** cycles A→Z→A; **随机** picks another letter. Legacy `cast.html` may still exist but has no in-app entry.
 
