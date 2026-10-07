@@ -1513,9 +1513,10 @@
     <div class="az-body">
       <button type="button" class="az-pair" id="alphaPair" title="Play letter sound">A <span class="lo">a</span></button>
       <div class="az-ipa" id="alphaIpa">/eɪ/</div>
-      <div class="az-hint">点字母听读音 · 下一个 / 随机 · Esc / ✕ 退出</div>
+      <div class="az-hint">点字母听读音 · 上一个 / 下一个 / 随机 · Esc / ✕ 退出</div>
       <div class="az-actions">
         <button type="button" class="primary" id="alphaPlay">▶ 读音 Play</button>
+        <button type="button" id="alphaPrev">上一个 Prev</button>
         <button type="button" id="alphaNext">下一个 Next</button>
         <button type="button" id="alphaRandom">🎲 随机 Random</button>
       </div>
@@ -1578,7 +1579,7 @@
   </script>
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 11;
+    const APP_VERSION = 12;
     document.getElementById('versionLabel').textContent = APP_VERSION;
     /** Cache-bust pack JSON so Pages/browser max-age cannot serve stale words/actions/etc. */
     function packUrl(path) {
@@ -4500,6 +4501,10 @@
           if (typeof closeAlphabet === 'function') closeAlphabet();
           return true;
         }
+        if (/\b(previous letter|prev letter|previous|prev)\b/.test(t) || /上一个|上一个字母|前一个/.test(t)) {
+          if (typeof alphabetPrev === 'function') alphabetPrev();
+          return true;
+        }
         if (/\b(next letter|next)\b/.test(t) || /下一个|下一个字母/.test(t)) {
           if (typeof alphabetNext === 'function') alphabetNext();
           return true;
@@ -5221,35 +5226,144 @@
       S: '/ɛs/', T: '/tiː/', U: '/juː/', V: '/viː/', W: '/ˈdʌbəl.juː/',
       X: '/ɛks/', Y: '/waɪ/', Z: '/ziː/'
     };
+    // Spoken names help engines that drop single-character utterances.
+    const LETTER_SAY = {
+      A: 'A', B: 'B', C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', H: 'H',
+      I: 'I', J: 'J', K: 'K', L: 'L', M: 'M', N: 'N', O: 'O', P: 'P',
+      Q: 'Q', R: 'R', S: 'S', T: 'T', U: 'U', V: 'V', W: 'double U',
+      X: 'X', Y: 'Y', Z: 'Z'
+    };
     const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const alphaState = { active: false, index: 0 };
+    let alphaVoices = [];
+    let alphaTtsUnlocked = false;
+    let alphaSpeakToken = 0;
 
-    function speakLetterName(ch) {
+    function refreshAlphaVoices() {
+      try {
+        if (!window.speechSynthesis) return [];
+        alphaVoices = window.speechSynthesis.getVoices() || [];
+        return alphaVoices;
+      } catch (e) {
+        return alphaVoices || [];
+      }
+    }
+
+    function pickEnUsVoice(voices) {
+      const list = voices && voices.length ? voices : refreshAlphaVoices();
+      return list.find((v) => /en-US/i.test(v.lang) && /female|samantha|zira|google US|Jenny|Aria|Michelle/i.test(v.name))
+        || list.find((v) => /en-US/i.test(v.lang))
+        || list.find((v) => /^en[-_]/i.test(v.lang))
+        || null;
+    }
+
+    /** Unlock speechSynthesis inside a user gesture (required on mobile Chrome). */
+    function unlockAlphabetTts() {
+      if (alphaTtsUnlocked) return;
+      if (typeof window.speechSynthesis === 'undefined') return;
+      try {
+        refreshAlphaVoices();
+        // Near-silent warm-up keeps the user-gesture audio session alive.
+        // Do not cancel immediately — cancel-before-speak races on Android Chrome.
+        const warm = new SpeechSynthesisUtterance('.');
+        warm.volume = 0.01;
+        warm.rate = 2;
+        warm.pitch = 1;
+        warm.lang = 'en-US';
+        const pref = pickEnUsVoice();
+        if (pref) warm.voice = pref;
+        window.speechSynthesis.speak(warm);
+        alphaTtsUnlocked = true;
+      } catch (e) {
+        alphaTtsUnlocked = true;
+      }
+    }
+
+    function speakLetterName(ch, opts) {
+      const fromGesture = !!(opts && opts.fromGesture);
       const letter = String(ch || 'A').toUpperCase().slice(0, 1);
+      const sayText = (LETTER_SAY[letter] || letter) + '.';
       try {
         if (typeof currentAudio !== 'undefined' && currentAudio) {
           currentAudio.pause();
           currentAudio = null;
         }
       } catch (e) {}
+      if (typeof say === 'function') say(letter + ' ' + letter.toLowerCase(), 1400);
+
       if (typeof window.speechSynthesis === 'undefined') {
-        if (typeof say === 'function') say(letter, 1200);
+        // No TTS: brief visual already via say(); nothing else available.
         return;
       }
-      try { window.speechSynthesis.cancel(); } catch (e) {}
-      const u = new SpeechSynthesisUtterance(letter);
-      u.lang = 'en-US';
-      u.rate = 0.85;
-      u.pitch = 1.05;
-      try {
-        const voices = window.speechSynthesis.getVoices() || [];
-        const pref = voices.find((v) => /en-US/i.test(v.lang) && /female|samantha|zira|google US/i.test(v.name))
-          || voices.find((v) => /en-US/i.test(v.lang))
-          || voices.find((v) => /^en/i.test(v.lang));
-        if (pref) u.voice = pref;
-      } catch (e) {}
-      window.speechSynthesis.speak(u);
-      if (typeof say === 'function') say(letter + ' ' + letter.toLowerCase(), 1400);
+
+      if (fromGesture) unlockAlphabetTts();
+
+      const token = ++alphaSpeakToken;
+      const voicesNow = refreshAlphaVoices();
+
+      const doSpeak = () => {
+        if (token !== alphaSpeakToken) return;
+        try {
+          // Chrome can stick in paused state after cancel.
+          try { window.speechSynthesis.cancel(); } catch (e) {}
+          try { window.speechSynthesis.resume(); } catch (e) {}
+          const u = new SpeechSynthesisUtterance(sayText);
+          u.lang = 'en-US';
+          u.rate = 0.9;
+          u.pitch = 1.05;
+          u.volume = 1;
+          const pref = pickEnUsVoice(refreshAlphaVoices());
+          if (pref) u.voice = pref;
+          u.onerror = function () {
+            if (token !== alphaSpeakToken) return;
+            // Retry once with plain letter if named speak failed.
+            try {
+              const u2 = new SpeechSynthesisUtterance(letter);
+              u2.lang = 'en-US';
+              u2.rate = 0.85;
+              const p2 = pickEnUsVoice();
+              if (p2) u2.voice = p2;
+              window.speechSynthesis.speak(u2);
+            } catch (e2) {}
+          };
+          window.speechSynthesis.speak(u);
+          // Mobile Chrome often pauses mid-queue; nudge resume.
+          setTimeout(() => {
+            try {
+              if (token === alphaSpeakToken && window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
+              }
+            } catch (e) {}
+          }, 40);
+        } catch (e) {}
+      };
+
+      if (voicesNow.length) {
+        // Speak in the same tick when possible (keeps user-gesture unlock).
+        doSpeak();
+      } else {
+        // Voices often empty until voiceschanged on first visit (mobile Chrome).
+        let done = false;
+        const finish = () => {
+          if (done || token !== alphaSpeakToken) return;
+          done = true;
+          try { window.speechSynthesis.removeEventListener('voiceschanged', onVoices); } catch (e) {}
+          doSpeak();
+        };
+        const onVoices = () => { refreshAlphaVoices(); finish(); };
+        try { window.speechSynthesis.addEventListener('voiceschanged', onVoices); } catch (e) {}
+        // Also poll briefly — some WebViews never fire voiceschanged.
+        let polls = 0;
+        const poll = setInterval(() => {
+          polls += 1;
+          if (refreshAlphaVoices().length || polls > 20) {
+            clearInterval(poll);
+            finish();
+          }
+        }, 50);
+        // Fallback speak even with empty voice list after short wait.
+        setTimeout(finish, 400);
+      }
     }
 
     function renderAlphabet() {
@@ -5272,12 +5386,14 @@
         ov.setAttribute('aria-hidden', 'false');
       }
       renderAlphabet();
-      // slight delay so overlay paints before TTS on mobile
-      setTimeout(() => speakLetterName(LETTERS[alphaState.index]), 120);
+      // Speak immediately in the opening gesture (no setTimeout — mobile Chrome drops TTS otherwise).
+      unlockAlphabetTts();
+      speakLetterName(LETTERS[alphaState.index], { fromGesture: true });
     }
 
     function closeAlphabet() {
       alphaState.active = false;
+      alphaSpeakToken += 1;
       try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
       const ov = document.getElementById('alphaOverlay');
       if (ov) {
@@ -5286,10 +5402,16 @@
       }
     }
 
+    function alphabetPrev() {
+      alphaState.index = (alphaState.index - 1 + LETTERS.length) % LETTERS.length;
+      renderAlphabet();
+      speakLetterName(LETTERS[alphaState.index], { fromGesture: true });
+    }
+
     function alphabetNext() {
       alphaState.index = (alphaState.index + 1) % LETTERS.length;
       renderAlphabet();
-      speakLetterName(LETTERS[alphaState.index]);
+      speakLetterName(LETTERS[alphaState.index], { fromGesture: true });
     }
 
     function alphabetRandom() {
@@ -5298,7 +5420,7 @@
       while (n === alphaState.index) n = Math.floor(Math.random() * LETTERS.length);
       alphaState.index = n;
       renderAlphabet();
-      speakLetterName(LETTERS[alphaState.index]);
+      speakLetterName(LETTERS[alphaState.index], { fromGesture: true });
     }
 
     (function wireAlphabetUi() {
@@ -5309,27 +5431,31 @@
       const playBtn = document.getElementById('alphaPlay');
       if (playBtn) playBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        speakLetterName(LETTERS[alphaState.index]);
+        speakLetterName(LETTERS[alphaState.index], { fromGesture: true });
       });
       const pair = document.getElementById('alphaPair');
       if (pair) pair.addEventListener('click', (e) => {
         e.stopPropagation();
-        speakLetterName(LETTERS[alphaState.index]);
+        speakLetterName(LETTERS[alphaState.index], { fromGesture: true });
       });
+      const prevBtn = document.getElementById('alphaPrev');
+      if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); alphabetPrev(); });
       const nextBtn = document.getElementById('alphaNext');
       if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); alphabetNext(); });
       const rndBtn = document.getElementById('alphaRandom');
       if (rndBtn) rndBtn.addEventListener('click', (e) => { e.stopPropagation(); alphabetRandom(); });
       try {
         if (window.speechSynthesis && typeof window.speechSynthesis.getVoices === 'function') {
+          refreshAlphaVoices();
+          window.speechSynthesis.addEventListener('voiceschanged', refreshAlphaVoices);
+          // Prime voice list early (fires voiceschanged on many browsers).
           window.speechSynthesis.getVoices();
-          window.speechSynthesis.onvoiceschanged = function () { window.speechSynthesis.getVoices(); };
         }
       } catch (e) {}
     })();
 
 
-    loadWords();    loadWords();
+    loadWords();
 
     const saved = localStorage.getItem('proto-pet-form');
     state.form = FORMS.some((f) => f.id === saved) ? saved : 'cat';

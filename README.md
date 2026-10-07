@@ -31,5 +31,5 @@ https://2fhours.github.io/petworld/
 
 ## Alphabet / 字母播放
 
-English panel **字母 / ABC** (or ops **字母**) opens a fullscreen letter practice: one letter at a time as `A a` with IPA tip and en-US speechSynthesis pronunciation. **下一个** cycles A→Z→A; **随机** picks another letter. Legacy `cast.html` may still exist but has no in-app entry.
+English panel **字母 / ABC** (or ops **字母**) opens a fullscreen letter practice: one letter at a time as `A a` with IPA tip and en-US `speechSynthesis` pronunciation (unlocked on tap; waits for voices on mobile Chrome). **上一个** / **下一个** cycle Z↔A; **随机** picks another letter. Legacy `cast.html` may still exist but has no in-app entry.
 
