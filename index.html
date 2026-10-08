@@ -1579,7 +1579,7 @@
   </script>
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 12;
+    const APP_VERSION = 13;
     document.getElementById('versionLabel').textContent = APP_VERSION;
     /** Cache-bust pack JSON so Pages/browser max-age cannot serve stale words/actions/etc. */
     function packUrl(path) {
@@ -2214,6 +2214,7 @@
         if (foods.genericReject) add(foods.genericReject.audio);
         if (foods.askFood) add(foods.askFood.audio);
         add('audio/good_morning.mp3');
+        'abcdefghijklmnopqrstuvwxyz'.split('').forEach((c) => add('audio/letters/' + c + '.mp3'));
         const playsSrc = plays || PLAYS;
         if (playsSrc && playsSrc.plays) {
           playsSrc.plays.forEach((p) => add(p.audio));
@@ -5279,26 +5280,99 @@
       }
     }
 
+    function letterAudioPath(letter) {
+      return 'audio/letters/' + String(letter || 'A').toLowerCase().slice(0, 1) + '.mp3';
+    }
+
+    /** Warm Cache API with the 26 letter MP3s (background, best-effort). */
+    let alphaCacheWarmed = false;
+    async function warmLetterAudioCache() {
+      if (alphaCacheWarmed || !window.caches) return;
+      alphaCacheWarmed = true;
+      try {
+        const cache = await caches.open(AUDIO_CACHE);
+        for (const l of LETTERS) {
+          const path = letterAudioPath(l);
+          try {
+            if (await cache.match(path)) continue;
+            const res = await fetch(path, { cache: 'reload' });
+            if (res.ok) await cache.put(path, res.clone());
+          } catch (e) {}
+        }
+      } catch (e) { alphaCacheWarmed = false; }
+    }
+
+    /**
+     * Play pre-recorded letter MP3 (same neural voice as words).
+     * Audio element is created + play() called synchronously inside the tap gesture
+     * (mobile browsers drop play() after awaits). Resolves on 'playing', rejects on failure.
+     */
+    function playLetterMp3(letter, token) {
+      const path = letterAudioPath(letter);
+      const tryPlay = (url) => new Promise((resolve, reject) => {
+        if (token !== alphaSpeakToken) { resolve(null); return; }
+        let settled = false;
+        const audio = new Audio(url);
+        audio.preload = 'auto';
+        const ok = () => { if (!settled) { settled = true; clearTimeout(timer); resolve(audio); } };
+        const fail = (err) => {
+          if (settled) return;
+          settled = true; clearTimeout(timer);
+          try { audio.pause(); } catch (e) {}
+          if (currentAudio === audio) currentAudio = null;
+          reject(err || new Error('letter audio failed'));
+        };
+        const timer = setTimeout(() => fail(new Error('letter audio timeout')), 3500);
+        audio.addEventListener('playing', ok, { once: true });
+        audio.addEventListener('error', () => fail(new Error('letter audio error')), { once: true });
+        currentAudio = audio;
+        try {
+          const pr = audio.play();
+          if (pr && typeof pr.then === 'function') pr.then(ok, fail);
+        } catch (e) { fail(e); }
+      });
+      const memo = audioUrlMemo.get(path);
+      return tryPlay(memo || path).catch(async (err) => {
+        if (token !== alphaSpeakToken) return null;
+        // Retry once from Cache API (offline after 预下载), else give up -> TTS fallback.
+        const url = await getPlayableUrl(path);
+        if (!url || url === (memo || path)) throw err;
+        return tryPlay(url);
+      });
+    }
+
     function speakLetterName(ch, opts) {
       const fromGesture = !!(opts && opts.fromGesture);
       const letter = String(ch || 'A').toUpperCase().slice(0, 1);
-      const sayText = (LETTER_SAY[letter] || letter) + '.';
       try {
         if (typeof currentAudio !== 'undefined' && currentAudio) {
           currentAudio.pause();
           currentAudio = null;
         }
       } catch (e) {}
+      try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
       if (typeof say === 'function') say(letter + ' ' + letter.toLowerCase(), 1400);
 
-      if (typeof window.speechSynthesis === 'undefined') {
-        // No TTS: brief visual already via say(); nothing else available.
-        return;
-      }
+      const token = ++alphaSpeakToken;
+      playLetterMp3(letter, token).then(() => {
+        // Cache blob URL for next time (does not affect current playback).
+        if (window.caches && !audioUrlMemo.has(letterAudioPath(letter))) {
+          getPlayableUrl(letterAudioPath(letter)).catch(() => {});
+        }
+      }).catch((err) => {
+        if (token !== alphaSpeakToken) return;
+        console.warn('letter mp3 failed, using speechSynthesis', err);
+        speakLetterTts(letter, fromGesture, token);
+      });
+    }
+
+    /** Fallback only: browser speechSynthesis when the MP3 cannot play. */
+    function speakLetterTts(letter, fromGesture, token) {
+      const sayText = (LETTER_SAY[letter] || letter) + '.';
+      if (typeof window.speechSynthesis === 'undefined') return;
 
       if (fromGesture) unlockAlphabetTts();
 
-      const token = ++alphaSpeakToken;
       const voicesNow = refreshAlphaVoices();
 
       const doSpeak = () => {
@@ -5339,7 +5413,6 @@
       };
 
       if (voicesNow.length) {
-        // Speak in the same tick when possible (keeps user-gesture unlock).
         doSpeak();
       } else {
         // Voices often empty until voiceschanged on first visit (mobile Chrome).
@@ -5386,15 +5459,16 @@
         ov.setAttribute('aria-hidden', 'false');
       }
       renderAlphabet();
-      // Speak immediately in the opening gesture (no setTimeout — mobile Chrome drops TTS otherwise).
-      unlockAlphabetTts();
+      // Play immediately in the opening gesture (no setTimeout — mobile drops audio otherwise).
       speakLetterName(LETTERS[alphaState.index], { fromGesture: true });
+      warmLetterAudioCache();
     }
 
     function closeAlphabet() {
       alphaState.active = false;
       alphaSpeakToken += 1;
       try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+      try { if (currentAudio) { currentAudio.pause(); currentAudio = null; } } catch (e) {}
       const ov = document.getElementById('alphaOverlay');
       if (ov) {
         ov.classList.remove('open');
