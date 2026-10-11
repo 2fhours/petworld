@@ -1619,7 +1619,7 @@
   </script>
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 14;
+    const APP_VERSION = 15;
     document.getElementById('versionLabel').textContent = APP_VERSION;
     /** Cache-bust pack JSON so Pages/browser max-age cannot serve stale words/actions/etc. */
     function packUrl(path) {
@@ -2255,6 +2255,8 @@
         if (foods.askFood) add(foods.askFood.audio);
         add('audio/good_morning.mp3');
         'abcdefghijklmnopqrstuvwxyz'.split('').forEach((c) => add('audio/letters/' + c + '.mp3'));
+        add('audio/sfx/quiz_ok.mp3');
+        add('audio/sfx/quiz_bad.mp3');
         const playsSrc = plays || PLAYS;
         if (playsSrc && playsSrc.plays) {
           playsSrc.plays.forEach((p) => add(p.audio));
@@ -4062,7 +4064,9 @@
       done: 0,
       total: 0,
       filter: '',
-      lastN: 5
+      lastN: 5,
+      autoListen: false,
+      listenTimer: null
     };
 
     function normalizeQuizText(s) {
@@ -4083,13 +4087,14 @@
         const g = normalizeQuizText(target);
         if (!g) continue;
         if (t === g) return true;
+        // Contiguous target in longer utterance (word-boundary). Covers multi-word
+        // phrases and "I like a cat please" → cat / "my pencil case" → pencil case.
         if (typeof matchTrigger === 'function' && matchTrigger(t, g)) return true;
-        // close: transcript contains full target as phrase
-        if (g.length >= 2 && (t.includes(g) || g.includes(t))) {
-          // avoid tiny false positives
-          if (Math.min(t.length, g.length) >= 2 && Math.abs(t.length - g.length) <= Math.max(3, Math.floor(g.length * 0.4))) {
-            return true;
-          }
+        // 1–2 letter targets: word-boundary only (matchTrigger above).
+        // Longer: also accept contiguous substring with boundary-ish edges.
+        if (g.length >= 3) {
+          const esc = g.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          if (new RegExp('(^|[^a-z0-9])' + esc + '([^a-z0-9]|$)').test(t)) return true;
         }
       }
       return false;
@@ -4138,6 +4143,8 @@
       quizState.judged = false;
       quizState.current = null;
       quizState.pool = [];
+      quizState.autoListen = false;
+      if (typeof clearQuizListenTimer === 'function') clearQuizListenTimer();
       if (typeof requestRecognitionStop === 'function' && was) {
         // stop 跟读 listen without leaving a pending restart
         try { requestRecognitionStop(); } catch (e) {}
@@ -4566,8 +4573,40 @@
       speakDialog(matched);
     }
 
+    function clearQuizListenTimer() {
+      if (quizState.listenTimer) {
+        clearTimeout(quizState.listenTimer);
+        quizState.listenTimer = null;
+      }
+    }
+
+    function scheduleQuizAutoListen(ms) {
+      clearQuizListenTimer();
+      const delay = Math.max(0, Number(ms) || 0);
+      quizState.listenTimer = setTimeout(() => {
+        quizState.listenTimer = null;
+        if (!quizState.active || quizState.phase !== 'practice' || !quizState.autoListen) return;
+        if (!quizState.current || quizState.waiting) return;
+        startQuizRepeat();
+      }, delay);
+    }
+
+    /** Short quiz SFX — separate Audio so it does not steal currentAudio / block mic restart. */
+    function playQuizSfx(kind) {
+      const path = kind === 'ok' ? 'audio/sfx/quiz_ok.mp3' : 'audio/sfx/quiz_bad.mp3';
+      const url = (typeof packUrl === 'function') ? packUrl(path) : path;
+      try {
+        const a = new Audio(url);
+        a.volume = 0.75;
+        const p = a.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } catch (e) {}
+    }
+
     function startQuizRepeat() {
       if (!quizState.active || quizState.phase !== 'practice' || !quizState.current) return;
+      clearQuizListenTimer();
+      quizState.autoListen = true;
       quizState.waiting = true;
       quizState.judged = false;
       const fb = document.getElementById('quizFeedback');
@@ -4599,19 +4638,28 @@
       const heard = String(transcript || '').trim();
       const ok = (typeof precomputedOk === 'boolean') ? precomputedOk : quizWordMatches(heard, it);
       if (ok) {
+        playQuizSfx('ok');
         if (fb) { fb.textContent = '✅ Great!'; fb.className = 'qz-feedback ok'; }
         if (typeof setHappy === 'function') setHappy(1400);
         if (typeof burst === 'function') burst(['✨', '⭐', '💛'], state.x, state.y - 70);
         if (typeof awardXp === 'function') awardXp(1, 'quiz', { key: 'quiz:' + it.id + ':' + Date.now(), cooldownMs: 0 });
         if (typeof unlockAtlasWord === 'function') unlockAtlasWord(it, 'quiz');
         say('Good!', 1000);
-        setTimeout(() => {
-          if (quizState.active && quizState.phase === 'practice') showNextQuizWord(false);
-        }, 900);
+        // Continuous: ding → next word → auto 跟读 again (pool reshuffles when empty).
+        clearQuizListenTimer();
+        quizState.listenTimer = setTimeout(() => {
+          quizState.listenTimer = null;
+          if (!quizState.active || quizState.phase !== 'practice') return;
+          showNextQuizWord(false);
+          if (quizState.autoListen && quizState.current) scheduleQuizAutoListen(280);
+        }, 750);
       } else {
+        playQuizSfx('bad');
         const tip = heard ? ('❌ Heard: ' + heard + ' · ' + (it.text || '')) : ('❌ Try again · ' + (it.text || ''));
         if (fb) { fb.textContent = tip; fb.className = 'qz-feedback bad'; }
         say('Try again', 1200);
+        // Keep same word; auto re-listen for continuous practice.
+        if (quizState.autoListen) scheduleQuizAutoListen(800);
       }
     }
 
@@ -4736,8 +4784,14 @@
         if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting && !quizState.judged) {
           quizState.waiting = false;
           const fb = document.getElementById('quizFeedback');
-          if (fb) { fb.textContent = '🎤 没听到，请再点跟读'; fb.className = 'qz-feedback bad'; }
-          setMicStatus('没听到说话，请再点跟读');
+          if (quizState.autoListen) {
+            if (fb) { fb.textContent = '🎤 没听到，再试…'; fb.className = 'qz-feedback'; }
+            setMicStatus('没听到说话，自动再听…');
+            if (typeof scheduleQuizAutoListen === 'function') scheduleQuizAutoListen(800);
+          } else {
+            if (fb) { fb.textContent = '🎤 没听到，请再点跟读'; fb.className = 'qz-feedback bad'; }
+            setMicStatus('没听到说话，请再点跟读');
+          }
         }
       };
       recognition.onerror = (e) => {
@@ -4766,10 +4820,16 @@
           const fb = document.getElementById('quizFeedback');
           if (fb) {
             let qmsg = '🎤 ' + msg;
-            if (e.error === 'no-speech') qmsg = '🎤 没听到，请再点跟读';
-            else if (e.error === 'not-allowed' || e.error === 'service-not-allowed') qmsg = '🎤 请允许麦克风后重试';
+            if (e.error === 'no-speech') {
+              qmsg = quizState.autoListen ? '🎤 没听到，再试…' : '🎤 没听到，请再点跟读';
+            } else if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+              qmsg = '🎤 请允许麦克风后重试';
+            }
             fb.textContent = qmsg;
-            fb.className = 'qz-feedback bad';
+            fb.className = (e.error === 'no-speech' && quizState.autoListen) ? 'qz-feedback' : 'qz-feedback bad';
+          }
+          if (e.error === 'no-speech' && quizState.autoListen && typeof scheduleQuizAutoListen === 'function') {
+            scheduleQuizAutoListen(800);
           }
         }
         if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
@@ -4851,6 +4911,8 @@
         // User cancel — clear pending restart and any 跟读 wait
         if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
           quizState.waiting = false;
+          quizState.autoListen = false;
+          if (typeof clearQuizListenTimer === 'function') clearQuizListenTimer();
           const fb = document.getElementById('quizFeedback');
           if (fb) { fb.textContent = '已停止聆听'; fb.className = 'qz-feedback'; }
         }
