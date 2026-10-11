@@ -1,0 +1,308 @@
+{
+  "source": "沪教版(五四制) 2024 新版 一年级英语 1A/1B",
+  "units": [
+    {
+      "id": "1A-U1",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 1,
+      "title": "1A U1 Greetings 问候",
+      "words": [
+        "w_morning",
+        "w_afternoon",
+        "w_evening"
+      ]
+    },
+    {
+      "id": "1A-U2",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 2,
+      "title": "1A U2 New friends 新朋友",
+      "words": [
+        "w_hello",
+        "friend",
+        "w_welcome",
+        "w_name",
+        "w_hi"
+      ]
+    },
+    {
+      "id": "1A-U3",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 3,
+      "title": "1A U3 My schoolbag 我的书包",
+      "words": [
+        "w_pack",
+        "w_my",
+        "w_schoolbag",
+        "w_pencil",
+        "w_ruler",
+        "w_eraser",
+        "w_book",
+        "w_pencil_case"
+      ]
+    },
+    {
+      "id": "1A-U4",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 4,
+      "title": "1A U4 My classroom 我的教室",
+      "words": [
+        "w_clean",
+        "w_classroom",
+        "w_door",
+        "w_desk",
+        "w_chair",
+        "w_on_duty",
+        "w_blackboard",
+        "w_floor"
+      ]
+    },
+    {
+      "id": "1A-U5",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 5,
+      "title": "1A U5 Lovely faces 可爱的脸",
+      "words": [
+        "w_face",
+        "w_eye",
+        "w_ear",
+        "w_nose",
+        "w_mouth"
+      ]
+    },
+    {
+      "id": "1A-U6",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 6,
+      "title": "1A U6 My family 我的家",
+      "words": [
+        "w_family",
+        "w_mum",
+        "w_dad",
+        "w_brother",
+        "w_sister",
+        "w_me",
+        "w_warm",
+        "w_happy",
+        "w_love"
+      ]
+    },
+    {
+      "id": "1A-U7",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 7,
+      "title": "1A U7 Animals in our lives 我们生活中的动物",
+      "words": [
+        "w_helpful",
+        "w_animal",
+        "w_horse",
+        "w_dog",
+        "w_hen",
+        "w_bee",
+        "w_cat"
+      ]
+    },
+    {
+      "id": "1A-U8",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 8,
+      "title": "1A U8 Have a go! 试一试！",
+      "words": [
+        "w_bird",
+        "w_hill",
+        "w_fly_away",
+        "w_come_back",
+        "w_flap_wings"
+      ]
+    },
+    {
+      "id": "1A-U9",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 9,
+      "title": "1A U9 Yes, I can! 是的，我能！",
+      "words": [
+        "w_wash",
+        "w_tie_shoelaces",
+        "w_take_a_photo"
+      ]
+    },
+    {
+      "id": "1A-U10",
+      "book": "1A",
+      "bookTitle": "上册",
+      "unit": 10,
+      "title": "1A U10 Fun numbers 有趣的数字",
+      "words": [
+        "w_one",
+        "w_two",
+        "w_three",
+        "w_four",
+        "w_five",
+        "w_six"
+      ]
+    },
+    {
+      "id": "1B-U1",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 1,
+      "title": "1B U1 Back to school 回到学校",
+      "words": [
+        "w_fine",
+        "w_great",
+        "w_busy",
+        "w_tired",
+        "w_happy"
+      ]
+    },
+    {
+      "id": "1B-U2",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 2,
+      "title": "1B U2 Lunch time 午餐时间",
+      "words": [
+        "w_lunch",
+        "w_time",
+        "w_meatball",
+        "w_rice",
+        "w_vegetable",
+        "w_soup",
+        "w_apple"
+      ]
+    },
+    {
+      "id": "1B-U3",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 3,
+      "title": "1B U3 Colours in the park 公园里的颜色",
+      "words": [
+        "w_colour",
+        "yellow",
+        "red",
+        "green",
+        "blue"
+      ]
+    },
+    {
+      "id": "1B-U4",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 4,
+      "title": "1B U4 In the playground 在游乐场",
+      "words": [
+        "w_playground",
+        "w_slide",
+        "w_swing",
+        "w_seesaw",
+        "w_hold_on_tight",
+        "w_be_careful"
+      ]
+    },
+    {
+      "id": "1B-U5",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 5,
+      "title": "1B U5 Weather 天气",
+      "words": [
+        "w_weather",
+        "w_sunny",
+        "w_rainy",
+        "w_windy",
+        "w_cloudy",
+        "w_snowy"
+      ]
+    },
+    {
+      "id": "1B-U6",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 6,
+      "title": "1B U6 Clothes 衣服",
+      "words": [
+        "clothes",
+        "shirt",
+        "w_trousers",
+        "w_sock",
+        "w_socks",
+        "w_shoe",
+        "w_shoes",
+        "hat",
+        "w_dress",
+        "w_skirt"
+      ]
+    },
+    {
+      "id": "1B-U7",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 7,
+      "title": "1B U7 After school 放学后",
+      "words": [
+        "w_game",
+        "w_hide_and_seek",
+        "w_move_and_freeze",
+        "w_ready",
+        "w_play",
+        "w_skip_rope",
+        "w_throw_sandbags"
+      ]
+    },
+    {
+      "id": "1B-U8",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 8,
+      "title": "1B U8 Traffic safety 交通安全",
+      "words": [
+        "w_traffic_light",
+        "w_stop",
+        "w_go",
+        "w_wait",
+        "w_zebra_crossing"
+      ]
+    },
+    {
+      "id": "1B-U9",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 9,
+      "title": "1B U9 I see animals 我看见动物",
+      "words": [
+        "w_panda",
+        "w_tiger",
+        "w_elephant",
+        "w_monkey",
+        "w_climb_a_tree",
+        "w_swim"
+      ]
+    },
+    {
+      "id": "1B-U10",
+      "book": "1B",
+      "bookTitle": "下册",
+      "unit": 10,
+      "title": "1B U10 I like toys 我喜欢玩具",
+      "words": [
+        "w_kite",
+        "w_toy_car",
+        "w_toy_boat",
+        "w_ball",
+        "w_toy_train",
+        "w_gift",
+        "w_cute"
+      ]
+    }
+  ]
+}

@@ -1201,6 +1201,38 @@
     .quiz-pick .qz-csv-actions .qz-csv-status {
       flex: 1; font-size: 12px; color: rgba(199,210,254,0.9); min-width: 100px;
     }
+    .quiz-pick .qz-units {
+      flex: 0 0 auto; margin-bottom: 8px;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+    }
+    .quiz-pick .qz-units > summary {
+      cursor: pointer; padding: 7px 10px; font-size: 13px; color: #c7d2fe;
+      list-style: none; display: flex; align-items: center; gap: 8px; user-select: none;
+    }
+    .quiz-pick .qz-units > summary::-webkit-details-marker { display: none; }
+    .quiz-pick .qz-units > summary::before { content: '▸'; transition: transform .15s; }
+    .quiz-pick .qz-units[open] > summary::before { transform: rotate(90deg); }
+    .quiz-pick .qz-units .qz-units-sum { flex: 1; font-size: 11px; color: rgba(226,232,240,0.6); }
+    .quiz-pick .qz-units-body {
+      padding: 0 10px 8px; max-height: 30vh; overflow-y: auto;
+      -webkit-overflow-scrolling: touch; overscroll-behavior: contain; touch-action: pan-y;
+    }
+    .quiz-pick .qz-unit-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+    .quiz-pick .qz-unit-group .lbl { font-size: 11px; color: rgba(226,232,240,0.6); width: 100%; }
+    .quiz-pick .qz-unit-chip {
+      appearance: none; border: 1px solid rgba(255,255,255,0.14); border-radius: 999px;
+      padding: 5px 10px; font: inherit; font-size: 12px; color: #e2e8f0;
+      background: rgba(255,255,255,0.06); cursor: pointer; white-space: nowrap;
+    }
+    .quiz-pick .qz-unit-chip .n { opacity: 0.6; font-size: 11px; margin-left: 3px; }
+    .quiz-pick .qz-unit-chip.on { background: rgba(99,102,241,0.45); border-color: rgba(165,180,252,0.7); }
+    .quiz-pick .qz-units-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; font-size: 12px; color: rgba(226,232,240,0.8); }
+    .quiz-pick .qz-units-tools label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .quiz-pick .qz-units-tools button {
+      appearance: none; border: 0; border-radius: 999px; padding: 4px 10px;
+      font: inherit; font-size: 11px; color: #e2e8f0; background: rgba(255,255,255,0.1); cursor: pointer;
+    }
     .quiz-pick .qz-list {
       flex: 1 1 0; min-height: 0; max-height: none;
       overflow-y: auto; overflow-x: hidden;
@@ -1304,6 +1336,10 @@
       .quiz-pick .qz-meta { margin-bottom: 6px; flex: 0 0 auto; }
       .quiz-pick .qz-csv { margin-bottom: 6px; }
       .quiz-pick .qz-csv textarea { min-height: 44px; max-height: 72px; font-size: 12px; padding: 7px 9px; }
+      .quiz-pick .qz-units { margin-bottom: 6px; }
+      .quiz-pick .qz-units > summary { padding: 6px 9px; font-size: 12px; }
+      .quiz-pick .qz-units-body { max-height: 26vh; padding: 0 8px 6px; }
+      .quiz-pick .qz-unit-chip { padding: 4px 8px; font-size: 11px; }
       .quiz-pick .qz-csv-actions button { padding: 5px 10px; font-size: 11px; }
       .quiz-pick .qz-list {
         flex: 1 1 0;
@@ -1532,8 +1568,12 @@
     <div class="qz-body quiz-pick" id="quizPick">
       <input class="qz-search" id="quizSearch" type="search" placeholder="搜索单词 / Search" autocomplete="off" />
       <div class="qz-meta" id="quizPickMeta">选择要练习的单词</div>
+      <details class="qz-units" id="quizUnits" open>
+        <summary>📚 按单元选 · Units <span class="qz-units-sum" id="quizUnitsSum">沪教版一年级 · 可多选</span></summary>
+        <div class="qz-units-body" id="quizUnitsBody"></div>
+      </details>
       <div class="qz-csv">
-        <textarea id="quizCsvInput" rows="2" placeholder="粘贴单词列表：逗号 / ， / 空格 / 换行分隔，如 Hello, Friend, Dog" spellcheck="false"></textarea>
+        <textarea id="quizCsvInput" rows="2" placeholder="粘贴单词列表：逗号 / ， / 换行分隔，如 Hello, Pencil case, Good morning" spellcheck="false"></textarea>
         <div class="qz-csv-actions">
           <button type="button" id="quizCsvApply">导入 Apply</button>
           <button type="button" id="quizCsvExport">导出 Export</button>
@@ -1579,7 +1619,7 @@
   </script>
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 13;
+    const APP_VERSION = 14;
     document.getElementById('versionLabel').textContent = APP_VERSION;
     /** Cache-bust pack JSON so Pages/browser max-age cannot serve stale words/actions/etc. */
     function packUrl(path) {
@@ -4083,6 +4123,8 @@
       if (title) title.textContent = '🎯 抽读 · Word Quiz';
       const prog = document.getElementById('quizProgress');
       if (prog) prog.textContent = '';
+      if (!quizState.selectedUnits) quizState.selectedUnits = new Set();
+      if (QUIZ_UNITS === null) loadQuizUnits(); else renderQuizUnits();
       renderQuizPickList();
       updateQuizPickCount();
       say('Word quiz', 1400);
@@ -4118,13 +4160,16 @@
       if (!list || !WORDS || !WORDS.items) return;
       const q = (quizState.filter || '').trim().toLowerCase();
       const items = WORDS.items;
+      const unitOnly = quizState.unitOnly && quizState.selectedUnits && quizState.selectedUnits.size;
+      const unitIds = unitOnly ? quizUnitWordIds(quizState.selectedUnits) : null;
       const idxs = items.map((it, i) => i).filter((i) => {
+        if (unitIds && !unitIds.has(items[i].id)) return false;
         if (!q) return true;
         const it = items[i];
         const bag = [it.text, it.zh, it.ipa, it.id].join(' ').toLowerCase();
         return bag.includes(q);
       });
-      if (meta) meta.textContent = q ? `找到 ${idxs.length} 个` : `共 ${items.length} 个单词 · 勾选或随机抽取`;
+      if (meta) meta.textContent = (q || unitIds) ? `找到 ${idxs.length} 个` + (unitIds ? '（所选单元）' : '') : `共 ${items.length} 个单词 · 勾选或随机抽取`;
       list.innerHTML = idxs.map((i) => {
         const it = items[i];
         const sel = quizState.selectedIds.has(it.id);
@@ -4161,15 +4206,89 @@
         const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
       }
       quizState.selectedIds = new Set(pool.slice(0, nWant).map((it) => it.id));
+      if (quizState.selectedUnits) quizState.selectedUnits.clear();
+      renderQuizUnits();
       renderQuizPickList();
       updateQuizPickCount();
       say('Picked ' + nWant, 1200);
     }
 
+    // ---- Units (沪教版一年级 1A/1B) ----
+    let QUIZ_UNITS = null;
+    async function loadQuizUnits() {
+      try {
+        const res = await fetch(packUrl('units.json'));
+        const data = await res.json();
+        QUIZ_UNITS = (data && data.units) || [];
+      } catch (e) { QUIZ_UNITS = []; }
+      renderQuizUnits();
+    }
+    function quizUnitById(id) { return (QUIZ_UNITS || []).find((u) => u.id === id); }
+    function quizUnitWordIds(unitIds) {
+      const out = new Set();
+      unitIds.forEach((uid) => { const u = quizUnitById(uid); if (u) u.words.forEach((w) => out.add(w)); });
+      return out;
+    }
+    function escQuizHtml(s) { return String(s || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+    function renderQuizUnits() {
+      const body = document.getElementById('quizUnitsBody');
+      const sum = document.getElementById('quizUnitsSum');
+      if (!body) return;
+      if (!quizState.selectedUnits) quizState.selectedUnits = new Set();
+      const units = QUIZ_UNITS || [];
+      if (!units.length) { body.innerHTML = '<div class="qz-unit-group"><span class="lbl">单元加载中…</span></div>'; return; }
+      const known = new Set((WORDS && WORDS.items || []).map((it) => it.id));
+      const groups = [];
+      units.forEach((u) => {
+        let g = groups.find((x) => x.book === u.book);
+        if (!g) { g = { book: u.book, title: u.bookTitle || u.book, units: [] }; groups.push(g); }
+        g.units.push(u);
+      });
+      body.innerHTML = groups.map((g) => `<div class="qz-unit-group"><span class="lbl">${escQuizHtml(g.book)} 一年级${escQuizHtml(g.title)}</span>` +
+        g.units.map((u) => {
+          const on = quizState.selectedUnits.has(u.id);
+          const n = u.words.filter((w) => known.size === 0 || known.has(w)).length;
+          const short = String(u.title || u.id).replace(/^\s*\d[AB]\s+/, '');
+          return `<button type="button" class="qz-unit-chip${on ? ' on' : ''}" data-quiz-unit="${escQuizHtml(u.id)}" title="${escQuizHtml(u.title)}">${on ? '☑' : '☐'} ${escQuizHtml(short)}<span class="n">${n}</span></button>`;
+        }).join('') + '</div>').join('') +
+        `<div class="qz-units-tools"><label><input type="checkbox" id="quizUnitOnly"${quizState.unitOnly ? ' checked' : ''}> 只看所选单元</label><button type="button" id="quizUnitsClear">清空单元</button></div>`;
+      if (sum) {
+        const k = quizState.selectedUnits.size;
+        sum.textContent = k ? `已选 ${k} 个单元 · ${quizUnitWordIds(quizState.selectedUnits).size} 词` : '沪教版一年级 · 可多选';
+      }
+    }
+    function toggleQuizUnit(uid) {
+      const u = quizUnitById(uid);
+      if (!u) return;
+      if (!quizState.selectedUnits) quizState.selectedUnits = new Set();
+      if (!quizState.selectedIds) quizState.selectedIds = new Set();
+      const known = new Set((WORDS && WORDS.items || []).map((it) => it.id));
+      if (quizState.selectedUnits.has(uid)) {
+        quizState.selectedUnits.delete(uid);
+        const keep = quizUnitWordIds(quizState.selectedUnits);
+        u.words.forEach((w) => { if (!keep.has(w)) quizState.selectedIds.delete(w); });
+      } else {
+        quizState.selectedUnits.add(uid);
+        u.words.forEach((w) => { if (known.has(w)) quizState.selectedIds.add(w); });
+      }
+      renderQuizUnits();
+      renderQuizPickList();
+      updateQuizPickCount();
+    }
+    function clearQuizUnits() {
+      if (!quizState.selectedUnits || !quizState.selectedUnits.size) return;
+      const ids = quizUnitWordIds(quizState.selectedUnits);
+      ids.forEach((w) => quizState.selectedIds.delete(w));
+      quizState.selectedUnits.clear();
+      renderQuizUnits();
+      renderQuizPickList();
+      updateQuizPickCount();
+    }
+
     function parseQuizCsvTokens(raw) {
       return String(raw || '')
-        .split(/[,，\s\n\r]+/)
-        .map((s) => s.trim())
+        .split(/[,，、;；\n\r]+/)
+        .map((s) => s.trim().replace(/\s+/g, ' '))
         .filter(Boolean);
     }
 
@@ -4200,6 +4319,8 @@
         else unknown.push(tok);
       }
       quizState.selectedIds = new Set(matchedIds);
+      if (quizState.selectedUnits) quizState.selectedUnits.clear();
+      renderQuizUnits();
       renderQuizPickList();
       updateQuizPickCount();
       let msg = '匹配 ' + matchedIds.length;
@@ -5173,6 +5294,21 @@
         quizRandomPick(Number(b.dataset.quizRand) || 5);
       });
     });
+    const quizUnitsBody = document.getElementById('quizUnitsBody');
+    if (quizUnitsBody) {
+      quizUnitsBody.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const chip = e.target.closest('button[data-quiz-unit]');
+        if (chip) { toggleQuizUnit(chip.dataset.quizUnit); return; }
+        if (e.target.closest('#quizUnitsClear')) { clearQuizUnits(); return; }
+      });
+      quizUnitsBody.addEventListener('change', (e) => {
+        if (e.target && e.target.id === 'quizUnitOnly') {
+          quizState.unitOnly = !!e.target.checked;
+          renderQuizPickList();
+        }
+      });
+    }
     const quizCsvApply = document.getElementById('quizCsvApply');
     if (quizCsvApply) quizCsvApply.addEventListener('click', (e) => { e.stopPropagation(); applyQuizCsvImport(); });
     const quizCsvExport = document.getElementById('quizCsvExport');

@@ -5981,6 +5981,1673 @@
       ],
       "audio": "audio/the_sea_is_blue.mp3",
       "phonicsAudio": "audio/the_sea_is_blue_phonics.mp3"
+    },
+    {
+      "id": "w_pack",
+      "text": "Pack",
+      "ipa": "/pæk/",
+      "zh": "收拾；装（书包）",
+      "phonics": "PACK",
+      "audio": "audio/w_pack.mp3",
+      "phonicsAudio": "audio/w_pack_phonics.mp3",
+      "ipaSegments": [
+        "p",
+        "æ",
+        "k"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_schoolbag",
+      "text": "Schoolbag",
+      "ipa": "/ˈskuːlbæɡ/",
+      "zh": "书包",
+      "phonics": "SCHOOL-bag",
+      "audio": "audio/w_schoolbag.mp3",
+      "phonicsAudio": "audio/w_schoolbag_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "k",
+        "uː",
+        "l",
+        "b",
+        "æ",
+        "ɡ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_pencil",
+      "text": "Pencil",
+      "ipa": "/ˈpensl/",
+      "zh": "铅笔",
+      "phonics": "PEN-cil",
+      "audio": "audio/w_pencil.mp3",
+      "phonicsAudio": "audio/w_pencil_phonics.mp3",
+      "ipaSegments": [
+        "p",
+        "e",
+        "n",
+        "s",
+        "l"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_ruler",
+      "text": "Ruler",
+      "ipa": "/ˈruːlər/",
+      "zh": "直尺",
+      "phonics": "RU-ler",
+      "audio": "audio/w_ruler.mp3",
+      "phonicsAudio": "audio/w_ruler_phonics.mp3",
+      "ipaSegments": [
+        "r",
+        "uː",
+        "l",
+        "ə",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_eraser",
+      "text": "Eraser",
+      "ipa": "/ɪˈreɪsər/",
+      "zh": "橡皮",
+      "phonics": "e-RA-ser",
+      "audio": "audio/w_eraser.mp3",
+      "phonicsAudio": "audio/w_eraser_phonics.mp3",
+      "ipaSegments": [
+        "ɪ",
+        "r",
+        "eɪ",
+        "s",
+        "ə",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_book",
+      "text": "Book",
+      "ipa": "/bʊk/",
+      "zh": "书",
+      "phonics": "BOOK",
+      "audio": "audio/w_book.mp3",
+      "phonicsAudio": "audio/w_book_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "ʊ",
+        "k"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_pencil_case",
+      "text": "Pencil case",
+      "ipa": "/ˈpensl keɪs/",
+      "zh": "铅笔盒；笔袋",
+      "phonics": "PEN-cil CASE",
+      "audio": "audio/w_pencil_case.mp3",
+      "phonicsAudio": "audio/w_pencil_case_phonics.mp3",
+      "ipaSegments": [
+        "p",
+        "e",
+        "n",
+        "s",
+        "l",
+        "k",
+        "eɪ",
+        "s"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_clean",
+      "text": "Clean",
+      "ipa": "/kliːn/",
+      "zh": "打扫",
+      "phonics": "CLEAN",
+      "audio": "audio/w_clean.mp3",
+      "phonicsAudio": "audio/w_clean_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "l",
+        "iː",
+        "n"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_classroom",
+      "text": "Classroom",
+      "ipa": "/ˈklæsruːm/",
+      "zh": "教室",
+      "phonics": "CLASS-room",
+      "audio": "audio/w_classroom.mp3",
+      "phonicsAudio": "audio/w_classroom_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "l",
+        "æ",
+        "s",
+        "r",
+        "uː",
+        "m"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_door",
+      "text": "Door",
+      "ipa": "/dɔːr/",
+      "zh": "门",
+      "phonics": "DOOR",
+      "audio": "audio/w_door.mp3",
+      "phonicsAudio": "audio/w_door_phonics.mp3",
+      "ipaSegments": [
+        "d",
+        "ɔː",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_desk",
+      "text": "Desk",
+      "ipa": "/desk/",
+      "zh": "书桌",
+      "phonics": "DESK",
+      "audio": "audio/w_desk.mp3",
+      "phonicsAudio": "audio/w_desk_phonics.mp3",
+      "ipaSegments": [
+        "d",
+        "e",
+        "s",
+        "k"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_chair",
+      "text": "Chair",
+      "ipa": "/tʃer/",
+      "zh": "椅子",
+      "phonics": "CHAIR",
+      "audio": "audio/w_chair.mp3",
+      "phonicsAudio": "audio/w_chair_phonics.mp3",
+      "ipaSegments": [
+        "tʃ",
+        "e",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_on_duty",
+      "text": "On duty",
+      "ipa": "/ɑːn ˈduːti/",
+      "zh": "值日",
+      "phonics": "on DU-ty",
+      "audio": "audio/w_on_duty.mp3",
+      "phonicsAudio": "audio/w_on_duty_phonics.mp3",
+      "ipaSegments": [
+        "ɑː",
+        "n",
+        "d",
+        "uː",
+        "t",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_blackboard",
+      "text": "Blackboard",
+      "ipa": "/ˈblækbɔːrd/",
+      "zh": "黑板",
+      "phonics": "BLACK-board",
+      "audio": "audio/w_blackboard.mp3",
+      "phonicsAudio": "audio/w_blackboard_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "l",
+        "æ",
+        "k",
+        "b",
+        "ɔː",
+        "r",
+        "d"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_floor",
+      "text": "Floor",
+      "ipa": "/flɔːr/",
+      "zh": "地板",
+      "phonics": "FLOOR",
+      "audio": "audio/w_floor.mp3",
+      "phonicsAudio": "audio/w_floor_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "l",
+        "ɔː",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_face",
+      "text": "Face",
+      "ipa": "/feɪs/",
+      "zh": "脸",
+      "phonics": "FACE",
+      "audio": "audio/w_face.mp3",
+      "phonicsAudio": "audio/w_face_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "eɪ",
+        "s"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_eye",
+      "text": "Eye",
+      "ipa": "/aɪ/",
+      "zh": "眼睛",
+      "phonics": "EYE",
+      "audio": "audio/w_eye.mp3",
+      "phonicsAudio": "audio/w_eye_phonics.mp3",
+      "ipaSegments": [
+        "aɪ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_ear",
+      "text": "Ear",
+      "ipa": "/ɪr/",
+      "zh": "耳朵",
+      "phonics": "EAR",
+      "audio": "audio/w_ear.mp3",
+      "phonicsAudio": "audio/w_ear_phonics.mp3",
+      "ipaSegments": [
+        "ɪ",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_nose",
+      "text": "Nose",
+      "ipa": "/noʊz/",
+      "zh": "鼻子",
+      "phonics": "NOSE",
+      "audio": "audio/w_nose.mp3",
+      "phonicsAudio": "audio/w_nose_phonics.mp3",
+      "ipaSegments": [
+        "n",
+        "oʊ",
+        "z"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_mouth",
+      "text": "Mouth",
+      "ipa": "/maʊθ/",
+      "zh": "嘴",
+      "phonics": "MOUTH",
+      "audio": "audio/w_mouth.mp3",
+      "phonicsAudio": "audio/w_mouth_phonics.mp3",
+      "ipaSegments": [
+        "m",
+        "aʊ",
+        "θ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_family",
+      "text": "Family",
+      "ipa": "/ˈfæməli/",
+      "zh": "家；家庭",
+      "phonics": "FAM-i-ly",
+      "audio": "audio/w_family.mp3",
+      "phonicsAudio": "audio/w_family_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "æ",
+        "m",
+        "ə",
+        "l",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_mum",
+      "text": "Mum",
+      "ipa": "/mʌm/",
+      "zh": "妈妈",
+      "phonics": "MUM",
+      "audio": "audio/w_mum.mp3",
+      "phonicsAudio": "audio/w_mum_phonics.mp3",
+      "ipaSegments": [
+        "m",
+        "ʌ",
+        "m"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_dad",
+      "text": "Dad",
+      "ipa": "/dæd/",
+      "zh": "爸爸",
+      "phonics": "DAD",
+      "audio": "audio/w_dad.mp3",
+      "phonicsAudio": "audio/w_dad_phonics.mp3",
+      "ipaSegments": [
+        "d",
+        "æ",
+        "d"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_brother",
+      "text": "Brother",
+      "ipa": "/ˈbrʌðər/",
+      "zh": "哥哥；弟弟",
+      "phonics": "BROTH-er",
+      "audio": "audio/w_brother.mp3",
+      "phonicsAudio": "audio/w_brother_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "r",
+        "ʌ",
+        "ð",
+        "ə",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_sister",
+      "text": "Sister",
+      "ipa": "/ˈsɪstər/",
+      "zh": "姐姐；妹妹",
+      "phonics": "SIS-ter",
+      "audio": "audio/w_sister.mp3",
+      "phonicsAudio": "audio/w_sister_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "ɪ",
+        "s",
+        "t",
+        "ə",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_warm",
+      "text": "Warm",
+      "ipa": "/wɔːrm/",
+      "zh": "温暖的",
+      "phonics": "WARM",
+      "audio": "audio/w_warm.mp3",
+      "phonicsAudio": "audio/w_warm_phonics.mp3",
+      "ipaSegments": [
+        "w",
+        "ɔː",
+        "r",
+        "m"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_helpful",
+      "text": "Helpful",
+      "ipa": "/ˈhelpfl/",
+      "zh": "有帮助的",
+      "phonics": "HELP-ful",
+      "audio": "audio/w_helpful.mp3",
+      "phonicsAudio": "audio/w_helpful_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "e",
+        "l",
+        "p",
+        "f",
+        "l"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_animal",
+      "text": "Animal",
+      "ipa": "/ˈænɪml/",
+      "zh": "动物",
+      "phonics": "AN-i-mal",
+      "audio": "audio/w_animal.mp3",
+      "phonicsAudio": "audio/w_animal_phonics.mp3",
+      "ipaSegments": [
+        "æ",
+        "n",
+        "ɪ",
+        "m",
+        "l"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_horse",
+      "text": "Horse",
+      "ipa": "/hɔːrs/",
+      "zh": "马",
+      "phonics": "HORSE",
+      "audio": "audio/w_horse.mp3",
+      "phonicsAudio": "audio/w_horse_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "ɔː",
+        "r",
+        "s"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_hen",
+      "text": "Hen",
+      "ipa": "/hen/",
+      "zh": "母鸡",
+      "phonics": "HEN",
+      "audio": "audio/w_hen.mp3",
+      "phonicsAudio": "audio/w_hen_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "e",
+        "n"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_bee",
+      "text": "Bee",
+      "ipa": "/biː/",
+      "zh": "蜜蜂",
+      "phonics": "BEE",
+      "audio": "audio/w_bee.mp3",
+      "phonicsAudio": "audio/w_bee_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "iː"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_bird",
+      "text": "Bird",
+      "ipa": "/bɜːrd/",
+      "zh": "鸟",
+      "phonics": "BIRD",
+      "audio": "audio/w_bird.mp3",
+      "phonicsAudio": "audio/w_bird_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "ɜː",
+        "r",
+        "d"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_hill",
+      "text": "Hill",
+      "ipa": "/hɪl/",
+      "zh": "小山",
+      "phonics": "HILL",
+      "audio": "audio/w_hill.mp3",
+      "phonicsAudio": "audio/w_hill_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "ɪ",
+        "l"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_fly_away",
+      "text": "Fly away",
+      "ipa": "/flaɪ əˈweɪ/",
+      "zh": "飞走",
+      "phonics": "FLY a-WAY",
+      "audio": "audio/w_fly_away.mp3",
+      "phonicsAudio": "audio/w_fly_away_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "l",
+        "aɪ",
+        "ə",
+        "w",
+        "eɪ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_come_back",
+      "text": "Come back",
+      "ipa": "/kʌm ˈbæk/",
+      "zh": "回来",
+      "phonics": "come BACK",
+      "audio": "audio/w_come_back.mp3",
+      "phonicsAudio": "audio/w_come_back_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "ʌ",
+        "m",
+        "b",
+        "æ",
+        "k"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_flap_wings",
+      "text": "Flap wings",
+      "ipa": "/flæp wɪŋz/",
+      "zh": "拍打翅膀",
+      "phonics": "FLAP WINGS",
+      "audio": "audio/w_flap_wings.mp3",
+      "phonicsAudio": "audio/w_flap_wings_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "l",
+        "æ",
+        "p",
+        "w",
+        "ɪ",
+        "ŋ",
+        "z"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_wash",
+      "text": "Wash",
+      "ipa": "/wɑːʃ/",
+      "zh": "洗",
+      "phonics": "WASH",
+      "audio": "audio/w_wash.mp3",
+      "phonicsAudio": "audio/w_wash_phonics.mp3",
+      "ipaSegments": [
+        "w",
+        "ɑː",
+        "ʃ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_tie_shoelaces",
+      "text": "Tie shoelaces",
+      "ipa": "/taɪ ˈʃuːleɪsɪz/",
+      "zh": "系鞋带",
+      "phonics": "TIE SHOE-la-ces",
+      "audio": "audio/w_tie_shoelaces.mp3",
+      "phonicsAudio": "audio/w_tie_shoelaces_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "aɪ",
+        "ʃ",
+        "uː",
+        "l",
+        "eɪ",
+        "s",
+        "ɪ",
+        "z"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_take_a_photo",
+      "text": "Take a photo",
+      "ipa": "/teɪk ə ˈfoʊtoʊ/",
+      "zh": "拍照",
+      "phonics": "TAKE a PHO-to",
+      "audio": "audio/w_take_a_photo.mp3",
+      "phonicsAudio": "audio/w_take_a_photo_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "eɪ",
+        "k",
+        "ə",
+        "f",
+        "oʊ",
+        "t",
+        "oʊ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_one",
+      "text": "One",
+      "ipa": "/wʌn/",
+      "zh": "一",
+      "phonics": "ONE",
+      "audio": "audio/w_one.mp3",
+      "phonicsAudio": "audio/w_one_phonics.mp3",
+      "ipaSegments": [
+        "w",
+        "ʌ",
+        "n"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_two",
+      "text": "Two",
+      "ipa": "/tuː/",
+      "zh": "二",
+      "phonics": "TWO",
+      "audio": "audio/w_two.mp3",
+      "phonicsAudio": "audio/w_two_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "uː"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_three",
+      "text": "Three",
+      "ipa": "/θriː/",
+      "zh": "三",
+      "phonics": "THREE",
+      "audio": "audio/w_three.mp3",
+      "phonicsAudio": "audio/w_three_phonics.mp3",
+      "ipaSegments": [
+        "θ",
+        "r",
+        "iː"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_four",
+      "text": "Four",
+      "ipa": "/fɔːr/",
+      "zh": "四",
+      "phonics": "FOUR",
+      "audio": "audio/w_four.mp3",
+      "phonicsAudio": "audio/w_four_phonics.mp3",
+      "ipaSegments": [
+        "f",
+        "ɔː",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_six",
+      "text": "Six",
+      "ipa": "/sɪks/",
+      "zh": "六",
+      "phonics": "SIX",
+      "audio": "audio/w_six.mp3",
+      "phonicsAudio": "audio/w_six_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "ɪ",
+        "k",
+        "s"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_busy",
+      "text": "Busy",
+      "ipa": "/ˈbɪzi/",
+      "zh": "忙碌的",
+      "phonics": "BU-sy",
+      "audio": "audio/w_busy.mp3",
+      "phonicsAudio": "audio/w_busy_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "ɪ",
+        "z",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_tired",
+      "text": "Tired",
+      "ipa": "/ˈtaɪərd/",
+      "zh": "疲惫的",
+      "phonics": "TI-red",
+      "audio": "audio/w_tired.mp3",
+      "phonicsAudio": "audio/w_tired_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "aɪ",
+        "ə",
+        "r",
+        "d"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_lunch",
+      "text": "Lunch",
+      "ipa": "/lʌntʃ/",
+      "zh": "午餐",
+      "phonics": "LUNCH",
+      "audio": "audio/w_lunch.mp3",
+      "phonicsAudio": "audio/w_lunch_phonics.mp3",
+      "ipaSegments": [
+        "l",
+        "ʌ",
+        "n",
+        "tʃ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_meatball",
+      "text": "Meatball",
+      "ipa": "/ˈmiːtbɔːl/",
+      "zh": "肉丸",
+      "phonics": "MEAT-ball",
+      "audio": "audio/w_meatball.mp3",
+      "phonicsAudio": "audio/w_meatball_phonics.mp3",
+      "ipaSegments": [
+        "m",
+        "iː",
+        "t",
+        "b",
+        "ɔː",
+        "l"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_vegetable",
+      "text": "Vegetable",
+      "ipa": "/ˈvedʒtəbl/",
+      "zh": "蔬菜",
+      "phonics": "VEG-ta-ble",
+      "audio": "audio/w_vegetable.mp3",
+      "phonicsAudio": "audio/w_vegetable_phonics.mp3",
+      "ipaSegments": [
+        "v",
+        "e",
+        "dʒ",
+        "t",
+        "ə",
+        "b",
+        "l"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_soup",
+      "text": "Soup",
+      "ipa": "/suːp/",
+      "zh": "汤",
+      "phonics": "SOUP",
+      "audio": "audio/w_soup.mp3",
+      "phonicsAudio": "audio/w_soup_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "uː",
+        "p"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_colour",
+      "text": "Colour",
+      "ipa": "/ˈkʌlər/",
+      "zh": "颜色",
+      "phonics": "COL-our",
+      "audio": "audio/w_colour.mp3",
+      "phonicsAudio": "audio/w_colour_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "ʌ",
+        "l",
+        "ə",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_playground",
+      "text": "Playground",
+      "ipa": "/ˈpleɪɡraʊnd/",
+      "zh": "游乐场",
+      "phonics": "PLAY-ground",
+      "audio": "audio/w_playground.mp3",
+      "phonicsAudio": "audio/w_playground_phonics.mp3",
+      "ipaSegments": [
+        "p",
+        "l",
+        "eɪ",
+        "ɡ",
+        "r",
+        "aʊ",
+        "n",
+        "d"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_slide",
+      "text": "Slide",
+      "ipa": "/slaɪd/",
+      "zh": "滑梯",
+      "phonics": "SLIDE",
+      "audio": "audio/w_slide.mp3",
+      "phonicsAudio": "audio/w_slide_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "l",
+        "aɪ",
+        "d"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_swing",
+      "text": "Swing",
+      "ipa": "/swɪŋ/",
+      "zh": "秋千",
+      "phonics": "SWING",
+      "audio": "audio/w_swing.mp3",
+      "phonicsAudio": "audio/w_swing_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "w",
+        "ɪ",
+        "ŋ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_seesaw",
+      "text": "Seesaw",
+      "ipa": "/ˈsiːsɔː/",
+      "zh": "跷跷板",
+      "phonics": "SEE-saw",
+      "audio": "audio/w_seesaw.mp3",
+      "phonicsAudio": "audio/w_seesaw_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "iː",
+        "s",
+        "ɔː"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_hold_on_tight",
+      "text": "Hold on tight",
+      "ipa": "/hoʊld ɑːn taɪt/",
+      "zh": "抓紧",
+      "phonics": "HOLD on TIGHT",
+      "audio": "audio/w_hold_on_tight.mp3",
+      "phonicsAudio": "audio/w_hold_on_tight_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "oʊ",
+        "l",
+        "d",
+        "ɑː",
+        "n",
+        "t",
+        "aɪ",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_be_careful",
+      "text": "Be careful",
+      "ipa": "/bi ˈkerfl/",
+      "zh": "小心",
+      "phonics": "be CARE-ful",
+      "audio": "audio/w_be_careful.mp3",
+      "phonicsAudio": "audio/w_be_careful_phonics.mp3",
+      "ipaSegments": [
+        "b",
+        "i",
+        "k",
+        "e",
+        "r",
+        "f",
+        "l"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_rainy",
+      "text": "Rainy",
+      "ipa": "/ˈreɪni/",
+      "zh": "下雨的",
+      "phonics": "RAI-ny",
+      "audio": "audio/w_rainy.mp3",
+      "phonicsAudio": "audio/w_rainy_phonics.mp3",
+      "ipaSegments": [
+        "r",
+        "eɪ",
+        "n",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_windy",
+      "text": "Windy",
+      "ipa": "/ˈwɪndi/",
+      "zh": "刮风的",
+      "phonics": "WIN-dy",
+      "audio": "audio/w_windy.mp3",
+      "phonicsAudio": "audio/w_windy_phonics.mp3",
+      "ipaSegments": [
+        "w",
+        "ɪ",
+        "n",
+        "d",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_cloudy",
+      "text": "Cloudy",
+      "ipa": "/ˈklaʊdi/",
+      "zh": "多云的",
+      "phonics": "CLOU-dy",
+      "audio": "audio/w_cloudy.mp3",
+      "phonicsAudio": "audio/w_cloudy_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "l",
+        "aʊ",
+        "d",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_snowy",
+      "text": "Snowy",
+      "ipa": "/ˈsnoʊi/",
+      "zh": "下雪的",
+      "phonics": "SNOW-y",
+      "audio": "audio/w_snowy.mp3",
+      "phonicsAudio": "audio/w_snowy_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "n",
+        "oʊ",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_trousers",
+      "text": "Trousers",
+      "ipa": "/ˈtraʊzərz/",
+      "zh": "裤子",
+      "phonics": "TROU-sers",
+      "audio": "audio/w_trousers.mp3",
+      "phonicsAudio": "audio/w_trousers_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "r",
+        "aʊ",
+        "z",
+        "ə",
+        "r",
+        "z"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_sock",
+      "text": "Sock",
+      "ipa": "/sɑːk/",
+      "zh": "袜子",
+      "phonics": "SOCK",
+      "audio": "audio/w_sock.mp3",
+      "phonicsAudio": "audio/w_sock_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "ɑː",
+        "k"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_socks",
+      "text": "Socks",
+      "ipa": "/sɑːks/",
+      "zh": "袜子（复数）",
+      "phonics": "SOCKS",
+      "audio": "audio/w_socks.mp3",
+      "phonicsAudio": "audio/w_socks_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "ɑː",
+        "k",
+        "s"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_shoe",
+      "text": "Shoe",
+      "ipa": "/ʃuː/",
+      "zh": "鞋",
+      "phonics": "SHOE",
+      "audio": "audio/w_shoe.mp3",
+      "phonicsAudio": "audio/w_shoe_phonics.mp3",
+      "ipaSegments": [
+        "ʃ",
+        "uː"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_shoes",
+      "text": "Shoes",
+      "ipa": "/ʃuːz/",
+      "zh": "鞋（复数）",
+      "phonics": "SHOES",
+      "audio": "audio/w_shoes.mp3",
+      "phonicsAudio": "audio/w_shoes_phonics.mp3",
+      "ipaSegments": [
+        "ʃ",
+        "uː",
+        "z"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_dress",
+      "text": "Dress",
+      "ipa": "/dres/",
+      "zh": "连衣裙",
+      "phonics": "DRESS",
+      "audio": "audio/w_dress.mp3",
+      "phonicsAudio": "audio/w_dress_phonics.mp3",
+      "ipaSegments": [
+        "d",
+        "r",
+        "e",
+        "s"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_skirt",
+      "text": "Skirt",
+      "ipa": "/skɜːrt/",
+      "zh": "裙子",
+      "phonics": "SKIRT",
+      "audio": "audio/w_skirt.mp3",
+      "phonicsAudio": "audio/w_skirt_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "k",
+        "ɜː",
+        "r",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_game",
+      "text": "Game",
+      "ipa": "/ɡeɪm/",
+      "zh": "游戏",
+      "phonics": "GAME",
+      "audio": "audio/w_game.mp3",
+      "phonicsAudio": "audio/w_game_phonics.mp3",
+      "ipaSegments": [
+        "ɡ",
+        "eɪ",
+        "m"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_hide_and_seek",
+      "text": "Hide-and-seek",
+      "ipa": "/ˌhaɪd ən ˈsiːk/",
+      "zh": "捉迷藏",
+      "phonics": "HIDE-and-SEEK",
+      "audio": "audio/w_hide_and_seek.mp3",
+      "phonicsAudio": "audio/w_hide_and_seek_phonics.mp3",
+      "ipaSegments": [
+        "h",
+        "aɪ",
+        "d",
+        "ə",
+        "n",
+        "s",
+        "iː",
+        "k"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_move_and_freeze",
+      "text": "Move-and-freeze",
+      "ipa": "/ˌmuːv ən ˈfriːz/",
+      "zh": "动一动停一停",
+      "phonics": "MOVE-and-FREEZE",
+      "audio": "audio/w_move_and_freeze.mp3",
+      "phonicsAudio": "audio/w_move_and_freeze_phonics.mp3",
+      "ipaSegments": [
+        "m",
+        "uː",
+        "v",
+        "ə",
+        "n",
+        "f",
+        "r",
+        "iː",
+        "z"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_ready",
+      "text": "Ready",
+      "ipa": "/ˈredi/",
+      "zh": "准备好的",
+      "phonics": "REA-dy",
+      "audio": "audio/w_ready.mp3",
+      "phonicsAudio": "audio/w_ready_phonics.mp3",
+      "ipaSegments": [
+        "r",
+        "e",
+        "d",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_skip_rope",
+      "text": "Skip rope",
+      "ipa": "/skɪp roʊp/",
+      "zh": "跳绳",
+      "phonics": "SKIP ROPE",
+      "audio": "audio/w_skip_rope.mp3",
+      "phonicsAudio": "audio/w_skip_rope_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "k",
+        "ɪ",
+        "p",
+        "r",
+        "oʊ",
+        "p"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_throw_sandbags",
+      "text": "Throw sandbags",
+      "ipa": "/θroʊ ˈsændbæɡz/",
+      "zh": "扔沙包",
+      "phonics": "THROW SAND-bags",
+      "audio": "audio/w_throw_sandbags.mp3",
+      "phonicsAudio": "audio/w_throw_sandbags_phonics.mp3",
+      "ipaSegments": [
+        "θ",
+        "r",
+        "oʊ",
+        "s",
+        "æ",
+        "n",
+        "d",
+        "b",
+        "æ",
+        "ɡ",
+        "z"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_traffic_light",
+      "text": "Traffic light",
+      "ipa": "/ˈtræfɪk laɪt/",
+      "zh": "红绿灯",
+      "phonics": "TRAF-fic LIGHT",
+      "audio": "audio/w_traffic_light.mp3",
+      "phonicsAudio": "audio/w_traffic_light_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "r",
+        "æ",
+        "f",
+        "ɪ",
+        "k",
+        "l",
+        "aɪ",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_stop",
+      "text": "Stop",
+      "ipa": "/stɑːp/",
+      "zh": "停",
+      "phonics": "STOP",
+      "audio": "audio/w_stop.mp3",
+      "phonicsAudio": "audio/w_stop_phonics.mp3",
+      "ipaSegments": [
+        "s",
+        "t",
+        "ɑː",
+        "p"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_wait",
+      "text": "Wait",
+      "ipa": "/weɪt/",
+      "zh": "等待",
+      "phonics": "WAIT",
+      "audio": "audio/w_wait.mp3",
+      "phonicsAudio": "audio/w_wait_phonics.mp3",
+      "ipaSegments": [
+        "w",
+        "eɪ",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_zebra_crossing",
+      "text": "Zebra crossing",
+      "ipa": "/ˈziːbrə ˈkrɔːsɪŋ/",
+      "zh": "斑马线",
+      "phonics": "ZE-bra CROSS-ing",
+      "audio": "audio/w_zebra_crossing.mp3",
+      "phonicsAudio": "audio/w_zebra_crossing_phonics.mp3",
+      "ipaSegments": [
+        "z",
+        "iː",
+        "b",
+        "r",
+        "ə",
+        "k",
+        "r",
+        "ɔː",
+        "s",
+        "ɪ",
+        "ŋ"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_tiger",
+      "text": "Tiger",
+      "ipa": "/ˈtaɪɡər/",
+      "zh": "老虎",
+      "phonics": "TI-ger",
+      "audio": "audio/w_tiger.mp3",
+      "phonicsAudio": "audio/w_tiger_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "aɪ",
+        "ɡ",
+        "ə",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_elephant",
+      "text": "Elephant",
+      "ipa": "/ˈelɪfənt/",
+      "zh": "大象",
+      "phonics": "EL-e-phant",
+      "audio": "audio/w_elephant.mp3",
+      "phonicsAudio": "audio/w_elephant_phonics.mp3",
+      "ipaSegments": [
+        "e",
+        "l",
+        "ɪ",
+        "f",
+        "ə",
+        "n",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_monkey",
+      "text": "Monkey",
+      "ipa": "/ˈmʌŋki/",
+      "zh": "猴子",
+      "phonics": "MON-key",
+      "audio": "audio/w_monkey.mp3",
+      "phonicsAudio": "audio/w_monkey_phonics.mp3",
+      "ipaSegments": [
+        "m",
+        "ʌ",
+        "ŋ",
+        "k",
+        "i"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_climb_a_tree",
+      "text": "Climb a tree",
+      "ipa": "/klaɪm ə triː/",
+      "zh": "爬树",
+      "phonics": "CLIMB a TREE",
+      "audio": "audio/w_climb_a_tree.mp3",
+      "phonicsAudio": "audio/w_climb_a_tree_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "l",
+        "aɪ",
+        "m",
+        "ə",
+        "t",
+        "r",
+        "iː"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_kite",
+      "text": "Kite",
+      "ipa": "/kaɪt/",
+      "zh": "风筝",
+      "phonics": "KITE",
+      "audio": "audio/w_kite.mp3",
+      "phonicsAudio": "audio/w_kite_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "aɪ",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_toy_car",
+      "text": "Toy car",
+      "ipa": "/tɔɪ kɑːr/",
+      "zh": "玩具汽车",
+      "phonics": "TOY CAR",
+      "audio": "audio/w_toy_car.mp3",
+      "phonicsAudio": "audio/w_toy_car_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "ɔɪ",
+        "k",
+        "ɑː",
+        "r"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_toy_boat",
+      "text": "Toy boat",
+      "ipa": "/tɔɪ boʊt/",
+      "zh": "玩具船",
+      "phonics": "TOY BOAT",
+      "audio": "audio/w_toy_boat.mp3",
+      "phonicsAudio": "audio/w_toy_boat_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "ɔɪ",
+        "b",
+        "oʊ",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_toy_train",
+      "text": "Toy train",
+      "ipa": "/tɔɪ treɪn/",
+      "zh": "玩具火车",
+      "phonics": "TOY TRAIN",
+      "audio": "audio/w_toy_train.mp3",
+      "phonicsAudio": "audio/w_toy_train_phonics.mp3",
+      "ipaSegments": [
+        "t",
+        "ɔɪ",
+        "t",
+        "r",
+        "eɪ",
+        "n"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_gift",
+      "text": "Gift",
+      "ipa": "/ɡɪft/",
+      "zh": "礼物",
+      "phonics": "GIFT",
+      "audio": "audio/w_gift.mp3",
+      "phonicsAudio": "audio/w_gift_phonics.mp3",
+      "ipaSegments": [
+        "ɡ",
+        "ɪ",
+        "f",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "w_cute",
+      "text": "Cute",
+      "ipa": "/kjuːt/",
+      "zh": "可爱的",
+      "phonics": "CUTE",
+      "audio": "audio/w_cute.mp3",
+      "phonicsAudio": "audio/w_cute_phonics.mp3",
+      "ipaSegments": [
+        "k",
+        "j",
+        "uː",
+        "t"
+      ],
+      "tags": [
+        "grade1"
+      ]
     }
   ]
 }
