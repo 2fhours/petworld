@@ -1300,6 +1300,13 @@
     .quiz-practice .qz-actions button.next {
       background: linear-gradient(135deg, #6366f1, #8b5cf6);
     }
+    .quiz-practice .qz-lang-tip {
+      margin-top: 6px;
+      font-size: 12px;
+      color: rgba(165, 180, 252, 0.9);
+      letter-spacing: 0.02em;
+    }
+    .quiz-practice .qz-lang-tip[hidden] { display: none !important; }
     .quiz-practice .qz-hint { font-size: 12px; color: rgba(226,232,240,0.5); margin-top: 4px; }
 
     @media (max-width: 820px) {
@@ -1595,6 +1602,7 @@
       <div class="qz-ipa" id="quizIpa"></div>
       <div class="qz-sub" id="quizZh"></div>
       <div class="qz-feedback" id="quizFeedback"></div>
+      <div class="qz-lang-tip" id="quizLangTip" hidden>识别语言：英语</div>
       <div class="qz-actions">
         <button type="button" class="repeat" id="quizRepeat">🎤 跟读</button>
         <button type="button" class="next" id="quizNext">下一个 Next</button>
@@ -1619,7 +1627,7 @@
   </script>
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 15;
+    const APP_VERSION = 16;
     document.getElementById('versionLabel').textContent = APP_VERSION;
     /** Cache-bust pack JSON so Pages/browser max-age cannot serve stale words/actions/etc. */
     function packUrl(path) {
@@ -4076,6 +4084,82 @@
         .trim();
     }
 
+    /** Collapse spaces/hyphens for compound matching: schoolbag ↔ school bag. */
+    function quizCompact(s) {
+      return normalizeQuizText(s).replace(/[\s\-_']+/g, '');
+    }
+
+    /**
+     * Grade-1 letter-name / homophone confusions (explicit, small).
+     * Groups are symmetric: saying any member counts for any other as the target word.
+     */
+    const QUIZ_HOMOPHONE_GROUPS = [
+      ['eye', 'i'],
+      ['you', 'u'],
+      ['be', 'b', 'bee'],
+      ['see', 'c', 'sea'],
+      ['are', 'r'],
+      ['why', 'y'],
+      ['oh', 'o'],
+      ['tea', 't'],
+      ['pea', 'p']
+    ];
+
+    function quizHomophoneAlts(token) {
+      const t = String(token || '').toLowerCase().trim();
+      if (!t) return [];
+      for (const g of QUIZ_HOMOPHONE_GROUPS) {
+        if (g.includes(t)) return g.slice();
+      }
+      return [t];
+    }
+
+    function quizHomophoneHit(transcript, targetNorm) {
+      // Only for single-token targets (avoid over-accepting phrases).
+      const gParts = targetNorm.split(/\s+/).filter(Boolean);
+      if (gParts.length !== 1) return false;
+      const gAlts = new Set(quizHomophoneAlts(gParts[0]));
+      if (gAlts.size <= 1 && !QUIZ_HOMOPHONE_GROUPS.some((g) => g.includes(gParts[0]))) return false;
+      const tParts = normalizeQuizText(transcript).split(/\s+/).filter(Boolean);
+      // Also treat fully compacted transcript as one token (e.g. "i" / "eye").
+      const whole = quizCompact(transcript);
+      const candidates = tParts.concat(whole ? [whole] : []);
+      for (const tok of candidates) {
+        for (const a of quizHomophoneAlts(tok)) {
+          if (gAlts.has(a)) return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Compound spacing: schoolbag ↔ school bag, pencilcase ↔ pencil case.
+     * Join consecutive transcript tokens (and accept a single glued token when the
+     * target itself has spaces). Avoids false hits like "care" ⊃ "are".
+     */
+    function quizCompoundMatch(transcript, targetNorm) {
+      const gC = quizCompact(targetNorm);
+      if (!gC || gC.length < 3) return false;
+      const t = normalizeQuizText(transcript);
+      if (!t) return false;
+      if (quizCompact(t) === gC) return true;
+      const tokens = t.split(/\s+/).filter(Boolean).map((x) => x.replace(/[\-_']/g, ''));
+      const targetHasSpace = /\s/.test(targetNorm);
+      // Glued single token vs spaced target: "pencilcase" → "pencil case"
+      if (targetHasSpace && tokens.length === 1 && tokens[0] === gC) return true;
+      // Consecutive tokens concatenate to closed or spaced compound:
+      // "school"+"bag" → Schoolbag; "pencil"+"case" → Pencil case
+      for (let i = 0; i < tokens.length; i++) {
+        let acc = '';
+        for (let j = i; j < tokens.length; j++) {
+          acc += tokens[j];
+          if (acc === gC) return true;
+          if (acc.length >= gC.length) break;
+        }
+      }
+      return false;
+    }
+
     function quizWordMatches(transcript, word) {
       if (!word) return false;
       const t = normalizeQuizText(transcript);
@@ -4096,6 +4180,10 @@
           const esc = g.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           if (new RegExp('(^|[^a-z0-9])' + esc + '([^a-z0-9]|$)').test(t)) return true;
         }
+        // Compound spacing: schoolbag ↔ school bag, playground ↔ play ground, etc.
+        if (quizCompoundMatch(transcript, g)) return true;
+        // Homophones / letter names (eye↔I, see↔c/sea, …)
+        if (quizHomophoneHit(transcript, g)) return true;
       }
       return false;
     }
@@ -4144,6 +4232,7 @@
       quizState.current = null;
       quizState.pool = [];
       quizState.autoListen = false;
+      if (typeof setQuizLangTip === 'function') setQuizLangTip(false);
       if (typeof clearQuizListenTimer === 'function') clearQuizListenTimer();
       if (typeof requestRecognitionStop === 'function' && was) {
         // stop 跟读 listen without leaving a pending restart
@@ -4454,11 +4543,14 @@
       recogLastInterim = '';
       recogGotFinal = false;
       try {
-        recognition.lang = payload.lang || getMicLang();
+        // Quiz 跟读 always English — never inherit EN/中 toggle or zh-CN localStorage.
+        const quizListen = (typeof quizState !== 'undefined' && quizState.active && quizState.waiting);
+        const lang = quizListen ? 'en-US' : (payload.lang || getMicLang());
+        recognition.lang = lang;
         // interimResults only for quiz 跟读 live text; Speak/dialogs need finals-only
         // like pre-refactor (interim+require-isFinal dropped dialog utterances).
-        const quizListen = (typeof quizState !== 'undefined' && quizState.active && quizState.waiting);
         recognition.interimResults = !!quizListen;
+        try { recognition.maxAlternatives = quizListen ? 8 : 5; } catch (e) {}
         recogResultSession = payload.session;
         recognition.start();
         return true;
@@ -4484,7 +4576,10 @@
 
     function requestRecognitionStart(lang) {
       if (!recognition) return false;
-      const payload = { lang: lang || getMicLang(), session: ++recogActiveSession };
+      // While 跟读 is waiting, ignore caller/toggle and pin English (do not touch mic-lang storage).
+      const quizListen = (typeof quizState !== 'undefined' && quizState.active && quizState.waiting);
+      const useLang = quizListen ? 'en-US' : (lang || getMicLang());
+      const payload = { lang: useLang, session: ++recogActiveSession };
       // After onerror, recognizing may be false while engine still ending — must wait for onend.
       if (recognizing || recogStarting || recogEnding) {
         recogWantStart = payload;
@@ -4603,6 +4698,36 @@
       } catch (e) {}
     }
 
+
+    function setQuizLangTip(on) {
+      const tip = document.getElementById('quizLangTip');
+      if (tip) {
+        if (on) tip.removeAttribute('hidden');
+        else tip.setAttribute('hidden', '');
+      }
+    }
+
+    /** Prefer Latin/English-looking alternatives (Huawei/CN browsers often return CJK first). */
+    function preferEnglishAlts(list) {
+      const arr = (list || []).map((s) => String(s || '').trim()).filter(Boolean);
+      if (arr.length <= 1) return arr;
+      const scored = arr.map((v, i) => {
+        const latin = (v.match(/[A-Za-z]/g) || []).length;
+        const cjk = (v.match(/[一-鿿]/g) || []).length;
+        return { v, score: latin * 3 - cjk * 4 - i * 0.01 };
+      });
+      scored.sort((a, b) => b.score - a.score);
+      const out = [];
+      const seen = new Set();
+      for (const x of scored) {
+        const k = x.v.toLowerCase();
+        if (seen.has(k)) continue;
+        seen.add(k);
+        out.push(x.v);
+      }
+      return out;
+    }
+
     function startQuizRepeat() {
       if (!quizState.active || quizState.phase !== 'practice' || !quizState.current) return;
       clearQuizListenTimer();
@@ -4611,10 +4736,13 @@
       quizState.judged = false;
       const fb = document.getElementById('quizFeedback');
       if (fb) { fb.textContent = '🎤 启动麦克风…'; fb.className = 'qz-feedback'; }
-      setMicStatus('正在启动跟读麦克风…');
+      setQuizLangTip(true);
+      setMicStatus('跟读识别语言：英语 · 正在启动…');
       // Force en-US for this listen only — do NOT setMicLang() (that stuck EN in localStorage
       // and broke Speak dialogs/commands after any 跟读).
       pausePlaybackForMic();
+      // Pin engine lang before queue/start (some WebViews latch the prior value).
+      try { if (recognition) recognition.lang = 'en-US'; } catch (e) {}
       if (!recognition) {
         quizState.waiting = false;
         if (fb) { fb.textContent = '🎤 请用 Chrome/Edge'; fb.className = 'qz-feedback bad'; }
@@ -4635,6 +4763,7 @@
       if (!it) return;
       quizState.waiting = false;
       quizState.judged = true;
+      if (typeof setQuizLangTip === 'function') setQuizLangTip(false);
       const heard = String(transcript || '').trim();
       const ok = (typeof precomputedOk === 'boolean') ? precomputedOk : quizWordMatches(heard, it);
       if (ok) {
@@ -4713,10 +4842,17 @@
         };
         push(text);
         if (alts) alts.forEach(push);
-        let best = list[0] || text || '';
+        const ordered = (typeof preferEnglishAlts === 'function') ? preferEnglishAlts(list) : list;
+        // Prefer a matching English-looking alt; then any matching alt; else best Latin transcript.
+        let best = ordered[0] || list[0] || text || '';
         let matched = false;
-        for (const a of list) {
+        for (const a of ordered) {
           if (quizWordMatches(a, quizState.current)) { best = a; matched = true; break; }
+        }
+        if (!matched) {
+          for (const a of list) {
+            if (quizWordMatches(a, quizState.current)) { best = a; matched = true; break; }
+          }
         }
         judgeQuizSpeech(best, matched);
         return true;
@@ -4742,10 +4878,13 @@
         document.getElementById('micBtn').classList.add('listening');
         document.getElementById('micBtn').textContent = '🎤...';
         if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
-          setMicStatus('正在听，请跟读单词…');
+          try { recognition.lang = 'en-US'; } catch (e) {}
+          setQuizLangTip(true);
+          setMicStatus('跟读识别语言：英语 · 正在听…');
           const fb = document.getElementById('quizFeedback');
-          if (fb) { fb.textContent = '🎤 正在听，请跟读…'; fb.className = 'qz-feedback'; }
+          if (fb) { fb.textContent = '🎤 正在听（识别语言：英语）…'; fb.className = 'qz-feedback'; }
         } else {
+          setQuizLangTip(false);
           setMicStatus('正在听…');
         }
       };
@@ -4881,9 +5020,15 @@
       micLangBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const next = getMicLang() === 'en-US' ? 'zh-CN' : 'en-US';
-        setMicLang(next);
-        if (recognition) recognition.lang = next;
-        setMicStatus('识别语言：' + (next === 'zh-CN' ? '中文' : 'English'));
+        setMicLang(next); // Speak button language only — quiz 跟读 never reads this while listening
+        if (typeof quizState !== 'undefined' && quizState.active && quizState.waiting) {
+          // Keep engine on English for the in-flight 跟读 session
+          if (recognition) recognition.lang = 'en-US';
+          setMicStatus('跟读固定英语；说话按钮已改为：' + (next === 'zh-CN' ? '中文' : 'English'));
+        } else {
+          if (recognition) recognition.lang = next;
+          setMicStatus('识别语言：' + (next === 'zh-CN' ? '中文' : 'English'));
+        }
       });
     }
 
