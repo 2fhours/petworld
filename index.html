@@ -1627,7 +1627,7 @@
   </script>
   <script>
     // Bump with scripts/bump-version.js before every code commit.
-    const APP_VERSION = 16;
+    const APP_VERSION = 17;
     document.getElementById('versionLabel').textContent = APP_VERSION;
     /** Cache-bust pack JSON so Pages/browser max-age cannot serve stale words/actions/etc. */
     function packUrl(path) {
@@ -2251,7 +2251,7 @@
           fetch(packUrl('animals.json')).then((r) => r.json()).catch(() => null),
           fetch(packUrl('songs.json')).then((r) => r.json()).catch(() => null),
         ]);
-        (words.items || []).forEach((it) => { add(it.audio); add(it.phonicsAudio); });
+        (words.items || []).forEach((it) => { add(it.audio); add(it.phonicsAudio); add(it.quizAudio); });
         Object.values(actions.actions || {}).forEach((arr) => arr.forEach((it) => add(it.audio)));
         (dialogs.dialogs || []).forEach((it) => add(it.audio));
         (foods.foods || []).forEach((it) => {
@@ -4521,9 +4521,15 @@
 
     function playQuizCurrentAudio() {
       const it = quizState.current;
-      if (!it || !it.audio) return;
-      if (typeof playCachedAudio === 'function') playCachedAudio(it.audio);
-      else if (typeof playWord === 'function') { /* fallback unused */ }
+      if (!it) return;
+      // Prefer textbook-style quizAudio (en-GB Sonia, slower); else existing audio at 0.85.
+      const quizSrc = it.quizAudio || null;
+      const fallback = it.audio || null;
+      if (!quizSrc && !fallback) return;
+      if (typeof playCachedAudio === 'function') {
+        if (quizSrc) playCachedAudio(quizSrc, { rate: 1 });
+        else playCachedAudio(fallback, { rate: 0.85 });
+      }
     }
 
     function pausePlaybackForMic() {
